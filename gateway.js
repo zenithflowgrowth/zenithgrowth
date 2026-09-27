@@ -70,6 +70,11 @@ app.get(['/video-downloader', '/video-downloader/', '/video'], (req, res, next) 
   next();
 });
 
+// Serve assets under /video-downloader/ prefix as well
+app.get('/video-downloader/video-downloader.css', (req, res) => res.sendFile(path.join(ROOT_DIR, 'video-downloader.css')));
+app.get('/video-downloader/video-downloader.js', (req, res) => res.sendFile(path.join(ROOT_DIR, 'video-downloader.js')));
+app.get('/video-downloader/favicon.svg', (req, res) => res.sendFile(path.join(ROOT_DIR, 'logo.png')));
+
 // 1. Mount Video Downloader App & APIs (Flexible auto-locator)
 const candidateDirs = [
   path.join(ROOT_DIR, 'universal-video-downloader'),
