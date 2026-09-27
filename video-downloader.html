@@ -13,7 +13,1428 @@
     gtag('config', 'G-FX6GCW9T0X');
   </script>
   <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="stylesheet" href="/video-downloader.css">
+  <style>
+:root {
+  --bg-primary: #090d16;
+  --bg-secondary: #0f172a;
+  --bg-card: rgba(18, 24, 38, 0.75);
+  --bg-card-hover: rgba(26, 34, 52, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.25);
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.4);
+  --accent-cyan: #06b6d4;
+  --accent-pink: #ec4899;
+  
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --warning: #f59e0b;
+  
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-card-hover: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.3);
+  
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-glow: rgba(79, 70, 229, 0.3);
+  
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 35px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ambient glow accents */
+.ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.glow-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+  top: -150px;
+  left: 20%;
+}
+
+.glow-2 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+  top: 15%;
+  right: 5%;
+}
+
+.glow-3 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+  bottom: 0;
+  left: 5%;
+}
+
+/* Top Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  background: rgba(9, 13, 22, 0.7);
+  border-bottom: 1px solid var(--border-color);
+  padding: 14px 24px;
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  background: linear-gradient(135deg, #06b6d4, #6366f1);
+  color: white;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brand-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.engine-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.engine-badge.ready {
+  background: var(--success-bg);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--success);
+}
+
+.engine-badge.ready .pulse-dot {
+  background-color: var(--success);
+  box-shadow: 0 0 10px var(--success);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--warning);
+  display: inline-block;
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+}
+
+.btn-icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon-circle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--primary);
+}
+
+/* Main Content */
+.main-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* Hero */
+.hero-section {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #06b6d4 10%, #6366f1 50%, #ec4899 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 680px;
+  margin: 0 auto 35px;
+}
+
+/* Search Card */
+.search-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-card:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 4px 12px 4px 8px;
+  transition: all 0.2s;
+}
+
+[data-theme="light"] .input-wrapper {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.platform-detect-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.25s ease;
+}
+
+/* Platform-specific pill themes */
+.platform-detect-pill.badge-youtube {
+  background: rgba(255, 0, 0, 0.18);
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.platform-detect-pill.badge-instagram {
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.25), rgba(247, 119, 55, 0.25));
+  color: #f472b6;
+  border: 1px solid rgba(225, 48, 108, 0.4);
+}
+
+.platform-detect-pill.badge-tiktok {
+  background: rgba(0, 242, 254, 0.18);
+  color: #22d3ee;
+  border: 1px solid rgba(0, 242, 254, 0.35);
+}
+
+.platform-detect-pill.badge-facebook {
+  background: rgba(24, 119, 242, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(24, 119, 242, 0.35);
+}
+
+.platform-detect-pill.badge-twitter {
+  background: rgba(29, 161, 242, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(29, 161, 242, 0.35);
+}
+
+.platform-detect-pill.badge-reddit {
+  background: rgba(255, 69, 0, 0.2);
+  color: #fb923c;
+  border: 1px solid rgba(255, 69, 0, 0.35);
+}
+
+.platform-detect-pill.badge-pinterest {
+  background: rgba(230, 0, 35, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(230, 0, 35, 0.35);
+}
+
+.input-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 14px 12px;
+  font-size: 1rem;
+  color: var(--text-main);
+  font-family: inherit;
+  min-width: 0;
+}
+
+.input-wrapper input::placeholder {
+  color: var(--text-dim);
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-inline-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-inline-action:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+}
+
+.btn-primary-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6 50%, #ec4899);
+  color: white;
+  border: none;
+  padding: 16px 28px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px var(--primary-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+.btn-primary-gradient:active {
+  transform: translateY(0);
+}
+
+.btn-primary-gradient:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner inside button */
+.btn-icon-spin {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Quick Strip of supported chips */
+.platforms-quick-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.strip-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.platform-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.chip-yt .chip-dot { background-color: #ff0000; }
+.chip-ig .chip-dot { background-color: #e1306c; }
+.chip-tt .chip-dot { background-color: #00f2fe; }
+.chip-fb .chip-dot { background-color: #1877f2; }
+.chip-x .chip-dot { background-color: #38bdf8; }
+.chip-rd .chip-dot { background-color: #ff4500; }
+.chip-pin .chip-dot { background-color: #e60023; }
+.chip-sc .chip-dot { background-color: #ff5500; }
+
+/* Alert Box */
+.alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 25px;
+  position: relative;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.error-box {
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.error-box h4 {
+  color: #ef4444;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.error-box p {
+  font-size: 0.85rem;
+  color: #fecaca;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.7;
+  margin-left: auto;
+}
+
+.alert-close:hover {
+  opacity: 1;
+}
+
+/* Result Card */
+.result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 26px;
+  margin-bottom: 30px;
+}
+
+.media-preview-container {
+  width: 100%;
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow-sm);
+}
+
+.thumbnail-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.thumbnail-wrapper:hover img {
+  transform: scale(1.03);
+}
+
+.duration-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+
+.media-platform-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.media-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.media-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 12px;
+  color: var(--text-main);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.media-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-separator {
+  color: var(--text-dim);
+}
+
+.link-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link-external:hover {
+  text-decoration: underline;
+}
+
+.media-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tabs */
+.formats-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.tab-badge {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Formats Grid */
+.formats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.format-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.format-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.format-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.format-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-res {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.badge-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
+
+.badge-tag.tag-4k {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.badge-tag.tag-hd {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.badge-tag.tag-audio {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+}
+
+.format-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-download-format {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-download-format:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  max-width: 540px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.spinner-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner-dot.done {
+  border: none;
+  background-color: var(--success);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  animation: none;
+  box-shadow: 0 0 10px var(--success);
+}
+
+.modal-title-group h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.btn-close-modal:hover {
+  color: var(--text-main);
+}
+
+.progress-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.progress-file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dl-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.format-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.progress-bar-container {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #6366f1, #ec4899);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.metric-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-banner.info {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #a5b4fc;
+}
+
+.status-banner.success {
+  background: var(--success-bg);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+.status-banner.error {
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.completed-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-action-primary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--success);
+  color: white;
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s;
+}
+
+.btn-action-primary:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* History Section */
+.history-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  margin-bottom: 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.section-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.section-subtitle code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.history-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-outline-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline-sm:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.empty-history {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.history-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.history-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-glow);
+}
+
+.history-file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.history-filename {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ext-badge {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
+
+.history-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-history-dl {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-history-dl:hover {
+  background: var(--success);
+  color: white;
+}
+
+.btn-history-del {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-history-del:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Platform Showcase */
+.showcase-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.showcase-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-main);
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.platform-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.25s;
+}
+
+.platform-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.p-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.p-icon.yt { background: rgba(255, 0, 0, 0.15); color: #ff0000; }
+.p-icon.ig { background: linear-gradient(135deg, rgba(225, 48, 108, 0.2), rgba(247, 119, 55, 0.2)); color: #e1306c; }
+.p-icon.tt { background: rgba(0, 242, 254, 0.15); color: #00f2fe; }
+.p-icon.fb { background: rgba(24, 119, 242, 0.15); color: #1877f2; }
+.p-icon.tw { background: rgba(255, 255, 255, 0.1); color: var(--text-main); }
+.p-icon.rd { background: rgba(255, 69, 0, 0.15); color: #ff4500; }
+
+.platform-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.platform-card p {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.footer-copy strong {
+  color: var(--text-muted);
+}
+
+.footer-status {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  .search-form {
+    flex-direction: column;
+  }
+  .btn-primary-gradient {
+    width: 100%;
+  }
+  .result-header {
+    grid-template-columns: 1fr;
+  }
+  .btn-label-desktop {
+    display: none;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+</style>
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -470,6 +1891,527 @@
     </div>
   </footer>
 
-  <script src="/video-downloader.js"></script>
+  <script>
+// State
+let currentMediaData = null;
+let currentJobEventSource = null;
+
+// DOM Elements
+const urlInput = document.getElementById('url-input');
+const pasteBtn = document.getElementById('paste-btn');
+const clearBtn = document.getElementById('clear-btn');
+const fetchBtn = document.getElementById('fetch-btn');
+const fetchBtnText = document.getElementById('fetch-btn-text');
+const fetchSpinner = document.getElementById('fetch-spinner');
+const platformBadge = document.getElementById('detected-platform-badge');
+const platformIcon = document.getElementById('detected-platform-icon');
+const platformName = document.getElementById('detected-platform-name');
+const engineStatus = document.getElementById('engine-status');
+const engineStatusText = document.getElementById('engine-status-text');
+
+const errorContainer = document.getElementById('error-container');
+const errorTitle = document.getElementById('error-title');
+const errorMessage = document.getElementById('error-message');
+
+const resultCard = document.getElementById('result-card');
+const mediaThumbnail = document.getElementById('media-thumbnail');
+const mediaDuration = document.getElementById('media-duration');
+const mediaPlatformTag = document.getElementById('media-platform-tag');
+const mediaTitle = document.getElementById('media-title');
+const mediaAuthor = document.getElementById('media-author');
+const mediaSourceLink = document.getElementById('media-source-link');
+const mediaDescription = document.getElementById('media-description');
+const videoCountBadge = document.getElementById('video-count-badge');
+const videoFormatsList = document.getElementById('video-formats-list');
+const audioFormatsList = document.getElementById('audio-formats-list');
+
+// Modal Elements
+const progressModal = document.getElementById('download-progress-modal');
+const modalHeading = document.getElementById('modal-status-heading');
+const statusIndicator = document.getElementById('download-status-indicator');
+const dlMediaTitle = document.getElementById('dl-media-title');
+const dlBadgeFormat = document.getElementById('dl-badge-format');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const metricPercent = document.getElementById('metric-percent');
+const metricSpeed = document.getElementById('metric-speed');
+const metricEta = document.getElementById('metric-eta');
+const metricStage = document.getElementById('metric-stage');
+const dlStatusMessage = document.getElementById('dl-status-message');
+const dlStatusBanner = document.getElementById('dl-status-banner');
+const completedActions = document.getElementById('completed-actions');
+const saveFileBtn = document.getElementById('save-file-btn');
+
+// History Elements
+const historyContainer = document.getElementById('history-container');
+const historyItemsList = document.getElementById('history-items-list');
+const emptyHistoryPlaceholder = document.getElementById('empty-history-placeholder');
+
+// Theme Elements
+const themeToggle = document.getElementById('theme-toggle');
+const themeIconSun = document.getElementById('theme-icon-sun');
+const themeIconMoon = document.getElementById('theme-icon-moon');
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  checkEngineStatus();
+  loadHistory();
+  setupEventListeners();
+});
+
+// Platform detection rules
+const PLATFORMS = [
+  { match: ['youtube.com', 'youtu.be'], name: 'YouTube', badgeClass: 'badge-youtube' },
+  { match: ['instagram.com'], name: 'Instagram', badgeClass: 'badge-instagram' },
+  { match: ['tiktok.com'], name: 'TikTok', badgeClass: 'badge-tiktok' },
+  { match: ['facebook.com', 'fb.watch', 'fb.com'], name: 'Facebook', badgeClass: 'badge-facebook' },
+  { match: ['twitter.com', 'x.com'], name: 'Twitter / X', badgeClass: 'badge-twitter' },
+  { match: ['reddit.com', 'redd.it'], name: 'Reddit', badgeClass: 'badge-reddit' },
+  { match: ['pinterest.com', 'pin.it'], name: 'Pinterest', badgeClass: 'badge-pinterest' },
+  { match: ['linkedin.com'], name: 'LinkedIn', badgeClass: 'badge-linkedin' },
+  { match: ['vimeo.com'], name: 'Vimeo', badgeClass: 'badge-vimeo' },
+  { match: ['twitch.tv'], name: 'Twitch', badgeClass: 'badge-twitch' },
+  { match: ['soundcloud.com'], name: 'SoundCloud', badgeClass: 'badge-soundcloud' },
+  { match: ['threads.net'], name: 'Threads', badgeClass: 'badge-threads' }
+];
+
+function updatePlatformDetection(url) {
+  if (!url || !url.trim()) {
+    platformBadge.className = 'platform-detect-pill';
+    platformName.textContent = 'Auto Detect';
+    clearBtn.classList.add('hidden');
+    return;
+  }
+
+  clearBtn.classList.remove('hidden');
+  const lower = url.toLowerCase();
+  const matched = PLATFORMS.find(p => p.match.some(m => lower.includes(m)));
+
+  if (matched) {
+    platformBadge.className = `platform-detect-pill ${matched.badgeClass}`;
+    platformName.textContent = matched.name;
+  } else {
+    platformBadge.className = 'platform-detect-pill';
+    platformName.textContent = 'Universal Web';
+  }
+}
+
+function setupEventListeners() {
+  urlInput.addEventListener('input', (e) => {
+    updatePlatformDetection(e.target.value);
+  });
+
+  pasteBtn.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        urlInput.value = text.trim();
+        updatePlatformDetection(urlInput.value);
+        urlInput.focus();
+      }
+    } catch (err) {
+      console.warn('Clipboard read failed:', err);
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    urlInput.value = '';
+    updatePlatformDetection('');
+    clearBtn.classList.add('hidden');
+    urlInput.focus();
+  });
+
+  themeToggle.addEventListener('click', toggleTheme);
+
+  document.getElementById('open-folder-nav-btn').addEventListener('click', openDownloadsFolder);
+}
+
+// Engine Status Check
+async function checkEngineStatus() {
+  try {
+    const res = await fetch('/api/status');
+    const data = await res.json();
+    if (data.ytdlp && data.ytdlp.exists && data.ffmpeg && data.ffmpeg.exists) {
+      engineStatus.className = 'engine-badge ready';
+      engineStatusText.textContent = `yt-dlp v${data.ytdlp.version} + FFmpeg Ready`;
+    } else {
+      engineStatus.className = 'engine-badge';
+      engineStatusText.textContent = 'Engines Initializing';
+    }
+  } catch (e) {
+    engineStatus.className = 'engine-badge';
+    engineStatusText.textContent = 'Offline / Connecting';
+  }
+}
+
+// Theme Handlers
+function initTheme() {
+  const saved = localStorage.getItem('omni_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcons(saved);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const target = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', target);
+  localStorage.setItem('omni_theme', target);
+  updateThemeIcons(target);
+}
+
+function updateThemeIcons(theme) {
+  if (theme === 'light') {
+    themeIconSun.classList.add('hidden');
+    themeIconMoon.classList.remove('hidden');
+  } else {
+    themeIconSun.classList.remove('hidden');
+    themeIconMoon.classList.add('hidden');
+  }
+}
+
+// Show/Hide Errors
+function showError(title, msg) {
+  errorTitle.textContent = title;
+  errorMessage.textContent = msg;
+  errorContainer.classList.remove('hidden');
+  errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function hideError() {
+  errorContainer.classList.add('hidden');
+}
+
+// Switch Format Tabs
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.toggle('active', content.id === tabId);
+  });
+}
+
+// Inspect URL Handler
+async function handleInspectUrl() {
+  const url = urlInput.value.trim();
+  if (!url) return;
+
+  hideError();
+  resultCard.classList.add('hidden');
+
+  fetchBtn.disabled = true;
+  fetchSpinner.classList.remove('hidden');
+  document.querySelector('.btn-icon-send').classList.add('hidden');
+  fetchBtnText.textContent = 'Analyzing Media...';
+
+  try {
+    const res = await fetch('/api/inspect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to inspect link.');
+    }
+
+    currentMediaData = data;
+    renderMediaResult(data);
+  } catch (err) {
+    showError('Extraction Failed', err.message || 'Could not fetch media information. Please check the URL.');
+  } finally {
+    fetchBtn.disabled = false;
+    fetchSpinner.classList.add('hidden');
+    document.querySelector('.btn-icon-send').classList.remove('hidden');
+    fetchBtnText.textContent = 'Analyze Link';
+  }
+}
+
+// Render Media Result Card
+function renderMediaResult(data) {
+  mediaThumbnail.src = data.thumbnail || 'favicon.svg';
+  mediaDuration.textContent = data.durationFormatted || '--:--';
+  mediaPlatformTag.textContent = data.platform.name;
+  mediaPlatformTag.style.borderColor = data.platform.color || '#fff';
+  mediaTitle.textContent = data.title;
+  mediaAuthor.textContent = data.uploader;
+  mediaSourceLink.href = data.webpage_url;
+  mediaDescription.textContent = data.description || 'No description provided.';
+
+  // Video Formats
+  videoFormatsList.innerHTML = '';
+  const vOptions = data.videoOptions || [];
+  videoCountBadge.textContent = vOptions.length;
+
+  vOptions.forEach((opt) => {
+    const card = document.createElement('div');
+    card.className = 'format-card';
+
+    let tagClass = 'badge-tag';
+    if (opt.height >= 2160) tagClass += ' tag-4k';
+    else if (opt.height >= 1080) tagClass += ' tag-hd';
+
+    const fpsLabel = opt.fps ? ` • ${opt.fps}fps` : '';
+    const sizeLabel = opt.filesizeFormatted ? ` • ${opt.filesizeFormatted}` : '';
+
+    card.innerHTML = `
+      <div class="format-info">
+        <div class="format-badge-row">
+          <span class="badge-res">${opt.label}</span>
+          <span class="${tagClass}">${opt.ext.toUpperCase()}</span>
+        </div>
+        <div class="format-sub">Video + Audio Muxed${fpsLabel}${sizeLabel}</div>
+      </div>
+      <button class="btn-download-format" onclick="startDownload('video', '${opt.height}', '${opt.label}')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Download MP4</span>
+      </button>
+    `;
+    videoFormatsList.appendChild(card);
+  });
+
+  // Audio Formats
+  audioFormatsList.innerHTML = '';
+  const aOptions = data.audioOptions || [];
+  aOptions.forEach((opt) => {
+    const card = document.createElement('div');
+    card.className = 'format-card';
+
+    card.innerHTML = `
+      <div class="format-info">
+        <div class="format-badge-row">
+          <span class="badge-res">${opt.label}</span>
+          <span class="badge-tag tag-audio">${opt.ext.toUpperCase()}</span>
+        </div>
+        <div class="format-sub">Bitrate: ${opt.bitrate} • Clean Track Extraction</div>
+      </div>
+      <button class="btn-download-format" onclick="startDownload('audio', '${opt.id}', '${opt.label}')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18V5l12-2v13"></path>
+          <circle cx="6" cy="18" r="3"></circle>
+          <circle cx="18" cy="16" r="3"></circle>
+        </svg>
+        <span>Download ${opt.ext.toUpperCase()}</span>
+      </button>
+    `;
+    audioFormatsList.appendChild(card);
+  });
+
+  resultCard.classList.remove('hidden');
+  resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Start Download
+async function startDownload(type, quality, label) {
+  if (!currentMediaData) return;
+
+  // Reset Modal state
+  modalHeading.textContent = `Downloading ${label}...`;
+  statusIndicator.className = 'spinner-dot';
+  dlMediaTitle.textContent = currentMediaData.title;
+  dlBadgeFormat.textContent = label;
+  progressBarFill.style.width = '0%';
+  metricPercent.textContent = '0%';
+  metricSpeed.textContent = 'Connecting...';
+  metricEta.textContent = '--:--';
+  metricStage.textContent = 'Starting';
+  dlStatusMessage.textContent = 'Initializing media streams...';
+  dlStatusBanner.className = 'status-banner info';
+  completedActions.classList.add('hidden');
+
+  progressModal.classList.remove('hidden');
+
+  try {
+    const payload = {
+      url: currentMediaData.webpage_url,
+      type: type,
+      quality: quality,
+      customHeight: type === 'video' ? quality : null
+    };
+
+    const res = await fetch('/api/download/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const initData = await res.json();
+    if (!res.ok) {
+      throw new Error(initData.error || 'Failed to start download process.');
+    }
+
+    listenToDownloadProgress(initData.jobId);
+  } catch (err) {
+    statusIndicator.className = 'spinner-dot done';
+    statusIndicator.style.backgroundColor = 'var(--danger)';
+    dlStatusBanner.className = 'status-banner error';
+    dlStatusMessage.textContent = err.message || 'Error occurred during download.';
+  }
+}
+
+// SSE Progress Monitor
+function listenToDownloadProgress(jobId) {
+  if (currentJobEventSource) {
+    currentJobEventSource.close();
+  }
+
+  currentJobEventSource = new EventSource(`/api/download/stream/${jobId}`);
+
+  currentJobEventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+
+      progressBarFill.style.width = `${data.percent}%`;
+      metricPercent.textContent = `${Math.round(data.percent)}%`;
+      metricSpeed.textContent = data.speed || '-- MB/s';
+      metricEta.textContent = data.eta || '--:--';
+      metricStage.textContent = (data.stage || 'downloading').toUpperCase();
+      dlStatusMessage.textContent = data.message || 'Processing...';
+
+      if (data.status === 'completed') {
+        currentJobEventSource.close();
+        currentJobEventSource = null;
+
+        modalHeading.textContent = 'Download Complete!';
+        statusIndicator.className = 'spinner-dot done';
+        dlStatusBanner.className = 'status-banner success';
+        dlStatusMessage.textContent = `Saved: ${data.filename} (${data.fileSizeFormatted || 'Ready'})`;
+
+        // Configure direct browser download button
+        if (data.downloadUrl) {
+          saveFileBtn.href = data.downloadUrl;
+          saveFileBtn.setAttribute('download', data.filename || 'download');
+        }
+
+        completedActions.classList.remove('hidden');
+        loadHistory();
+
+        // Auto trigger browser download
+        if (data.downloadUrl) {
+          setTimeout(() => {
+            const tempLink = document.createElement('a');
+            tempLink.href = data.downloadUrl;
+            tempLink.setAttribute('download', data.filename || 'download');
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+          }, 600);
+        }
+      } else if (data.status === 'error') {
+        currentJobEventSource.close();
+        currentJobEventSource = null;
+
+        modalHeading.textContent = 'Download Failed';
+        statusIndicator.className = 'spinner-dot done';
+        statusIndicator.style.backgroundColor = 'var(--danger)';
+        dlStatusBanner.className = 'status-banner error';
+        dlStatusMessage.textContent = data.error || data.message || 'An error occurred during extraction.';
+      }
+    } catch (e) {
+      console.error('Error parsing SSE event:', e);
+    }
+  };
+
+  currentJobEventSource.onerror = () => {
+    if (currentJobEventSource) {
+      currentJobEventSource.close();
+      currentJobEventSource = null;
+    }
+  };
+}
+
+function closeProgressModal() {
+  if (currentJobEventSource) {
+    currentJobEventSource.close();
+    currentJobEventSource = null;
+  }
+  progressModal.classList.add('hidden');
+}
+
+// Download History Management
+async function loadHistory() {
+  try {
+    const res = await fetch('/api/history');
+    const data = await res.json();
+
+    if (data.files && data.files.length > 0) {
+      emptyHistoryPlaceholder.classList.add('hidden');
+      historyItemsList.classList.remove('hidden');
+      historyItemsList.innerHTML = '';
+
+      data.files.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'history-card';
+        const formattedDate = new Date(file.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        item.innerHTML = `
+          <div class="history-file-details">
+            <span class="history-filename" title="${file.filename}">${file.filename}</span>
+            <div class="history-meta">
+              <span class="ext-badge">${file.ext}</span>
+              <span>${file.sizeFormatted}</span>
+              <span>•</span>
+              <span>${formattedDate}</span>
+            </div>
+          </div>
+          <div class="history-actions-row">
+            <a href="${file.downloadUrl}" class="btn-history-dl" title="Save to Browser" download>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+            <button class="btn-history-del" onclick="deleteHistoryFile('${encodeURIComponent(file.filename)}')" title="Delete file">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        `;
+        historyItemsList.appendChild(item);
+      });
+    } else {
+      emptyHistoryPlaceholder.classList.remove('hidden');
+      historyItemsList.classList.add('hidden');
+    }
+  } catch (e) {
+    console.warn('Failed to load history:', e);
+  }
+}
+
+async function deleteHistoryFile(encodedFilename) {
+  if (!confirm('Are you sure you want to delete this downloaded file?')) return;
+  try {
+    const res = await fetch(`/api/files/${encodedFilename}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadHistory();
+    }
+  } catch (e) {
+    console.error('Delete error:', e);
+  }
+}
+
+// Windows Explorer Folder Opener
+async function openDownloadsFolder() {
+  try {
+    const res = await fetch('/api/open-folder', { method: 'POST' });
+    const data = await res.json();
+    if (!data.success && data.message) {
+      alert(data.message);
+    }
+  } catch (e) {
+    console.error('Error opening folder:', e);
+  }
+}
+
+</script>
 </body>
 </html>
