@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Video & Audio Downloader - Multi-Platform Media Studio</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6GCW9T0X');
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="video-downloader.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">OmniFetch <span class="brand-badge">PRO</span></span>
+          <span class="brand-sub">Universal Social Media Downloader</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="/" class="btn-icon" title="Return to Main Portal (PDF, Image & Dev Tools)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span class="btn-label-desktop">All Tools</span>
+        </a>
+
+        <div id="engine-status" class="engine-badge loading">
+          <span class="pulse-dot"></span>
+          <span id="engine-status-text">Checking Core Engines...</span>
+        </div>
+
+        <button id="open-folder-nav-btn" class="btn-icon" title="Open Downloads Folder in Windows Explorer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="btn-label-desktop">Downloads Folder</span>
+        </button>
+
+        <button id="theme-toggle" class="btn-icon-circle" title="Toggle Dark/Light Mode">
+          <svg id="theme-icon-sun" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Supports YouTube, Instagram, TikTok, Facebook, Twitter, Reddit & 1000+ Platforms</span>
+      </div>
+
+      <h1 class="hero-title">
+        Download Videos & Audio in <span class="gradient-text">Any Format</span>
+      </h1>
+      <p class="hero-subtitle">
+        Paste any link to save HD/4K MP4 videos, watermark-free TikToks, Instagram reels, and 320kbps MP3 audio tracks directly to your computer.
+      </p>
+
+      <!-- URL Input Card -->
+      <div class="search-card">
+        <form id="url-form" class="search-form" onsubmit="event.preventDefault(); handleInspectUrl();">
+          <div class="input-wrapper">
+            <!-- Dynamic Platform Badge -->
+            <div id="detected-platform-badge" class="platform-detect-pill" title="Platform auto-detector">
+              <span id="detected-platform-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </span>
+              <span id="detected-platform-name">Auto Detect</span>
+            </div>
+
+            <!-- Input Box -->
+            <input 
+              type="url" 
+              id="url-input" 
+              placeholder="Paste social media video link here (e.g. YouTube, Instagram Reel, TikTok, Twitter)..." 
+              autocomplete="off" 
+              required
+            >
+
+            <!-- Quick Action Buttons -->
+            <div class="input-actions">
+              <button type="button" id="paste-btn" class="btn-inline-action" title="Paste from Clipboard">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                <span>Paste</span>
+              </button>
+
+              <button type="button" id="clear-btn" class="btn-inline-action hidden" title="Clear input">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="fetch-btn" class="btn-primary-gradient">
+            <span class="btn-icon-spin hidden" id="fetch-spinner"></span>
+            <svg class="btn-icon-send" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span id="fetch-btn-text">Analyze Link</span>
+          </button>
+        </form>
+
+        <!-- Quick Platform Badges / Example Prompts -->
+        <div class="platforms-quick-strip">
+          <span class="strip-label">Supported:</span>
+          <div class="platform-chips">
+            <span class="chip chip-yt"><span class="chip-dot"></span>YouTube</span>
+            <span class="chip chip-ig"><span class="chip-dot"></span>Instagram Reels</span>
+            <span class="chip chip-tt"><span class="chip-dot"></span>TikTok (No Watermark)</span>
+            <span class="chip chip-fb"><span class="chip-dot"></span>Facebook</span>
+            <span class="chip chip-x"><span class="chip-dot"></span>Twitter / X</span>
+            <span class="chip chip-rd"><span class="chip-dot"></span>Reddit</span>
+            <span class="chip chip-pin"><span class="chip-dot"></span>Pinterest</span>
+            <span class="chip chip-sc"><span class="chip-dot"></span>SoundCloud</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Error Alert Box -->
+    <div id="error-container" class="alert-box error-box hidden">
+      <div class="alert-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="alert-content">
+        <h4 id="error-title">Extraction Error</h4>
+        <p id="error-message">Unable to fetch video details.</p>
+      </div>
+      <button class="alert-close" onclick="hideError()">✕</button>
+    </div>
+
+    <!-- Video Analysis Result Card -->
+    <section id="result-card" class="result-card hidden">
+      <div class="result-header">
+        <div class="media-preview-container">
+          <div class="thumbnail-wrapper">
+            <img id="media-thumbnail" src="" alt="Thumbnail preview">
+            <span id="media-duration" class="duration-badge">00:00</span>
+            <span id="media-platform-tag" class="media-platform-tag">YouTube</span>
+          </div>
+        </div>
+
+        <div class="media-info-container">
+          <h2 id="media-title" class="media-title">Video Title Placeholder</h2>
+          <div class="media-meta-row">
+            <span class="meta-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <strong id="media-author">Author Name</strong>
+            </span>
+            <span class="meta-separator">•</span>
+            <span class="meta-item">
+              <a id="media-source-link" href="#" target="_blank" rel="noopener noreferrer" class="link-external">
+                <span>View Original Source</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </span>
+          </div>
+
+          <p id="media-description" class="media-desc">Video description snippet...</p>
+        </div>
+      </div>
+
+      <!-- Format Selection Tabs -->
+      <div class="formats-section">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="video-tab" onclick="switchTab('video-tab')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+            <span>Video Formats (MP4 / Full HD / 4K)</span>
+            <span class="tab-badge" id="video-count-badge">0</span>
+          </button>
+
+          <button class="tab-btn" data-tab="audio-tab" onclick="switchTab('audio-tab')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <span>Audio Extraction (MP3 / M4A / WAV)</span>
+            <span class="tab-badge">5</span>
+          </button>
+        </div>
+
+        <!-- Video Tab Content -->
+        <div id="video-tab" class="tab-content active">
+          <div class="formats-grid" id="video-formats-list">
+            <!-- Dynamic Video Quality Cards -->
+          </div>
+        </div>
+
+        <!-- Audio Tab Content -->
+        <div id="audio-tab" class="tab-content">
+          <div class="formats-grid" id="audio-formats-list">
+            <!-- Dynamic Audio Bitrate Cards -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Download Progress Modal / Drawer -->
+    <div id="download-progress-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="spinner-dot" id="download-status-indicator"></div>
+            <h3 id="modal-status-heading">Processing Download...</h3>
+          </div>
+          <button class="btn-close-modal" onclick="closeProgressModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="progress-details">
+            <div class="progress-file-info">
+              <p id="dl-media-title" class="dl-title">Analyzing media stream...</p>
+              <span id="dl-badge-format" class="format-pill">MP4 1080p</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+              <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+
+            <!-- Progress Metrics -->
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">Progress</span>
+                <span id="metric-percent" class="metric-value">0%</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Speed</span>
+                <span id="metric-speed" class="metric-value">-- MB/s</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Time Remaining</span>
+                <span id="metric-eta" class="metric-value">--:--</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Stage</span>
+                <span id="metric-stage" class="metric-value">Connecting...</span>
+              </div>
+            </div>
+
+            <!-- Status Banner Message -->
+            <div id="dl-status-banner" class="status-banner info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span id="dl-status-message">Downloading video streams with yt-dlp...</span>
+            </div>
+          </div>
+
+          <!-- Completed Action Buttons (Shown when finished) -->
+          <div id="completed-actions" class="completed-actions hidden">
+            <a id="save-file-btn" href="#" class="btn-action-primary" download>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Save File to Browser</span>
+            </a>
+
+            <button id="open-local-folder-btn" class="btn-action-secondary" onclick="openDownloadsFolder()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>Open in Windows Explorer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Downloads History & Local Library -->
+    <section class="history-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <div class="section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="21 8 21 21 3 21 3 8"></polyline>
+              <rect x="1" y="3" width="22" height="5"></rect>
+              <line x1="10" y1="12" x2="14" y2="12"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="section-title">Saved Downloads & Library</h3>
+            <p class="section-subtitle">Files saved in your local <code>/downloads</code> directory</p>
+          </div>
+        </div>
+
+        <div class="history-actions">
+          <button class="btn-outline-sm" onclick="loadHistory()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Refresh</span>
+          </button>
+          <button class="btn-outline-sm" onclick="openDownloadsFolder()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Open Folder</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="history-container" class="history-container">
+        <div class="empty-history" id="empty-history-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <p>No downloaded media yet. Paste a link above to get started!</p>
+        </div>
+        <div id="history-items-list" class="history-grid hidden"></div>
+      </div>
+    </section>
+
+    <!-- Supported Platforms Grid Showcase -->
+    <section class="showcase-section">
+      <h3 class="showcase-title">Supported Social Media Platforms</h3>
+      <div class="showcase-grid">
+        <div class="platform-card">
+          <div class="p-icon yt">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </div>
+          <h4>YouTube</h4>
+          <p>Videos, Shorts, 4K 60FPS, 1080p, Playlists, MP3 audio extracts</p>
+        </div>
+
+        <div class="platform-card">
+          <div class="p-icon ig">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+          <h4>Instagram</h4>
+          <p>Reels, Feed videos, IGTV, Carousels & Stories in full HD MP4</p>
+        </div>
+
+        <div class="platform-card">
+          <div class="p-icon tt">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+            </svg>
+          </div>
+          <h4>TikTok</h4>
+          <p>Crisp watermark-free HD videos, audio tracks, and slideshow clips</p>
+        </div>
+
+        <div class="platform-card">
+          <div class="p-icon fb">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <h4>Facebook</h4>
+          <p>Public Facebook videos, Watch episodes, Reels & livestream replays</p>
+        </div>
+
+        <div class="platform-card">
+          <div class="p-icon tw">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </div>
+          <h4>Twitter / X</h4>
+          <p>Video tweets, GIF animations, threaded clips & broadcasts</p>
+        </div>
+
+        <div class="platform-card">
+          <div class="p-icon rd">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.56 12 8 12.56 8 13.25c0 .69.56 1.25 1.25 1.25.69 0 1.25-.56 1.25-1.25 0-.69-.56-1.25-1.25-1.25zm5.5 0c-.69 0-1.25.56-1.25 1.25 0 .69.56 1.25 1.25 1.25.69 0 1.25-.56 1.25-1.25 0-.69-.56-1.25-1.25-1.25zm-5.465 4.002a.417.417 0 0 0-.297.712c.983.983 2.766 1.055 3.012 1.055.247 0 2.029-.072 3.012-1.055a.417.417 0 0 0-.59-.59c-.684.685-1.92.763-2.422.763-.502 0-1.738-.078-2.422-.763a.412.412 0 0 0-.293-.122z"/>
+            </svg>
+          </div>
+          <h4>Reddit</h4>
+          <p>Auto-merges isolated DASH video and audio channels into 1 clean MP4</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-copy">
+        OmniFetch Downloader • Powered by <strong>yt-dlp</strong> & <strong>FFmpeg</strong> • Completely Local & Private
+      </p>
+      <p class="footer-status" id="footer-engine-details">
+        Backend: Node.js • Local port: 4000
+      </p>
+    </div>
+  </footer>
+
+  <script src="video-downloader.js"></script>
+</body>
+</html>

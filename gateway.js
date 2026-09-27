@@ -61,6 +61,15 @@ if (fs.existsSync(zipPath)) {
   }
 }
 
+// Route for video-downloader.html in root
+app.get(['/video-downloader', '/video-downloader/', '/video'], (req, res, next) => {
+  const directHtml = path.join(ROOT_DIR, 'video-downloader.html');
+  if (fs.existsSync(directHtml)) {
+    return res.sendFile(directHtml);
+  }
+  next();
+});
+
 // 1. Mount Video Downloader App & APIs (Flexible auto-locator)
 const candidateDirs = [
   path.join(ROOT_DIR, 'universal-video-downloader'),
