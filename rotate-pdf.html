@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate PDF Pages Online - 90 Degree Rotation Free - Zenith Growth</title>
+  <meta name="description" content="Rotate PDF pages 90, 180, or 270 degrees online for free. Rotate individual pages or all pages at once with instant preview. 100% private in-browser tool.">
+  <link rel="canonical" href="https://zenithgrowth.tech/rotate-pdf.html">
+
+  <meta property="og:title" content="Rotate PDF Pages Online Free - Zenith Growth">
+  <meta property="og:description" content="Rotate specific pages or all pages by 90 degrees with real-time visual previews. Zero file upload.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/rotate-pdf.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF-Lib for Client-Side PDF Manipulation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <!-- PDF.js for Instant Client-Side Page Rendering & Thumbnails -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+        <a href="rotate-pdf.html" class="text-emerald-600 font-bold">Rotate PDF</a>
+        <a href="image-to-pdf.html" class="hover:text-emerald-600 transition">Image to PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+        <span>🔄</span> 90° Precision Rotation
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Hero Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-full mb-3">
+        🔄 90° Incremental Rotation
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Rotate PDF Pages
+      </h1>
+      <p class="text-slate-600 text-base">
+        Rotate individual pages or all pages by 90°. Preview every page before applying. <strong class="text-slate-800">100% private in your browser.</strong>
+      </p>
+    </div>
+
+    <!-- Drag & Drop Zone -->
+    <div id="upload_zone" onclick="document.getElementById('pdf_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-amber-500 hover:bg-amber-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="pdf_input" accept="application/pdf" class="hidden" onchange="loadPdfFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:rotate-90 transition duration-300">
+        🔄
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">or drag and drop your PDF document here</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-amber-600 group-hover:bg-amber-700 text-white font-bold text-sm shadow-md shadow-amber-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Interactive Page Rotation Canvas & Workspace -->
+    <div id="rotation_workspace" class="w-full hidden flex flex-col items-center">
+      
+      <!-- Toolbar Controls -->
+      <div class="w-full bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h3 id="pdf_filename" class="font-bold text-slate-900 text-sm truncate max-w-xs sm:max-w-md">Document</h3>
+          <p id="pdf_page_count" class="text-xs text-slate-500">0 pages loaded</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="rotateAllPages(90)" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-xs">
+            <span>↻ Rotate All +90°</span>
+          </button>
+          <button onclick="rotateAllPages(-90)" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition border border-slate-200">
+            <span>↺ Rotate All -90°</span>
+          </button>
+          <button onclick="resetAllRotations()" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs transition border border-slate-200">
+            Reset
+          </button>
+          <button onclick="document.getElementById('pdf_input').click()" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-rose-500 font-medium text-xs transition border border-slate-200">
+            Change PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Page Thumbnails Grid -->
+      <div id="pages_grid" class="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+        <!-- Dynamic Page Cards Injected by JS -->
+      </div>
+
+      <!-- Action Panel -->
+      <div class="w-full bg-emerald-50 border border-emerald-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-emerald-950 text-sm">Download Rotated Document</h4>
+          <p class="text-xs text-emerald-800">Your page orientation changes will be permanently embedded into the PDF.</p>
+        </div>
+        <button id="download_btn" onclick="saveAndDownloadRotatedPdf()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+          <span>Apply Changes & Download</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Status Box -->
+    <div id="status_box" class="hidden w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold"></div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let currentPdfFile = null;
+    let currentPdfBytes = null;
+    let pageCount = 0;
+    let pageRotations = []; // Stores additional rotation degrees per page [0, 90, 180, 270]
+
+    async function loadPdfFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+
+      currentPdfFile = file;
+      currentPdfBytes = await file.arrayBuffer();
+
+      document.getElementById('upload_zone').classList.add('hidden');
+      document.getElementById('rotation_workspace').classList.remove('hidden');
+      document.getElementById('pdf_filename').textContent = file.name;
+
+      const loadingTask = pdfjsLib.getDocument({ data: currentPdfBytes.slice(0) });
+      const pdfDoc = await loadingTask.promise;
+      pageCount = pdfDoc.numPages;
+      document.getElementById('pdf_page_count').textContent = `${pageCount} page${pageCount > 1 ? 's' : ''}`;
+
+      pageRotations = new Array(pageCount).fill(0);
+      renderPageCards(pdfDoc);
+    }
+
+    async function renderPageCards(pdfDoc) {
+      const grid = document.getElementById('pages_grid');
+      grid.innerHTML = '';
+
+      for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
+        const page = await pdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 0.35 });
+
+        const card = document.createElement('div');
+        card.className = "bg-white p-3 rounded-2xl border border-slate-200 shadow-xs flex flex-col items-center group hover:border-amber-400 transition";
+        card.id = `page_card_${pageNum}`;
+
+        const canvasContainer = document.createElement('div');
+        canvasContainer.className = "w-full h-44 flex items-center justify-center overflow-hidden bg-slate-50 rounded-xl mb-3 relative";
+
+        const canvas = document.createElement('canvas');
+        canvas.id = `canvas_page_${pageNum}`;
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        canvas.className = "max-h-full max-w-full object-contain transition-transform duration-200";
+
+        const renderContext = {
+          canvasContext: canvas.getContext('2d'),
+          viewport: viewport
+        };
+        await page.render(renderContext).promise;
+
+        canvasContainer.appendChild(canvas);
+
+        // Individual 90-degree rotate button
+        const controls = document.createElement('div');
+        controls.className = "w-full flex items-center justify-between text-xs";
+        controls.innerHTML = `
+          <span class="font-bold text-slate-500 font-mono text-[11px]">Page ${pageNum}</span>
+          <button onclick="rotateSinglePage(${pageNum})" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-[11px] border border-amber-200 flex items-center gap-1 transition">
+            <span>↻</span> 90°
+          </button>
+        `;
+
+        card.appendChild(canvasContainer);
+        card.appendChild(controls);
+        grid.appendChild(card);
+      }
+    }
+
+    function rotateSinglePage(pageNum) {
+      const idx = pageNum - 1;
+      pageRotations[idx] = (pageRotations[idx] + 90) % 360;
+      updateCanvasRotation(pageNum);
+    }
+
+    function rotateAllPages(deltaDeg) {
+      for (let i = 0; i < pageCount; i++) {
+        pageRotations[i] = (pageRotations[i] + deltaDeg + 360) % 360;
+        updateCanvasRotation(i + 1);
+      }
+    }
+
+    function resetAllRotations() {
+      for (let i = 0; i < pageCount; i++) {
+        pageRotations[i] = 0;
+        updateCanvasRotation(i + 1);
+      }
+    }
+
+    function updateCanvasRotation(pageNum) {
+      const canvas = document.getElementById(`canvas_page_${pageNum}`);
+      if (canvas) {
+        canvas.style.transform = `rotate(${pageRotations[pageNum - 1]}deg)`;
+      }
+    }
+
+    async function saveAndDownloadRotatedPdf() {
+      const btn = document.getElementById('download_btn');
+      const statusBox = document.getElementById('status_box');
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Saving rotated PDF...</span>`;
+
+      try {
+        const { PDFDocument, degrees } = PDFLib;
+        const pdfDoc = await PDFDocument.load(currentPdfBytes);
+        const pages = pdfDoc.getPages();
+
+        pages.forEach((page, idx) => {
+          const addedRotation = pageRotations[idx] || 0;
+          if (addedRotation !== 0) {
+            const currentAngle = page.getRotation().angle;
+            page.setRotation(degrees((currentAngle + addedRotation) % 360));
+          }
+        });
+
+        const modifiedPdfBytes = await pdfDoc.save();
+        const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
+        const downloadUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `rotated_${currentPdfFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        statusBox.className = "w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        statusBox.innerHTML = `🎉 Successfully applied 90° rotations! Your download has started.`;
+        statusBox.classList.remove('hidden');
+      } catch (err) {
+        statusBox.className = "w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300";
+        statusBox.innerHTML = `❌ Error saving rotated PDF: ${err.message}`;
+        statusBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Apply Changes & Download</span><span>→</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

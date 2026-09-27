@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convert PDF to JPG Online Free - Extract PDF Pages as Images - Zenith Growth</title>
+  <meta name="description" content="Convert PDF pages into high-resolution JPG images online for free. Download all images in a clean ZIP file. 100% private in-browser tool with zero server uploads.">
+  <link rel="canonical" href="https://zenithgrowth.tech/pdf-to-jpg.html">
+
+  <meta property="og:title" content="Convert PDF to JPG Online Free - Zenith Growth">
+  <meta property="og:description" content="Extract high-quality JPG pictures from PDF documents in seconds directly in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/pdf-to-jpg.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF.js for Page Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <!-- JSZip for ZIP Bundling -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="pdf-to-jpg.html" class="text-amber-600 font-bold">PDF to JPG</a>
+        <a href="image-to-pdf.html" class="hover:text-emerald-600 transition">Image to PDF</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+        High-Res JPG Export
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-full mb-3">
+        🖼️ PDF to High-Res JPG Images
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Convert PDF to JPG
+      </h1>
+      <p class="text-slate-600 text-base">
+        Extract all pages of your PDF document into crisp, high-resolution JPG images. Download all pages in a single ZIP. <strong class="text-slate-800">100% private.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="p2j_upload_zone" onclick="document.getElementById('p2j_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-amber-500 hover:bg-amber-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="p2j_file_input" accept="application/pdf" class="hidden" onchange="handlePdfToJpg(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🖼️
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a PDF document to convert to JPG</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-amber-600 group-hover:bg-amber-700 text-white font-bold text-sm shadow-md shadow-amber-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Conversion Workspace -->
+    <div id="p2j_workspace" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm mb-8">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+        <div>
+          <h3 id="p2j_doc_name" class="text-base font-bold text-slate-900 truncate max-w-md">Document.pdf</h3>
+          <p id="p2j_doc_stats" class="text-xs text-slate-400">0 pages detected</p>
+        </div>
+        <button onclick="document.getElementById('p2j_file_input').click()" class="text-xs text-slate-400 hover:text-amber-600 underline">Change PDF</button>
+      </div>
+
+      <div class="mb-8 p-4 rounded-2xl bg-amber-50/60 border border-amber-200">
+        <label class="block text-xs font-bold uppercase text-slate-700 mb-2">Image Quality & DPI:</label>
+        <select id="p2j_dpi_select" class="w-full sm:w-1/2 p-3 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-800 outline-none">
+          <option value="1.5">Standard Quality (150 DPI - Fast)</option>
+          <option value="2.0" selected>High Quality (200 DPI - Recommended)</option>
+          <option value="3.0">Ultra High Resolution (300 DPI - Print Quality)</option>
+        </select>
+      </div>
+
+      <!-- Conversion Action & Progress -->
+      <div class="p-6 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h4 class="font-extrabold text-amber-950 text-sm">Extract Images</h4>
+            <p class="text-xs text-amber-800">Renders each page into an individual JPG file bundled in a ZIP archive.</p>
+          </div>
+          <button id="p2j_btn" onclick="executePdfToJpg()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-sm shadow-lg shadow-amber-600/30 transition flex items-center justify-center gap-2">
+            <span>Convert to JPG (ZIP)</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <div id="p2j_progress_wrapper" class="hidden w-full">
+          <div class="flex justify-between text-xs font-bold text-amber-900 mb-1">
+            <span id="p2j_status_text">Rendering pages...</span>
+            <span id="p2j_percent_text">0%</span>
+          </div>
+          <div class="w-full h-2.5 bg-amber-200 rounded-full overflow-hidden">
+            <div id="p2j_progress_bar" class="h-full bg-amber-600 transition-all duration-150" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let p2jFile = null;
+    let p2jDoc = null;
+    let p2jTotalPages = 0;
+
+    async function handlePdfToJpg(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+      p2jFile = file;
+      const fileBytes = await file.arrayBuffer();
+
+      document.getElementById('p2j_upload_zone').classList.add('hidden');
+      document.getElementById('p2j_workspace').classList.remove('hidden');
+      document.getElementById('p2j_doc_name').textContent = file.name;
+
+      const loadingTask = pdfjsLib.getDocument({ data: fileBytes });
+      p2jDoc = await loadingTask.promise;
+      p2jTotalPages = p2jDoc.numPages;
+
+      document.getElementById('p2j_doc_stats').textContent = `${p2jTotalPages} page${p2jTotalPages > 1 ? 's' : ''} detected (${(file.size / (1024*1024)).toFixed(2)} MB)`;
+    }
+
+    async function executePdfToJpg() {
+      const btn = document.getElementById('p2j_btn');
+      const progressWrapper = document.getElementById('p2j_progress_wrapper');
+      const progressBar = document.getElementById('p2j_progress_bar');
+      const statusText = document.getElementById('p2j_status_text');
+      const percentText = document.getElementById('p2j_percent_text');
+
+      const scale = parseFloat(document.getElementById('p2j_dpi_select').value);
+      btn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+
+      try {
+        const zip = new JSZip();
+        const baseName = p2jFile.name.replace(/\.pdf$/i, '');
+
+        for (let i = 1; i <= p2jTotalPages; i++) {
+          statusText.textContent = `Rendering page ${i} of ${p2jTotalPages}...`;
+          const pct = Math.round((i / p2jTotalPages) * 100);
+          progressBar.style.width = `${pct}%`;
+          percentText.textContent = `${pct}%`;
+
+          const page = await p2jDoc.getPage(i);
+          const viewport = page.getViewport({ scale: scale });
+
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const ctx = canvas.getContext('2d');
+
+          await page.render({
+            canvasContext: ctx,
+            viewport: viewport
+          }).promise;
+
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const base64Data = dataUrl.split(',')[1];
+          zip.file(`${baseName}_page_${i}.jpg`, base64Data, { base64: true });
+        }
+
+        statusText.textContent = "Packaging ZIP archive...";
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+        const downloadUrl = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `${baseName}_images.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        statusText.textContent = "✓ Complete! Your download has started.";
+      } catch (err) {
+        alert('Error converting PDF to JPG: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

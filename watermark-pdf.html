@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Watermark PDF - Live Visual Drag & Resize Preview - Zenith Growth</title>
+  <meta name="description" content="Add text or image watermarks to PDF with live visual preview. Manually drag, resize, rotate, and adjust opacity directly on your document pages. 100% private in-browser tool.">
+  <link rel="canonical" href="https://zenithgrowth.tech/watermark-pdf.html">
+
+  <meta property="og:title" content="Interactive Watermark PDF with Live Drag & Resize - Zenith Growth">
+  <meta property="og:description" content="Visually position and manually resize your watermark right on top of your PDF pages with real-time preview.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/watermark-pdf.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF-Lib: In-Browser PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <!-- PDF.js: In-Browser Page Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <style>
+    .watermark-box {
+      cursor: move;
+      user-select: none;
+      touch-action: none;
+    }
+    .resize-handle {
+      cursor: nwse-resize;
+    }
+  </style>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+        <a href="rotate-pdf.html" class="hover:text-emerald-600 transition">Rotate PDF</a>
+        <a href="watermark-pdf.html" class="text-purple-600 font-bold">Watermark PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
+        <span>✨</span> Live Drag & Resize
+      </span>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full mb-3">
+        👁️ Interactive WYSIWYG Watermark Editor
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Watermark PDF with Live Preview
+      </h1>
+      <p class="text-slate-600 text-base">
+        Drag and resize your watermark directly on the document preview. Adjust opacity, scale, and angle in real time. <strong class="text-slate-800">100% private.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="wm_upload_zone" onclick="document.getElementById('wm_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-purple-500 hover:bg-purple-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="wm_file_input" accept="application/pdf" class="hidden" onchange="handleWmFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🛡️
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a PDF to launch the visual watermark editor</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-purple-600 group-hover:bg-purple-700 text-white font-bold text-sm shadow-md shadow-purple-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Active Live Workspace (Split Screen: Preview & Controls) -->
+    <div id="wm_editor_workspace" class="w-full hidden flex flex-col lg:flex-row gap-8 items-start">
+      
+      <!-- LEFT: Live Interactive Preview Stage -->
+      <div class="w-full lg:w-7/12 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-4 pb-3 border-b border-slate-100 text-xs">
+          <div class="font-bold text-slate-900 flex items-center gap-2">
+            <span>Live Document Canvas</span>
+            <span class="text-purple-600 font-normal">(Drag watermark to move, pull corner to resize)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="changePreviewPage(-1)" id="btn_prev_page" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold">←</button>
+            <span id="page_indicator" class="font-mono font-bold text-slate-600">Page 1 / 1</span>
+            <button onclick="changePreviewPage(1)" id="btn_next_page" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold">→</button>
+          </div>
+        </div>
+
+        <!-- The Canvas & Draggable Overlay Container -->
+        <div class="w-full flex justify-center bg-slate-100 p-4 sm:p-6 rounded-2xl overflow-hidden">
+          <div id="preview_stage_wrapper" class="relative shadow-xl rounded-lg bg-white overflow-hidden" style="max-width: 100%;">
+            <canvas id="pdf_preview_canvas" class="block w-full h-auto"></canvas>
+            
+            <!-- Draggable & Resizable Watermark Box -->
+            <div id="draggable_watermark" class="watermark-box absolute border-2 border-dashed border-purple-500 bg-purple-500/10 rounded-lg flex items-center justify-center text-center p-2" style="left: 100px; top: 100px; width: 180px; height: 90px; opacity: 0.4;">
+              <!-- Dynamic Watermark Content (Image or Text) -->
+              <div id="watermark_content_display" class="w-full h-full flex items-center justify-center pointer-events-none select-none overflow-hidden">
+                <span id="text_preview_label" class="font-black text-rose-600 uppercase tracking-wider text-xl leading-none">CONFIDENTIAL</span>
+                <img id="img_preview_tag" src="" class="hidden max-w-full max-h-full object-contain">
+              </div>
+
+              <!-- Resize Handle at Bottom-Right Corner -->
+              <div id="resize_handle" class="resize-handle absolute -bottom-2 -right-2 w-5 h-5 rounded-full bg-purple-600 border-2 border-white shadow-md flex items-center justify-center text-white text-[9px] font-bold">
+                ↘
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Interactive Controls & Adjustments -->
+      <div class="w-full lg:w-5/12 space-y-6">
+        
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+          <!-- Mode Tabs -->
+          <div class="flex gap-2 p-1 bg-slate-100 rounded-2xl mb-6 text-xs font-bold">
+            <button onclick="setMode('image')" id="btn_mode_image" class="flex-1 py-2.5 rounded-xl bg-white text-purple-700 shadow-xs transition flex items-center justify-center gap-1.5">
+              <span>🖼️</span> Image Logo
+            </button>
+            <button onclick="setMode('text')" id="btn_mode_text" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5">
+              <span>✍️</span> Text Stamp
+            </button>
+          </div>
+
+          <!-- Image Upload Area -->
+          <div id="image_upload_control" class="mb-6">
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Watermark Image (PNG, JPG, WebP):</label>
+            <div onclick="document.getElementById('logo_input').click()" class="border-2 border-dashed border-slate-300 hover:border-purple-500 rounded-2xl p-4 text-center cursor-pointer bg-slate-50 transition">
+              <input type="file" id="logo_input" accept="image/png, image/jpeg, image/jpg, image/webp" class="hidden" onchange="handleLogoUpload(this.files[0])">
+              <div id="logo_status_text" class="text-xs text-slate-600 font-bold">
+                📁 Click to Choose Image / Logo
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Input Area -->
+          <div id="text_input_control" class="mb-6 hidden">
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Watermark Text:</label>
+            <input type="text" id="custom_wm_text" value="CONFIDENTIAL" oninput="updateWatermarkContent()" class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-300 font-black text-slate-800 text-sm focus:border-purple-600 outline-none">
+          </div>
+
+          <!-- Manual Adjustments & Sliders -->
+          <div class="space-y-4 pt-4 border-t border-slate-100">
+            <!-- Opacity Slider -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
+                <span>Transparency / Opacity:</span>
+                <span id="label_opacity" class="text-purple-600 font-mono">40%</span>
+              </div>
+              <input type="range" id="slider_opacity" min="5" max="100" value="40" oninput="adjustOpacity(this.value)" class="w-full accent-purple-600">
+            </div>
+
+            <!-- Size Slider -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
+                <span>Size / Dimensions:</span>
+                <span id="label_size" class="text-purple-600 font-mono">180px</span>
+              </div>
+              <input type="range" id="slider_size" min="60" max="450" value="180" oninput="adjustSize(this.value)" class="w-full accent-purple-600">
+            </div>
+
+            <!-- Rotation Angle Slider -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
+                <span>Rotation Angle:</span>
+                <span id="label_rotation" class="text-purple-600 font-mono">0°</span>
+              </div>
+              <input type="range" id="slider_rotation" min="0" max="360" value="0" oninput="adjustRotation(this.value)" class="w-full accent-purple-600">
+            </div>
+
+            <!-- Quick Position Snapping Buttons -->
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1.5">Quick Snap Position:</label>
+              <div class="grid grid-cols-3 gap-2 text-[11px] font-bold">
+                <button onclick="snapPosition('center')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Center</button>
+                <button onclick="snapPosition('top-right')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Top-Right</button>
+                <button onclick="snapPosition('bottom-right')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Bottom-Right</button>
+                <button onclick="snapPosition('top-left')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Top-Left</button>
+                <button onclick="snapPosition('bottom-left')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Bottom-Left</button>
+                <button onclick="snapPosition('diagonal')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-purple-700 font-extrabold">Diagonal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Download Action Card -->
+        <div class="bg-purple-50 border border-purple-200 rounded-3xl p-6 flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="font-extrabold text-purple-950 text-sm">Embed Watermark</h4>
+              <p class="text-xs text-purple-700">Stamps the exact position onto all document pages.</p>
+            </div>
+          </div>
+          <button id="apply_btn" onclick="executePermanentWatermark()" class="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-sm shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-2">
+            <span>Apply & Download PDF</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <!-- Status Alert -->
+        <div id="wm_status" class="hidden w-full p-4 rounded-xl text-center text-xs font-semibold"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let wmPdfFile = null;
+    let wmPdfBytes = null;
+    let loadedPdfJsDoc = null;
+    let totalPdfPages = 0;
+    let currentPreviewPage = 1;
+    let currentWatermarkMode = 'image'; // 'image' or 'text'
+
+    let stampImageTag = null;
+    let stampPngBytes = null;
+    let stampOriginalAspect = 1.0;
+
+    // Watermark State (Coordinates on the preview container)
+    let wmState = {
+      x: 80,
+      y: 80,
+      width: 180,
+      height: 90,
+      opacity: 0.4,
+      rotation: 0
+    };
+
+    async function handleWmFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+      wmPdfFile = file;
+      wmPdfBytes = await file.arrayBuffer();
+
+      document.getElementById('wm_upload_zone').classList.add('hidden');
+      document.getElementById('wm_editor_workspace').classList.remove('hidden');
+
+      const loadingTask = pdfjsLib.getDocument({ data: wmPdfBytes.slice(0) });
+      loadedPdfJsDoc = await loadingTask.promise;
+      totalPdfPages = loadedPdfJsDoc.numPages;
+
+      currentPreviewPage = 1;
+      await renderPageOnCanvas(currentPreviewPage);
+      initDragAndResize();
+      snapPosition('center');
+    }
+
+    async function renderPageOnCanvas(pageNum) {
+      document.getElementById('page_indicator').textContent = `Page ${pageNum} / ${totalPdfPages}`;
+      const page = await loadedPdfJsDoc.getPage(pageNum);
+      const canvas = document.getElementById('pdf_preview_canvas');
+      const wrapper = document.getElementById('preview_stage_wrapper');
+
+      // Calculate responsive viewport based on wrapper max width (up to 520px)
+      const unscaledViewport = page.getViewport({ scale: 1.0 });
+      const targetWidth = Math.min(520, window.innerWidth - 60);
+      const scale = targetWidth / unscaledViewport.width;
+      const viewport = page.getViewport({ scale: scale });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      wrapper.style.width = `${viewport.width}px`;
+      wrapper.style.height = `${viewport.height}px`;
+
+      await page.render({
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      }).promise;
+    }
+
+    function changePreviewPage(delta) {
+      const target = currentPreviewPage + delta;
+      if (target >= 1 && target <= totalPdfPages) {
+        currentPreviewPage = target;
+        renderPageOnCanvas(currentPreviewPage);
+      }
+    }
+
+    function setMode(mode) {
+      currentWatermarkMode = mode;
+      const btnImg = document.getElementById('btn_mode_image');
+      const btnTxt = document.getElementById('btn_mode_text');
+      const imgUpload = document.getElementById('image_upload_control');
+      const txtInput = document.getElementById('text_input_control');
+
+      const txtPreview = document.getElementById('text_preview_label');
+      const imgPreview = document.getElementById('img_preview_tag');
+
+      if (mode === 'image') {
+        btnImg.className = "flex-1 py-2.5 rounded-xl bg-white text-purple-700 shadow-xs transition flex items-center justify-center gap-1.5";
+        btnTxt.className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+        imgUpload.classList.remove('hidden');
+        txtInput.classList.add('hidden');
+
+        txtPreview.classList.add('hidden');
+        imgPreview.classList.remove('hidden');
+      } else {
+        btnTxt.className = "flex-1 py-2.5 rounded-xl bg-white text-purple-700 shadow-xs transition flex items-center justify-center gap-1.5";
+        btnImg.className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+        txtInput.classList.remove('hidden');
+        imgUpload.classList.add('hidden');
+
+        imgPreview.classList.add('hidden');
+        txtPreview.classList.remove('hidden');
+      }
+    }
+
+    function handleLogoUpload(file) {
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = async () => {
+          stampImageTag = img;
+          stampOriginalAspect = img.height / img.width;
+
+          // Normalize to PNG dataUrl via canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          const pngDataUrl = canvas.toDataURL('image/png');
+          const res = await fetch(pngDataUrl);
+          stampPngBytes = await res.arrayBuffer();
+
+          const imgPreview = document.getElementById('img_preview_tag');
+          imgPreview.src = pngDataUrl;
+          imgPreview.classList.remove('hidden');
+          document.getElementById('text_preview_label').classList.add('hidden');
+
+          document.getElementById('logo_status_text').innerHTML = `
+            <span class="text-emerald-600">✓ Loaded: ${file.name}</span>
+          `;
+
+          // Maintain aspect ratio
+          wmState.height = wmState.width * stampOriginalAspect;
+          applyWatermarkStyles();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateWatermarkContent() {
+      const text = document.getElementById('custom_wm_text').value || 'WATERMARK';
+      document.getElementById('text_preview_label').textContent = text;
+    }
+
+    function adjustOpacity(val) {
+      wmState.opacity = val / 100;
+      document.getElementById('label_opacity').textContent = `${val}%`;
+      applyWatermarkStyles();
+    }
+
+    function adjustSize(val) {
+      wmState.width = parseInt(val);
+      if (currentWatermarkMode === 'image' && stampImageTag) {
+        wmState.height = wmState.width * stampOriginalAspect;
+      } else {
+        wmState.height = wmState.width * 0.45;
+      }
+      document.getElementById('label_size').textContent = `${wmState.width}px`;
+      applyWatermarkStyles();
+    }
+
+    function adjustRotation(val) {
+      wmState.rotation = parseInt(val);
+      document.getElementById('label_rotation').textContent = `${val}°`;
+      applyWatermarkStyles();
+    }
+
+    function snapPosition(pos) {
+      const wrapper = document.getElementById('preview_stage_wrapper');
+      const w = wrapper.clientWidth;
+      const h = wrapper.clientHeight;
+
+      if (pos === 'center') {
+        wmState.x = (w / 2) - (wmState.width / 2);
+        wmState.y = (h / 2) - (wmState.height / 2);
+        wmState.rotation = 0;
+      } else if (pos === 'top-right') {
+        wmState.x = w - wmState.width - 20;
+        wmState.y = 20;
+        wmState.rotation = 0;
+      } else if (pos === 'top-left') {
+        wmState.x = 20;
+        wmState.y = 20;
+        wmState.rotation = 0;
+      } else if (pos === 'bottom-right') {
+        wmState.x = w - wmState.width - 20;
+        wmState.y = h - wmState.height - 20;
+        wmState.rotation = 0;
+      } else if (pos === 'bottom-left') {
+        wmState.x = 20;
+        wmState.y = h - wmState.height - 20;
+        wmState.rotation = 0;
+      } else if (pos === 'diagonal') {
+        wmState.x = (w / 2) - (wmState.width / 2);
+        wmState.y = (h / 2) - (wmState.height / 2);
+        wmState.rotation = 45;
+      }
+
+      document.getElementById('slider_rotation').value = wmState.rotation;
+      document.getElementById('label_rotation').textContent = `${wmState.rotation}°`;
+      applyWatermarkStyles();
+    }
+
+    function applyWatermarkStyles() {
+      const el = document.getElementById('draggable_watermark');
+      el.style.left = `${wmState.x}px`;
+      el.style.top = `${wmState.y}px`;
+      el.style.width = `${wmState.width}px`;
+      el.style.height = `${wmState.height}px`;
+      el.style.opacity = wmState.opacity;
+      el.style.transform = `rotate(${wmState.rotation}deg)`;
+    }
+
+    // Draggable and Resizable Mouse/Touch Engine
+    function initDragAndResize() {
+      const box = document.getElementById('draggable_watermark');
+      const handle = document.getElementById('resize_handle');
+      const wrapper = document.getElementById('preview_stage_wrapper');
+
+      let isDragging = false;
+      let isResizing = false;
+      let startX, startY, initX, initY, initW, initH;
+
+      // Drag
+      box.addEventListener('mousedown', (e) => {
+        if (e.target === handle) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initX = wmState.x;
+        initY = wmState.y;
+        e.preventDefault();
+      });
+
+      // Resize
+      handle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initW = wmState.width;
+        initH = wmState.height;
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          wmState.x = Math.max(0, Math.min(wrapper.clientWidth - wmState.width, initX + dx));
+          wmState.y = Math.max(0, Math.min(wrapper.clientHeight - wmState.height, initY + dy));
+          applyWatermarkStyles();
+        } else if (isResizing) {
+          const dx = e.clientX - startX;
+          const newW = Math.max(50, Math.min(wrapper.clientWidth - wmState.x, initW + dx));
+          wmState.width = newW;
+          if (currentWatermarkMode === 'image' && stampImageTag) {
+            wmState.height = newW * stampOriginalAspect;
+          } else {
+            wmState.height = newW * 0.45;
+          }
+          document.getElementById('slider_size').value = wmState.width;
+          document.getElementById('label_size').textContent = `${Math.round(wmState.width)}px`;
+          applyWatermarkStyles();
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+        isResizing = false;
+      });
+    }
+
+    // Execute Final Watermarking with Accurate Coordinate Translation
+    async function executePermanentWatermark() {
+      const statusBox = document.getElementById('wm_status');
+      const btn = document.getElementById('apply_btn');
+
+      if (currentWatermarkMode === 'image' && !stampPngBytes) {
+        alert('Please choose a watermark image first.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Stamping exact coordinates...</span>`;
+
+      try {
+        const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
+        const pdfDoc = await PDFDocument.load(wmPdfBytes);
+        const pages = pdfDoc.getPages();
+        const wrapper = document.getElementById('preview_stage_wrapper');
+
+        const previewW = wrapper.clientWidth;
+        const previewH = wrapper.clientHeight;
+
+        if (currentWatermarkMode === 'image') {
+          const embeddedImage = await pdfDoc.embedPng(stampPngBytes);
+
+          pages.forEach((page) => {
+            const { width, height } = page.getSize();
+            // Scale translation factor
+            const scaleFactor = width / previewW;
+
+            const pdfWatermarkW = wmState.width * scaleFactor;
+            const pdfWatermarkH = wmState.height * scaleFactor;
+
+            // Translate HTML top-left coordinate to PDF bottom-left coordinate
+            const pdfX = wmState.x * scaleFactor;
+            const pdfY = height - (wmState.y * scaleFactor) - pdfWatermarkH;
+
+            page.drawImage(embeddedImage, {
+              x: pdfX,
+              y: pdfY,
+              width: pdfWatermarkW,
+              height: pdfWatermarkH,
+              opacity: wmState.opacity,
+              rotate: degrees(-wmState.rotation)
+            });
+          });
+
+        } else {
+          // Text Watermark
+          const text = document.getElementById('custom_wm_text').value.trim() || 'CONFIDENTIAL';
+          const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+          pages.forEach((page) => {
+            const { width, height } = page.getSize();
+            const scaleFactor = width / previewW;
+
+            const pdfX = wmState.x * scaleFactor;
+            const pdfY = height - (wmState.y * scaleFactor) - (wmState.height * scaleFactor * 0.6);
+            const calculatedFontSize = (wmState.height * scaleFactor * 0.5);
+
+            page.drawText(text, {
+              x: pdfX,
+              y: pdfY,
+              size: Math.max(14, calculatedFontSize),
+              font: font,
+              color: rgb(0.85, 0.15, 0.15),
+              opacity: wmState.opacity,
+              rotate: degrees(-wmState.rotation)
+            });
+          });
+        }
+
+        const modifiedBytes = await pdfDoc.save();
+        const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
+        const downloadUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `watermarked_${wmPdfFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        statusBox.className = "w-full p-4 rounded-xl text-center text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        statusBox.innerHTML = `🎉 Successfully stamped watermark with custom position and size across all pages!`;
+        statusBox.classList.remove('hidden');
+      } catch (err) {
+        statusBox.className = "w-full p-4 rounded-xl text-center text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300";
+        statusBox.innerHTML = `❌ Error applying watermark: ${err.message}`;
+        statusBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Apply & Download PDF</span><span>→</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

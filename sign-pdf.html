@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign PDF Online Free - Digital Document Signature - Zenith Growth</title>
+  <meta name="description" content="Sign PDF documents online for free. Draw, type, or upload your signature and place it anywhere on your PDF. 100% private in-browser tool with zero server uploads.">
+  <link rel="canonical" href="https://zenithgrowth.tech/sign-pdf.html">
+
+  <meta property="og:title" content="Sign PDF Online Free - Zenith Growth">
+  <meta property="og:description" content="Draw, type, or upload your digital signature and stamp it onto contracts and PDFs in seconds.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/sign-pdf.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF-Lib for Document Signature Stamping -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <!-- PDF.js for Page Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <style>
+    .signature-font {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+    }
+  </style>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="sign-pdf.html" class="text-indigo-600 font-bold">Sign PDF</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+        <a href="compress-pdf.html" class="hover:text-emerald-600 transition">Compress PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+        Digital Signature Pad
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-full mb-3">
+        ✍️ E-Sign Contracts & Agreements
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Sign PDF Document
+      </h1>
+      <p class="text-slate-600 text-base">
+        Draw your signature, type it with elegant cursive, or upload your signature stamp. Place it anywhere on your document. <strong class="text-slate-800">100% private.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="sign_upload_zone" onclick="document.getElementById('sign_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-indigo-500 hover:bg-indigo-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="sign_file_input" accept="application/pdf" class="hidden" onchange="handleSignFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        ✍️
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF document</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a contract, lease, or form to sign</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-indigo-600 group-hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Active Signing Stage -->
+    <div id="sign_workspace" class="w-full hidden flex flex-col lg:flex-row gap-8 items-start">
+      
+      <!-- LEFT: Canvas with Draggable Signature Stamp -->
+      <div class="w-full lg:w-7/12 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-4 pb-3 border-b border-slate-100 text-xs">
+          <div class="font-bold text-slate-900 flex items-center gap-2">
+            <span>Document Preview</span>
+            <span class="text-indigo-600 font-normal">(Drag signature box to position)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="changeSignPage(-1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold">←</button>
+            <span id="sign_page_indicator" class="font-mono font-bold text-slate-600">Page 1 / 1</span>
+            <button onclick="changeSignPage(1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold">→</button>
+          </div>
+        </div>
+
+        <div class="w-full flex justify-center bg-slate-100 p-4 sm:p-6 rounded-2xl overflow-hidden">
+          <div id="sign_stage_wrapper" class="relative shadow-xl rounded-lg bg-white overflow-hidden" style="max-width: 100%;">
+            <canvas id="sign_pdf_canvas" class="block w-full h-auto"></canvas>
+            
+            <!-- Draggable Signature Box -->
+            <div id="draggable_signature" class="absolute border-2 border-dashed border-indigo-600 bg-indigo-500/10 rounded-lg flex items-center justify-center p-2 cursor-move select-none" style="left: 80px; top: 120px; width: 160px; height: 70px;">
+              <img id="signature_display_img" src="" class="max-w-full max-h-full object-contain pointer-events-none">
+              <span id="signature_placeholder_text" class="text-xs font-bold text-indigo-700">Signature Stamp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Create Your Signature -->
+      <div class="w-full lg:w-5/12 space-y-6">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+          <h4 class="font-extrabold text-slate-900 text-sm mb-4">Create Your Signature:</h4>
+
+          <!-- Signature Modes (Draw vs Type) -->
+          <div class="flex gap-2 p-1 bg-slate-100 rounded-2xl mb-4 text-xs font-bold">
+            <button onclick="setSignTab('draw')" id="tab_draw" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 shadow-xs transition">Draw</button>
+            <button onclick="setSignTab('type')" id="tab_type" class="flex-1 py-2 rounded-xl text-slate-600 hover:text-slate-900 transition">Type</button>
+          </div>
+
+          <!-- Draw Pad Section -->
+          <div id="section_draw">
+            <div class="border-2 border-slate-300 rounded-2xl p-2 bg-white mb-2">
+              <canvas id="pad_canvas" width="380" height="140" class="w-full h-32 touch-none cursor-crosshair bg-white"></canvas>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-400">Sign with mouse or finger</span>
+              <button onclick="clearSignaturePad()" class="text-rose-500 hover:text-rose-700 font-bold underline">Clear Pad</button>
+            </div>
+          </div>
+
+          <!-- Type Signature Section -->
+          <div id="section_type" class="hidden space-y-3">
+            <input type="text" id="type_name_input" placeholder="Enter your full name" oninput="renderTypedSignature()" class="w-full p-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs focus:border-indigo-600 outline-none">
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center min-h-[90px]">
+              <span id="typed_signature_preview" class="signature-font text-3xl text-indigo-950 font-bold">Your Signature</span>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <button onclick="updateSignatureStamp()" class="w-full py-2.5 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition border border-indigo-200">
+              ✓ Apply Signature to Preview
+            </button>
+          </div>
+        </div>
+
+        <!-- Download Action Card -->
+        <div class="bg-indigo-50 border border-indigo-200 rounded-3xl p-6 flex flex-col gap-3">
+          <h4 class="font-extrabold text-indigo-950 text-sm">Save Signed PDF</h4>
+          <p class="text-xs text-indigo-700">Embeds your signature permanently onto the selected page.</p>
+          <button id="stamp_sign_btn" onclick="executePermanentSigning()" class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+            <span>Sign & Download Document</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let signFile = null;
+    let signBytes = null;
+    let signDoc = null;
+    let totalSignPages = 0;
+    let currentSignPage = 1;
+
+    let signaturePngDataUrl = null;
+    let signBoxState = { x: 80, y: 120, width: 160, height: 70 };
+
+    // Drawing Pad Setup
+    const pad = document.getElementById('pad_canvas');
+    const pctx = pad.getContext('2d');
+    let isDrawing = false;
+
+    pctx.lineWidth = 2.5;
+    pctx.lineCap = 'round';
+    pctx.strokeStyle = '#1e1b4b';
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = pad.getBoundingClientRect();
+      const x = (e.clientX || e.touches[0].clientX) - rect.left;
+      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      pctx.beginPath();
+      pctx.moveTo(x, y);
+      e.preventDefault();
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = pad.getBoundingClientRect();
+      const x = (e.clientX || e.touches[0].clientX) - rect.left;
+      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      pctx.lineTo(x, y);
+      pctx.stroke();
+      e.preventDefault();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    pad.addEventListener('mousedown', startDrawing);
+    pad.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDrawing);
+
+    pad.addEventListener('touchstart', startDrawing);
+    pad.addEventListener('touchmove', draw);
+    window.addEventListener('touchend', stopDrawing);
+
+    function clearSignaturePad() {
+      pctx.clearRect(0, 0, pad.width, pad.height);
+    }
+
+    function setSignTab(tab) {
+      const tabDraw = document.getElementById('tab_draw');
+      const tabType = document.getElementById('tab_type');
+      const secDraw = document.getElementById('section_draw');
+      const secType = document.getElementById('section_type');
+
+      if (tab === 'draw') {
+        tabDraw.className = "flex-1 py-2 rounded-xl bg-white text-indigo-700 shadow-xs transition";
+        tabType.className = "flex-1 py-2 rounded-xl text-slate-600 hover:text-slate-900 transition";
+        secDraw.classList.remove('hidden');
+        secType.classList.add('hidden');
+      } else {
+        tabType.className = "flex-1 py-2 rounded-xl bg-white text-indigo-700 shadow-xs transition";
+        tabDraw.className = "flex-1 py-2 rounded-xl text-slate-600 hover:text-slate-900 transition";
+        secType.classList.remove('hidden');
+        secDraw.classList.add('hidden');
+      }
+    }
+
+    function renderTypedSignature() {
+      const name = document.getElementById('type_name_input').value.trim() || 'Your Signature';
+      document.getElementById('typed_signature_preview').textContent = name;
+    }
+
+    function updateSignatureStamp() {
+      const secDraw = document.getElementById('section_draw');
+      const img = document.getElementById('signature_display_img');
+      const placeholder = document.getElementById('signature_placeholder_text');
+
+      if (!secDraw.classList.contains('hidden')) {
+        signaturePngDataUrl = pad.toDataURL('image/png');
+      } else {
+        // Draw typed signature onto temporary canvas
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = 380;
+        tempCanvas.height = 140;
+        const tctx = tempCanvas.getContext('2d');
+        const text = document.getElementById('type_name_input').value.trim() || 'Signature';
+        tctx.font = "42px 'Brush Script MT', cursive, sans-serif";
+        tctx.fillStyle = "#1e1b4b";
+        tctx.fillText(text, 30, 80);
+        signaturePngDataUrl = tempCanvas.toDataURL('image/png');
+      }
+
+      img.src = signaturePngDataUrl;
+      img.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+    }
+
+    async function handleSignFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+      signFile = file;
+      signBytes = await file.arrayBuffer();
+
+      document.getElementById('sign_upload_zone').classList.add('hidden');
+      document.getElementById('sign_workspace').classList.remove('hidden');
+
+      const loadingTask = pdfjsLib.getDocument({ data: signBytes.slice(0) });
+      signDoc = await loadingTask.promise;
+      totalSignPages = signDoc.numPages;
+
+      currentSignPage = 1;
+      await renderSignPage(currentSignPage);
+      initDraggableSignature();
+    }
+
+    async function renderSignPage(pageNum) {
+      document.getElementById('sign_page_indicator').textContent = `Page ${pageNum} / ${totalSignPages}`;
+      const page = await signDoc.getPage(pageNum);
+      const canvas = document.getElementById('sign_pdf_canvas');
+      const wrapper = document.getElementById('sign_stage_wrapper');
+
+      const unscaledViewport = page.getViewport({ scale: 1.0 });
+      const targetWidth = Math.min(520, window.innerWidth - 60);
+      const scale = targetWidth / unscaledViewport.width;
+      const viewport = page.getViewport({ scale: scale });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      wrapper.style.width = `${viewport.width}px`;
+      wrapper.style.height = `${viewport.height}px`;
+
+      await page.render({
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      }).promise;
+    }
+
+    function changeSignPage(delta) {
+      const target = currentSignPage + delta;
+      if (target >= 1 && target <= totalSignPages) {
+        currentSignPage = target;
+        renderSignPage(currentSignPage);
+      }
+    }
+
+    function initDraggableSignature() {
+      const box = document.getElementById('draggable_signature');
+      const wrapper = document.getElementById('sign_stage_wrapper');
+
+      let isDragging = false;
+      let startX, startY, initX, initY;
+
+      box.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initX = signBoxState.x;
+        initY = signBoxState.y;
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          signBoxState.x = Math.max(0, Math.min(wrapper.clientWidth - signBoxState.width, initX + dx));
+          signBoxState.y = Math.max(0, Math.min(wrapper.clientHeight - signBoxState.height, initY + dy));
+          box.style.left = `${signBoxState.x}px`;
+          box.style.top = `${signBoxState.y}px`;
+        }
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+    }
+
+    async function executePermanentSigning() {
+      if (!signaturePngDataUrl) {
+        updateSignatureStamp();
+      }
+
+      const btn = document.getElementById('stamp_sign_btn');
+      btn.disabled = true;
+      btn.textContent = 'Embedding signature...';
+
+      try {
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.load(signBytes);
+        const pages = pdfDoc.getPages();
+        const page = pages[currentSignPage - 1];
+
+        const wrapper = document.getElementById('sign_stage_wrapper');
+        const scaleFactor = page.getWidth() / wrapper.clientWidth;
+
+        const res = await fetch(signaturePngDataUrl);
+        const pngBytes = await res.arrayBuffer();
+        const embeddedPng = await pdfDoc.embedPng(pngBytes);
+
+        const sigW = signBoxState.width * scaleFactor;
+        const sigH = signBoxState.height * scaleFactor;
+        const sigX = signBoxState.x * scaleFactor;
+        const sigY = page.getHeight() - (signBoxState.y * scaleFactor) - sigH;
+
+        page.drawImage(embeddedPng, {
+          x: sigX,
+          y: sigY,
+          width: sigW,
+          height: sigH
+        });
+
+        const modifiedBytes = await pdfDoc.save();
+        const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
+        const downloadUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `signed_${signFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        alert('🎉 Successfully signed document! Your download has started.');
+      } catch (err) {
+        alert('Error signing document: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign & Download Document →';
+      }
+    }
+  </script>
+</body>
+</html>

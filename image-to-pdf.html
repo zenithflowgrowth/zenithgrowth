@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convert JPG / PNG Images to PDF Online Free - Zenith Growth</title>
+  <meta name="description" content="Convert your JPG and PNG images into a clean PDF document for free with 90-degree page rotation. Zero server upload, runs 100% inside your web browser.">
+  <link rel="canonical" href="https://zenithgrowth.tech/image-to-pdf.html">
+
+  <meta property="og:title" content="Convert Images to PDF Online Free - Zenith Growth">
+  <meta property="og:description" content="Turn your pictures into PDF documents locally and privately with 90-degree rotation options.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/image-to-pdf.html">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jsPDF: Client-Side PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+        <a href="rotate-pdf.html" class="hover:text-emerald-600 transition">Rotate PDF</a>
+        <a href="image-to-pdf.html" class="text-emerald-600 font-bold">Image to PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <span>🔄</span> 90° Rotation Enabled
+      </span>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-full mb-3">
+        🖼️ Photos to Documents with 90° Rotation
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Image to PDF Converter
+      </h1>
+      <p class="text-slate-600 text-base">
+        Turn your JPG, PNG, and WebP pictures into a clean PDF. Rotate any image 90° before converting. <strong class="text-slate-800">100% private.</strong>
+      </p>
+    </div>
+
+    <!-- Drag & Drop Zone -->
+    <div id="img_drop_zone" onclick="document.getElementById('image_file_input').click()" class="w-full bg-white border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="image_file_input" multiple accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleImageFiles(this.files)">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🌄
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select Images</h3>
+      <p class="text-xs text-slate-500 mb-4">Supports JPG, PNG, and WebP</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-500/20 transition">
+        Choose Images
+      </button>
+    </div>
+
+    <!-- Image Previews & Action Panel -->
+    <div id="image_preview_section" class="w-full hidden">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <span>Selected Images</span>
+              <span id="img_count_badge" class="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600">0</span>
+            </h4>
+            <p class="text-[11px] text-slate-400 mt-0.5">Click "↻ 90°" on any image to rotate orientation.</p>
+          </div>
+          <button onclick="clearImages()" class="text-xs font-semibold text-rose-500 hover:text-rose-600 underline">Clear All</button>
+        </div>
+        <div id="image_thumbs_grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Settings and Conversion Trigger -->
+      <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl p-6">
+        <div>
+          <h4 class="font-bold text-emerald-950 text-sm">Convert & Compile</h4>
+          <p class="text-xs text-emerald-800">Compiles images with their chosen rotation into standardized A4 pages.</p>
+        </div>
+        <button id="convert_btn" onclick="executeImageToPdf()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+          <span>Generate PDF Document</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Status Box -->
+    <div id="img_status_box" class="hidden w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold"></div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). All rights reserved.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let imageItems = []; // Array of { file, dataUrl, rotation: 0 }
+
+    async function handleImageFiles(files) {
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].type.startsWith('image/')) {
+          const dataUrl = await readFileAsDataURL(files[i]);
+          imageItems.push({
+            file: files[i],
+            dataUrl: dataUrl,
+            rotation: 0
+          });
+        }
+      }
+      renderImageGrid();
+    }
+
+    function renderImageGrid() {
+      const section = document.getElementById('image_preview_section');
+      const grid = document.getElementById('image_thumbs_grid');
+      const countBadge = document.getElementById('img_count_badge');
+
+      if (imageItems.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+      countBadge.textContent = imageItems.length;
+      grid.innerHTML = '';
+
+      imageItems.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'relative group rounded-2xl border border-slate-200 bg-slate-50 p-3 overflow-hidden shadow-xs flex flex-col items-center justify-between';
+        div.innerHTML = `
+          <div class="w-full h-32 flex items-center justify-center overflow-hidden bg-slate-100 rounded-xl mb-2">
+            <img id="img_thumb_${index}" src="${item.dataUrl}" style="transform: rotate(${item.rotation}deg)" class="max-h-full max-w-full object-contain transition-transform duration-200">
+          </div>
+          <div class="w-full flex items-center justify-between text-xs mt-1">
+            <span class="text-[10px] text-slate-500 font-bold truncate max-w-[80px]">${item.file.name}</span>
+            <button onclick="rotateImageItem(${index})" class="px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-[10px] border border-amber-200 flex items-center gap-1 transition">
+              <span>↻</span> 90°
+            </button>
+          </div>
+          <button onclick="removeImage(${index})" class="absolute top-2 right-2 w-5 h-5 rounded-full bg-rose-500 text-white font-bold text-xs flex items-center justify-center hover:bg-rose-600 transition shadow">✕</button>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function rotateImageItem(index) {
+      imageItems[index].rotation = (imageItems[index].rotation + 90) % 360;
+      const img = document.getElementById(`img_thumb_${index}`);
+      if (img) {
+        img.style.transform = `rotate(${imageItems[index].rotation}deg)`;
+      }
+    }
+
+    function removeImage(index) {
+      imageItems.splice(index, 1);
+      renderImageGrid();
+    }
+
+    function clearImages() {
+      imageItems = [];
+      document.getElementById('image_file_input').value = '';
+      renderImageGrid();
+    }
+
+    // Helper to rotate image in memory via Canvas before adding to jsPDF
+    function getRotatedCanvasData(item) {
+      return new Promise((resolve) => {
+        if (item.rotation === 0) {
+          resolve(item.dataUrl);
+          return;
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const rot = item.rotation;
+
+          if (rot === 90 || rot === 270) {
+            canvas.width = img.height;
+            canvas.height = img.width;
+          } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+          }
+
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate((rot * Math.PI) / 180);
+          ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.95));
+        };
+        img.src = item.dataUrl;
+      });
+    }
+
+    async function executeImageToPdf() {
+      if (imageItems.length === 0) return;
+
+      const btn = document.getElementById('convert_btn');
+      const statusBox = document.getElementById('img_status_box');
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Processing rotated images...</span>`;
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+
+        for (let i = 0; i < imageItems.length; i++) {
+          if (i > 0) doc.addPage();
+          const item = imageItems[i];
+          const rotatedDataUrl = await getRotatedCanvasData(item);
+
+          doc.addImage(rotatedDataUrl, 'JPEG', 10, 10, pageWidth - 20, pageHeight - 20, undefined, 'FAST');
+        }
+
+        doc.save(`converted_document_${Date.now()}.pdf`);
+
+        statusBox.className = "w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        statusBox.innerHTML = `🎉 Successfully converted ${imageItems.length} images to PDF with applied 90° rotations!`;
+        statusBox.classList.remove('hidden');
+      } catch (err) {
+        statusBox.className = "w-full mt-6 p-4 rounded-xl text-center text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300";
+        statusBox.innerHTML = `❌ Error converting images: ${err.message}`;
+        statusBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Generate PDF Document</span><span>→</span>`;
+      }
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>

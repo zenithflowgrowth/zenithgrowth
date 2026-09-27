@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protect PDF with Password Online Free - Zenith Growth</title>
+  <meta name="description" content="Password protect and encrypt PDF files online for free. Prevent unauthorized access with strong document encryption. 100% private in-browser tool with zero server uploads.">
+  <link rel="canonical" href="https://zenithgrowth.tech/protect-pdf.html">
+
+  <meta property="og:title" content="Protect PDF with Password Free - Zenith Growth">
+  <meta property="og:description" content="Encrypt and secure PDF documents with a custom password in seconds.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/protect-pdf.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF-Lib with Native Encryption Support -->
+  <script src="https://unpkg.com/pdf-lib-plus-encrypt/dist/pdf-lib-plus-encrypt.min.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="protect-pdf.html" class="text-blue-600 font-bold">Protect PDF</a>
+        <a href="compress-pdf.html" class="hover:text-emerald-600 transition">Compress PDF</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+        🔒 Document Encryption
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full mb-3">
+        🔒 Security & Password Protection
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Protect PDF with Password
+      </h1>
+      <p class="text-slate-600 text-base">
+        Encrypt your PDF with a secure password to prevent unauthorized viewing. <strong class="text-slate-800">100% private in-browser encryption.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="prot_upload_zone" onclick="document.getElementById('prot_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-blue-500 hover:bg-blue-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="prot_file_input" accept="application/pdf" class="hidden" onchange="handleProtFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🔒
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a PDF document to password-protect</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-blue-600 group-hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Config Panel -->
+    <div id="prot_config_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm mb-8">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+        <div>
+          <h3 id="prot_doc_name" class="text-base font-bold text-slate-900 truncate max-w-md">Document.pdf</h3>
+          <p id="prot_doc_info" class="text-xs text-slate-400">Total pages: 0</p>
+        </div>
+        <button onclick="document.getElementById('prot_file_input').click()" class="text-xs text-slate-400 hover:text-blue-600 underline">Change PDF</button>
+      </div>
+
+      <div class="space-y-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Set Document Password:</label>
+          <div class="relative">
+            <input type="password" id="pdf_password_input" placeholder="Enter secure password" class="w-full p-4 pr-12 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:border-blue-600 outline-none">
+            <button type="button" onclick="togglePassVisibility('pdf_password_input', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm" title="Show/Hide Password">👁️</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Confirm Password:</label>
+          <div class="relative">
+            <input type="password" id="pdf_password_confirm" placeholder="Re-enter password" class="w-full p-4 pr-12 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:border-blue-600 outline-none">
+            <button type="button" onclick="togglePassVisibility('pdf_password_confirm', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm" title="Show/Hide Password">👁️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-blue-950 text-sm">Encrypt & Secure</h4>
+          <p class="text-xs text-blue-700">Applies 128-bit AES client-side encryption. Document will require password to open.</p>
+        </div>
+        <button id="protect_btn" onclick="executeProtectPdf()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2">
+          <span>Protect PDF Now</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Success Panel -->
+    <div id="prot_success_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm mb-8 text-center max-w-xl">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        🔒
+      </div>
+      <h3 class="text-2xl font-black text-slate-900 mb-2">PDF Successfully Encrypted!</h3>
+      <p id="success_doc_name" class="text-xs font-semibold text-slate-500 truncate max-w-md mx-auto mb-6">protected_Document.pdf</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+        <a id="download_link_btn" href="#" download="" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+          <span>Download Protected PDF</span>
+          <span>↓</span>
+        </a>
+        <button onclick="resetProtect()" class="px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+          Protect Another File
+        </button>
+      </div>
+      <p class="text-xs text-slate-400">Remember your password! Without it, encrypted documents cannot be opened.</p>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let protFile = null;
+    let protBytes = null;
+    let encryptedBlobUrl = null;
+
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    async function handleProtFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+      protFile = file;
+
+      try {
+        protBytes = await file.arrayBuffer();
+        const { PDFDocument } = PDFLib;
+        const doc = await PDFDocument.load(protBytes);
+
+        document.getElementById('prot_upload_zone').classList.add('hidden');
+        document.getElementById('prot_success_panel').classList.add('hidden');
+        document.getElementById('prot_config_panel').classList.remove('hidden');
+        document.getElementById('prot_doc_name').textContent = file.name;
+        document.getElementById('prot_doc_info').textContent = `Total pages: ${doc.getPageCount()} (${(file.size / (1024*1024)).toFixed(2)} MB)`;
+      } catch (err) {
+        if (err.message && err.message.toLowerCase().includes('encrypt')) {
+          alert('This PDF is already encrypted with a password.');
+        } else {
+          alert('Error reading PDF: ' + err.message);
+        }
+      }
+    }
+
+    async function executeProtectPdf() {
+      const p1 = document.getElementById('pdf_password_input').value;
+      const p2 = document.getElementById('pdf_password_confirm').value;
+
+      if (!p1) {
+        alert('Please enter a password.');
+        return;
+      }
+      if (p1 !== p2) {
+        alert('Passwords do not match. Please re-enter.');
+        return;
+      }
+
+      const btn = document.getElementById('protect_btn');
+      btn.disabled = true;
+      btn.textContent = 'Encrypting document...';
+
+      try {
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.load(protBytes);
+
+        // Encrypt with password
+        await pdfDoc.encrypt({
+          userPassword: p1,
+          ownerPassword: p1,
+          permissions: {
+            printing: 'highResolution',
+            modifying: false,
+            copying: false,
+            annotating: false,
+            fillingForms: true,
+            contentAccessibility: true,
+            documentAssembly: false
+          }
+        });
+
+        const encryptedBytes = await pdfDoc.save();
+        const blob = new Blob([encryptedBytes], { type: 'application/pdf' });
+        if (encryptedBlobUrl) URL.revokeObjectURL(encryptedBlobUrl);
+        encryptedBlobUrl = URL.createObjectURL(blob);
+
+        const filename = `protected_${protFile.name}`;
+
+        // Auto download trigger
+        const a = document.createElement('a');
+        a.href = encryptedBlobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Show Success View
+        document.getElementById('prot_config_panel').classList.add('hidden');
+        const successPanel = document.getElementById('prot_success_panel');
+        successPanel.classList.remove('hidden');
+        document.getElementById('download_link_btn').href = encryptedBlobUrl;
+        document.getElementById('download_link_btn').download = filename;
+        document.getElementById('success_doc_name').textContent = filename;
+      } catch (err) {
+        alert('Error encrypting PDF: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Protect PDF Now →';
+      }
+    }
+
+    function resetProtect() {
+      document.getElementById('prot_success_panel').classList.add('hidden');
+      document.getElementById('prot_config_panel').classList.add('hidden');
+      document.getElementById('prot_upload_zone').classList.remove('hidden');
+      document.getElementById('pdf_password_input').value = '';
+      document.getElementById('pdf_password_confirm').value = '';
+      document.getElementById('prot_file_input').value = '';
+      protFile = null;
+      protBytes = null;
+    }
+  </script>
+</body>
+</html>

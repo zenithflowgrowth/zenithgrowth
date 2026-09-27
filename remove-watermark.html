@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Watermark from PDF Online Free - Zenith Growth</title>
+  <meta name="description" content="Remove watermarks, stamps, text, and logos from PDF documents online for free. Visual eraser & redaction tool with zero server uploads. 100% private.">
+  <link rel="canonical" href="https://zenithgrowth.tech/remove-watermark.html">
+
+  <meta property="og:title" content="Remove Watermark from PDF Online Free - Zenith Growth">
+  <meta property="og:description" content="Erase unwanted watermarks, draft stamps, and confidential text from any PDF in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/remove-watermark.html">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF.js for Visual Page Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- PDF-Lib for Client-Side PDF Modification -->
+  <script src="https://unpkg.com/pdf-lib-plus-encrypt/dist/pdf-lib-plus-encrypt.min.js"></script>
+
+  <style>
+    .selection-box {
+      border: 2px dashed #ef4444;
+      background-color: rgba(239, 68, 68, 0.2);
+      position: absolute;
+      pointer-events: auto;
+      cursor: move;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="watermark-pdf.html" class="hover:text-emerald-600 transition">Add Watermark</a>
+        <a href="remove-watermark.html" class="text-rose-600 font-bold">Remove Watermark</a>
+        <a href="compress-pdf.html" class="hover:text-emerald-600 transition">Compress</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+        🧹 Watermark Eraser
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-full mb-3">
+        🧹 PDF Watermark & Stamp Eraser
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Remove Watermark from PDF
+      </h1>
+      <p class="text-slate-600 text-base">
+        Select and erase unwanted watermarks, "DRAFT" stamps, logos, or sensitive text lines. <strong class="text-slate-800">100% private in-browser tool.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="rm_upload_zone" onclick="document.getElementById('rm_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-rose-500 hover:bg-rose-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="rm_file_input" accept="application/pdf" class="hidden" onchange="handleRmPdfFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🧹
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a PDF document with watermarks to erase</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-rose-600 group-hover:bg-rose-700 text-white font-bold text-sm shadow-md shadow-rose-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Interactive Workspace (Hidden until file selected) -->
+    <div id="rm_workspace" class="w-full hidden flex flex-col lg:flex-row gap-8 items-start mb-12">
+      
+      <!-- Left: Interactive Canvas Viewer -->
+      <div class="flex-1 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm w-full">
+        
+        <div class="flex flex-wrap justify-between items-center pb-4 mb-4 border-b border-slate-100 gap-3">
+          <div>
+            <h3 id="rm_doc_title" class="font-extrabold text-slate-900 text-sm truncate max-w-xs">Document.pdf</h3>
+            <p class="text-[11px] text-slate-400">Drag a red rectangle over the watermark to erase it</p>
+          </div>
+          
+          <!-- Page Navigator -->
+          <div class="flex items-center gap-2 text-xs font-bold">
+            <button onclick="prevRmPage()" id="prev_page_btn" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">← Prev</button>
+            <span id="page_indicator" class="text-slate-600 px-1">Page 1 of 1</span>
+            <button onclick="nextRmPage()" id="next_page_btn" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Next →</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container with Interactive Overlay -->
+        <div class="relative overflow-auto max-h-[650px] flex justify-center bg-slate-100 p-4 rounded-2xl border border-slate-200 select-none" id="canvas_container">
+          <div id="canvas_wrapper" class="relative inline-block shadow-md">
+            <canvas id="pdf_render_canvas" class="block bg-white rounded"></canvas>
+            <div id="overlay_layer" class="absolute inset-0 cursor-crosshair"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center pt-3 text-[11px] text-slate-400">
+          <span>💡 Tip: Click and drag over any watermark to create an eraser box.</span>
+          <button onclick="clearEraserBoxes()" class="text-rose-600 hover:underline font-semibold">Clear Selection</button>
+        </div>
+
+      </div>
+
+      <!-- Right: Control & Options Panel -->
+      <div class="w-full lg:w-80 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
+        
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Eraser Settings</h4>
+          
+          <!-- Eraser Mode -->
+          <div class="space-y-2 mb-4">
+            <label class="block text-xs font-semibold text-slate-700">Eraser Fill Mode:</label>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+              <button onclick="setEraserColor('#ffffff')" id="btn_color_white" class="py-2 px-3 rounded-xl border-2 border-rose-500 bg-rose-50/50 text-slate-800 transition flex items-center justify-center gap-1.5">
+                <span class="w-3.5 h-3.5 rounded-full bg-white border border-slate-300"></span> Whiteout
+              </button>
+              <button onclick="setEraserColor('#000000')" id="btn_color_black" class="py-2 px-3 rounded-xl border border-slate-200 hover:border-slate-400 text-slate-800 transition flex items-center justify-center gap-1.5">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-900"></span> Redact
+              </button>
+            </div>
+          </div>
+
+          <!-- Scope -->
+          <div class="space-y-2 mb-4">
+            <label class="block text-xs font-semibold text-slate-700">Apply Eraser To:</label>
+            <select id="eraser_scope" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold text-slate-800 outline-none">
+              <option value="all">All Pages in Document (Recommended)</option>
+              <option value="current">Current Page Only</option>
+            </select>
+            <p class="text-[11px] text-slate-400">Selecting "All Pages" removes watermarks positioned at the same place across every page.</p>
+          </div>
+        </div>
+
+        <!-- Action Box -->
+        <div class="pt-4 border-t border-slate-100">
+          <button id="execute_rm_btn" onclick="executeRemoveWatermark()" class="w-full py-3.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-lg shadow-rose-600/25 transition flex items-center justify-center gap-2">
+            <span>Remove Watermark</span>
+            <span>→</span>
+          </button>
+          <button onclick="resetRmPdf()" class="w-full py-2.5 mt-2 rounded-xl text-slate-500 hover:text-slate-800 text-xs font-bold transition">
+            Choose Different PDF
+          </button>
+        </div>
+
+        <!-- Feature Pillar -->
+        <div class="p-4 rounded-2xl bg-rose-50/60 border border-rose-100 text-xs text-rose-950 space-y-2">
+          <div class="font-bold flex items-center gap-1.5">
+            <span>🔒</span> 100% Private In-Browser
+          </div>
+          <p class="text-[11px] text-rose-800 leading-relaxed">
+            Your documents are processed securely in your browser's RAM memory with zero server uploads.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Success Panel -->
+    <div id="rm_success_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm mb-8 text-center max-w-xl">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        ✅
+      </div>
+      <h3 class="text-2xl font-black text-slate-900 mb-2">Watermark Successfully Removed!</h3>
+      <p id="rm_success_filename" class="text-xs font-semibold text-slate-500 truncate max-w-md mx-auto mb-6">clean_Document.pdf</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+        <a id="rm_download_btn" href="#" download="" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+          <span>Download Clean PDF</span>
+          <span>↓</span>
+        </a>
+        <button onclick="resetRmPdf()" class="px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+          Erase Another PDF
+        </button>
+      </div>
+      <p class="text-xs text-slate-400">All selected watermark areas have been scrubbed from your file.</p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    let pdfDoc = null;
+    let pdfBytes = null;
+    let currentPdfFile = null;
+    let currentPageNum = 1;
+    let totalPages = 0;
+    let currentScale = 1.0;
+    let eraserColor = '#ffffff'; // Whiteout
+    let eraserBoxes = []; // Array of relative { x, y, width, height } in percentage [0..1]
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+    let currentBoxEl = null;
+
+    async function handleRmPdfFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+
+      currentPdfFile = file;
+      pdfBytes = await file.arrayBuffer();
+
+      try {
+        pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
+        totalPages = pdfDoc.numPages;
+        currentPageNum = 1;
+        eraserBoxes = [];
+
+        document.getElementById('rm_upload_zone').classList.add('hidden');
+        document.getElementById('rm_success_panel').classList.add('hidden');
+        document.getElementById('rm_workspace').classList.remove('hidden');
+        document.getElementById('rm_doc_title').textContent = file.name;
+
+        await renderRmPage(currentPageNum);
+        setupOverlayInteractions();
+      } catch (err) {
+        alert('Error loading PDF: ' + err.message);
+      }
+    }
+
+    async function renderRmPage(num) {
+      const page = await pdfDoc.getPage(num);
+      const canvas = document.getElementById('pdf_render_canvas');
+      const ctx = canvas.getContext('2d');
+
+      const viewport = page.getViewport({ scale: 1.25 });
+      currentScale = 1.25;
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+
+      document.getElementById('page_indicator').textContent = `Page ${num} of ${totalPages}`;
+      document.getElementById('prev_page_btn').disabled = num <= 1;
+      document.getElementById('next_page_btn').disabled = num >= totalPages;
+
+      drawSelectionBoxes();
+    }
+
+    function prevRmPage() {
+      if (currentPageNum > 1) {
+        currentPageNum--;
+        renderRmPage(currentPageNum);
+      }
+    }
+
+    function nextRmPage() {
+      if (currentPageNum < totalPages) {
+        currentPageNum++;
+        renderRmPage(currentPageNum);
+      }
+    }
+
+    function setupOverlayInteractions() {
+      const overlay = document.getElementById('overlay_layer');
+      overlay.innerHTML = '';
+
+      overlay.onmousedown = (e) => {
+        if (e.target !== overlay) return;
+        const rect = overlay.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+        isDrawing = true;
+
+        currentBoxEl = document.createElement('div');
+        currentBoxEl.className = 'selection-box';
+        currentBoxEl.style.left = startX + 'px';
+        currentBoxEl.style.top = startY + 'px';
+        currentBoxEl.style.width = '0px';
+        currentBoxEl.style.height = '0px';
+        overlay.appendChild(currentBoxEl);
+      };
+
+      overlay.onmousemove = (e) => {
+        if (!isDrawing || !currentBoxEl) return;
+        const rect = overlay.getBoundingClientRect();
+        const currentX = e.clientX - rect.left;
+        const currentY = e.clientY - rect.top;
+
+        const left = Math.min(startX, currentX);
+        const top = Math.min(startY, currentY);
+        const width = Math.abs(currentX - startX);
+        const height = Math.abs(currentY - startY);
+
+        currentBoxEl.style.left = left + 'px';
+        currentBoxEl.style.top = top + 'px';
+        currentBoxEl.style.width = width + 'px';
+        currentBoxEl.style.height = height + 'px';
+      };
+
+      window.onmouseup = () => {
+        if (!isDrawing || !currentBoxEl) return;
+        isDrawing = false;
+
+        const overlay = document.getElementById('overlay_layer');
+        const overlayW = overlay.clientWidth;
+        const overlayH = overlay.clientHeight;
+
+        const boxW = parseFloat(currentBoxEl.style.width);
+        const boxH = parseFloat(currentBoxEl.style.height);
+
+        // Require minimum 8px drag to avoid accidental clicks
+        if (boxW > 8 && boxH > 8) {
+          const relBox = {
+            x: parseFloat(currentBoxEl.style.left) / overlayW,
+            y: parseFloat(currentBoxEl.style.top) / overlayH,
+            width: boxW / overlayW,
+            height: boxH / overlayH
+          };
+          eraserBoxes.push(relBox);
+        } else {
+          currentBoxEl.remove();
+        }
+        currentBoxEl = null;
+        drawSelectionBoxes();
+      };
+    }
+
+    function drawSelectionBoxes() {
+      const overlay = document.getElementById('overlay_layer');
+      overlay.innerHTML = '';
+
+      eraserBoxes.forEach((box, i) => {
+        const div = document.createElement('div');
+        div.className = 'selection-box';
+        div.style.left = (box.x * overlay.clientWidth) + 'px';
+        div.style.top = (box.y * overlay.clientHeight) + 'px';
+        div.style.width = (box.width * overlay.clientWidth) + 'px';
+        div.style.height = (box.height * overlay.clientHeight) + 'px';
+
+        div.innerHTML = `
+          <button onclick="removeEraserBox(${i}, event)" class="absolute -top-2 -right-2 bg-rose-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold shadow-xs">✕</button>
+        `;
+        overlay.appendChild(div);
+      });
+    }
+
+    function removeEraserBox(index, event) {
+      if (event) event.stopPropagation();
+      eraserBoxes.splice(index, 1);
+      drawSelectionBoxes();
+    }
+
+    function clearEraserBoxes() {
+      eraserBoxes = [];
+      drawSelectionBoxes();
+    }
+
+    function setEraserColor(color) {
+      eraserColor = color;
+      if (color === '#ffffff') {
+        document.getElementById('btn_color_white').className = 'py-2 px-3 rounded-xl border-2 border-rose-500 bg-rose-50/50 text-slate-800 transition flex items-center justify-center gap-1.5';
+        document.getElementById('btn_color_black').className = 'py-2 px-3 rounded-xl border border-slate-200 hover:border-slate-400 text-slate-800 transition flex items-center justify-center gap-1.5';
+      } else {
+        document.getElementById('btn_color_black').className = 'py-2 px-3 rounded-xl border-2 border-slate-900 bg-slate-100 text-slate-800 transition flex items-center justify-center gap-1.5';
+        document.getElementById('btn_color_white').className = 'py-2 px-3 rounded-xl border border-slate-200 hover:border-slate-400 text-slate-800 transition flex items-center justify-center gap-1.5';
+      }
+    }
+
+    async function executeRemoveWatermark() {
+      if (eraserBoxes.length === 0) {
+        alert('Please drag a red box over the watermark you wish to erase first.');
+        return;
+      }
+
+      const btn = document.getElementById('execute_rm_btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> Scrubbing Watermark...';
+
+      try {
+        const { PDFDocument, rgb } = PDFLib;
+        const pdfDocToEdit = await PDFDocument.load(pdfBytes);
+        const pages = pdfDocToEdit.getPages();
+        const scope = document.getElementById('eraser_scope').value;
+
+        // Color components
+        const fillColor = eraserColor === '#ffffff' ? rgb(1, 1, 1) : rgb(0, 0, 0);
+
+        const pagesToProcess = scope === 'all' ? pages : [pages[currentPageNum - 1]];
+
+        pagesToProcess.forEach(page => {
+          const { width, height } = page.getSize();
+
+          eraserBoxes.forEach(box => {
+            // PDF coordinates: origin (0,0) is bottom-left
+            const rectWidth = box.width * width;
+            const rectHeight = box.height * height;
+            const rectX = box.x * width;
+            const rectY = height - (box.y * height) - rectHeight;
+
+            page.drawRectangle({
+              x: rectX,
+              y: rectY,
+              width: rectWidth,
+              height: rectHeight,
+              color: fillColor,
+              opacity: 1.0
+            });
+          });
+        });
+
+        const modifiedBytes = await pdfDocToEdit.save();
+        const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
+        const downloadUrl = URL.createObjectURL(blob);
+        const cleanFilename = `clean_${currentPdfFile.name}`;
+
+        // Auto download
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = cleanFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Show Success UI
+        document.getElementById('rm_workspace').classList.add('hidden');
+        document.getElementById('rm_success_panel').classList.remove('hidden');
+        document.getElementById('rm_download_btn').href = downloadUrl;
+        document.getElementById('rm_download_btn').download = cleanFilename;
+        document.getElementById('rm_success_filename').textContent = cleanFilename;
+      } catch (err) {
+        alert('Error removing watermark: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Remove Watermark</span> <span>→</span>';
+      }
+    }
+
+    function resetRmPdf() {
+      document.getElementById('rm_success_panel').classList.add('hidden');
+      document.getElementById('rm_workspace').classList.add('hidden');
+      document.getElementById('rm_upload_zone').classList.remove('hidden');
+      document.getElementById('rm_file_input').value = '';
+      currentPdfFile = null;
+      pdfBytes = null;
+      eraserBoxes = [];
+    }
+  </script>
+</body>
+</html>

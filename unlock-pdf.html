@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlock PDF - Remove PDF Password Online Free - Zenith Growth</title>
+  <meta name="description" content="Unlock password-protected PDF files online for free. Remove passwords, permissions, and encryption instantly in your browser with zero server uploads. 100% private.">
+  <link rel="canonical" href="https://zenithgrowth.tech/unlock-pdf.html">
+
+  <meta property="og:title" content="Unlock PDF - Remove PDF Password Online Free - Zenith Growth">
+  <meta property="og:description" content="Remove PDF passwords, security locks, and permission restrictions in seconds. 100% free and client-side.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/unlock-pdf.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Setup Console Interception for QPDF Emscripten before loading -->
+  <script>
+    window.capturedQpdfLines = null;
+    const _origLog = console.log;
+    const _origErr = console.error;
+    console.log = (...args) => {
+      if (window.capturedQpdfLines) window.capturedQpdfLines.push(args.join(' '));
+      _origLog(...args);
+    };
+    console.error = (...args) => {
+      if (window.capturedQpdfLines) window.capturedQpdfLines.push(args.join(' '));
+      _origErr(...args);
+    };
+  </script>
+
+  <!-- QPDF WebAssembly Engine -->
+  <script src="qpdf.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="protect-pdf.html" class="hover:text-emerald-600 transition">Protect PDF</a>
+        <a href="unlock-pdf.html" class="text-emerald-600 font-bold">Unlock PDF</a>
+        <a href="compress-pdf.html" class="hover:text-emerald-600 transition">Compress PDF</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        🔓 Password Remover
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-full mb-3">
+        🔓 Security & Decryption
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Unlock PDF
+      </h1>
+      <p class="text-slate-600 text-base">
+        Remove password protection, printing restrictions, and encryption from PDF files. <strong class="text-slate-800">100% private in-browser WebAssembly.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="unlock_upload_zone" onclick="document.getElementById('unlock_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="unlock_file_input" accept="application/pdf" class="hidden" onchange="handleUnlockFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🔓
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a password-protected or restricted PDF to unlock</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Status Spinner (Checking file) -->
+    <div id="unlock_checking_spinner" class="hidden my-8 text-center">
+      <div class="inline-block w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+      <p class="text-xs font-semibold text-slate-600">Analyzing PDF encryption & security parameters...</p>
+    </div>
+
+    <!-- Config / Unlock Panel -->
+    <div id="unlock_config_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm mb-8">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+        <div>
+          <h3 id="unlock_doc_name" class="text-base font-bold text-slate-900 truncate max-w-md">Document.pdf</h3>
+          <p id="unlock_doc_info" class="text-xs text-slate-400">File size: 0 KB</p>
+        </div>
+        <button onclick="resetUnlock()" class="text-xs text-slate-400 hover:text-emerald-600 underline">Change PDF</button>
+      </div>
+
+      <!-- Encryption Analysis Box -->
+      <div id="encryption_notice_box" class="p-4 rounded-2xl mb-6 flex items-start gap-3">
+        <span id="notice_icon" class="text-2xl mt-0.5">🔒</span>
+        <div>
+          <h4 id="notice_title" class="text-sm font-bold text-slate-900">Password Required</h4>
+          <p id="notice_desc" class="text-xs text-slate-600 mt-0.5 leading-relaxed">
+            This document is locked with an open password. Please enter the password once so we can permanently strip the security.
+          </p>
+        </div>
+      </div>
+
+      <!-- Password Input Row -->
+      <div id="password_input_row" class="space-y-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Enter PDF Password:</label>
+          <div class="relative">
+            <input type="password" id="pdf_unlock_password" placeholder="Enter the document password" class="w-full p-4 pr-12 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:border-emerald-600 outline-none">
+            <button type="button" onclick="toggleUnlockPassVisibility(this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm" title="Show/Hide Password">👁️</button>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-2">Entering the password removes it permanently from your output copy.</p>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Strip Document Encryption</h4>
+          <p class="text-xs text-slate-500">Processed 100% locally in your browser memory via WebAssembly.</p>
+        </div>
+        <button id="unlock_btn" onclick="executeUnlockPdf()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+          <span>Unlock PDF Now</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Success Panel -->
+    <div id="unlock_success_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm mb-8 text-center max-w-xl">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        🔓
+      </div>
+      <h3 class="text-2xl font-black text-slate-900 mb-2">PDF Successfully Unlocked!</h3>
+      <p id="success_doc_name" class="text-xs font-semibold text-slate-500 truncate max-w-md mx-auto mb-6">Document_unlocked.pdf</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+        <a id="download_unlocked_btn" href="#" download="" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+          <span>Download Unlocked PDF</span>
+          <span>↓</span>
+        </a>
+        <button onclick="resetUnlock()" class="px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+          Unlock Another File
+        </button>
+      </div>
+      <p class="text-xs text-slate-400">All password requirements and restrictions have been completely removed.</p>
+    </div>
+
+    <!-- Feature Pillars -->
+    <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+      <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mb-3">🛡️</div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">100% Private</h4>
+        <p class="text-slate-500 text-xs leading-relaxed">Processing runs entirely inside your browser's WebAssembly sandbox. Your files never touch a server.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-3">✨</div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">Lossless Quality</h4>
+        <p class="text-slate-500 text-xs leading-relaxed">Decrypts the document object tree directly. Never rasterizes text, ensuring perfect vector sharpness.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-3">⚡</div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">Owner Locks Removed</h4>
+        <p class="text-slate-500 text-xs leading-relaxed">Instantly strips printing, copying, and modification restrictions without requiring any password.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let qpdfModule = null;
+    let selectedFile = null;
+    let fileBytes = null;
+    let unlockedBlobUrl = null;
+    let isUserPassProtected = false;
+
+    // Initialize QPDF WebAssembly
+    async function getQpdf() {
+      if (qpdfModule) return qpdfModule;
+      try {
+        qpdfModule = await Module({
+          locateFile: (path) => path === 'qpdf.wasm' ? 'qpdf.wasm' : path
+        });
+        return qpdfModule;
+      } catch (err) {
+        console.warn('Local wasm failed, trying CDN fallback...', err);
+        qpdfModule = await Module({
+          locateFile: () => 'https://unpkg.com/@neslinesli93/qpdf-wasm@0.3.0/dist/qpdf.wasm'
+        });
+        return qpdfModule;
+      }
+    }
+
+    function toggleUnlockPassVisibility(btn) {
+      const input = document.getElementById('pdf_unlock_password');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    async function handleUnlockFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+
+      selectedFile = file;
+      document.getElementById('unlock_upload_zone').classList.add('hidden');
+      document.getElementById('unlock_checking_spinner').classList.remove('hidden');
+
+      try {
+        fileBytes = new Uint8Array(await file.arrayBuffer());
+        const instance = await getQpdf();
+
+        const inputPath = '/input_' + Date.now() + '.pdf';
+        instance.FS.writeFile(inputPath, fileBytes);
+
+        // Run inspection
+        window.capturedQpdfLines = [];
+        let exitCode;
+        try {
+          exitCode = instance.callMain(['--show-encryption', inputPath]);
+        } catch (e) {
+          exitCode = e?.status ?? -1;
+        }
+        const lines = [...window.capturedQpdfLines];
+        window.capturedQpdfLines = null;
+        try { instance.FS.unlink(inputPath); } catch(e){}
+
+        document.getElementById('unlock_checking_spinner').classList.add('hidden');
+        document.getElementById('unlock_config_panel').classList.remove('hidden');
+        document.getElementById('unlock_doc_name').textContent = file.name;
+        document.getElementById('unlock_doc_info').textContent = `File size: ${(file.size / 1024).toFixed(1)} KB`;
+
+        const noticeBox = document.getElementById('encryption_notice_box');
+        const noticeIcon = document.getElementById('notice_icon');
+        const noticeTitle = document.getElementById('notice_title');
+        const noticeDesc = document.getElementById('notice_desc');
+        const passRow = document.getElementById('password_input_row');
+
+        // Analyze result
+        if (exitCode !== 0 && lines.some(l => /password/i.test(l))) {
+          // User open password required
+          isUserPassProtected = true;
+          noticeBox.className = 'p-4 rounded-2xl mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200';
+          noticeIcon.textContent = '🔒';
+          noticeTitle.textContent = 'Password Required to Unlock';
+          noticeTitle.className = 'text-sm font-bold text-amber-950';
+          noticeDesc.textContent = 'This PDF is protected by an open password. Please enter the password below so we can permanently strip the security.';
+          noticeDesc.className = 'text-xs text-amber-800 mt-0.5 leading-relaxed';
+          passRow.classList.remove('hidden');
+        } else if (lines.some(l => l.includes('not encrypted'))) {
+          // Document is not encrypted at all
+          isUserPassProtected = false;
+          noticeBox.className = 'p-4 rounded-2xl mb-6 flex items-start gap-3 bg-emerald-50 border border-emerald-200';
+          noticeIcon.textContent = '✅';
+          noticeTitle.textContent = 'Document is Already Unlocked';
+          noticeTitle.className = 'text-sm font-bold text-emerald-950';
+          noticeDesc.textContent = 'This PDF does not have any password protection or security restrictions applied.';
+          noticeDesc.className = 'text-xs text-emerald-800 mt-0.5 leading-relaxed';
+          passRow.classList.add('hidden');
+        } else {
+          // Document has permission/owner restrictions only
+          isUserPassProtected = false;
+          noticeBox.className = 'p-4 rounded-2xl mb-6 flex items-start gap-3 bg-blue-50 border border-blue-200';
+          noticeIcon.textContent = '🔓';
+          noticeTitle.textContent = 'Permissions Locked (No Password Required)';
+          noticeTitle.className = 'text-sm font-bold text-blue-950';
+          noticeDesc.textContent = 'This document has printing, copying, or form editing restrictions. We can remove all restrictions instantly without needing a password!';
+          noticeDesc.className = 'text-xs text-blue-800 mt-0.5 leading-relaxed';
+          passRow.classList.add('hidden');
+        }
+      } catch (err) {
+        document.getElementById('unlock_checking_spinner').classList.add('hidden');
+        document.getElementById('unlock_upload_zone').classList.remove('hidden');
+        alert('Error inspecting PDF security: ' + err.message);
+      }
+    }
+
+    async function executeUnlockPdf() {
+      const btn = document.getElementById('unlock_btn');
+      const pass = document.getElementById('pdf_unlock_password').value;
+
+      if (isUserPassProtected && !pass) {
+        alert('Please enter the PDF password.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> Unlocking PDF...';
+
+      try {
+        const instance = await getQpdf();
+        const inputPath = '/in_' + Date.now() + '.pdf';
+        const outputPath = '/out_' + Date.now() + '.pdf';
+
+        instance.FS.writeFile(inputPath, fileBytes);
+
+        const args = ['--decrypt', inputPath, outputPath];
+        if (pass) {
+          args.unshift('--password=' + pass);
+        }
+
+        window.capturedQpdfLines = [];
+        let exitCode;
+        try {
+          exitCode = instance.callMain(args);
+        } catch (e) {
+          exitCode = e?.status ?? -1;
+        }
+        const lines = [...window.capturedQpdfLines];
+        window.capturedQpdfLines = null;
+
+        if (exitCode !== 0 && exitCode !== 3) {
+          try { instance.FS.unlink(inputPath); } catch(e){}
+          if (lines.some(l => /password/i.test(l))) {
+            throw new Error('Incorrect password. The password does not match this document.');
+          } else {
+            throw new Error(lines.join(' ').trim() || `Decryption exited with code ${exitCode}`);
+          }
+        }
+
+        const outputBytes = instance.FS.readFile(outputPath);
+        try { instance.FS.unlink(inputPath); } catch(e){}
+        try { instance.FS.unlink(outputPath); } catch(e){}
+
+        const blob = new Blob([outputBytes], { type: 'application/pdf' });
+        if (unlockedBlobUrl) URL.revokeObjectURL(unlockedBlobUrl);
+        unlockedBlobUrl = URL.createObjectURL(blob);
+
+        const filename = selectedFile.name.replace(/\.pdf$/i, '') + '_unlocked.pdf';
+
+        // Auto download
+        const a = document.createElement('a');
+        a.href = unlockedBlobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Success UI
+        document.getElementById('unlock_config_panel').classList.add('hidden');
+        const successPanel = document.getElementById('unlock_success_panel');
+        successPanel.classList.remove('hidden');
+        document.getElementById('download_unlocked_btn').href = unlockedBlobUrl;
+        document.getElementById('download_unlocked_btn').download = filename;
+        document.getElementById('success_doc_name').textContent = filename;
+      } catch (err) {
+        alert(err.message || 'Decryption failed.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Unlock PDF Now</span> <span>→</span>';
+      }
+    }
+
+    function resetUnlock() {
+      document.getElementById('unlock_success_panel').classList.add('hidden');
+      document.getElementById('unlock_config_panel').classList.add('hidden');
+      document.getElementById('unlock_checking_spinner').classList.add('hidden');
+      document.getElementById('unlock_upload_zone').classList.remove('hidden');
+      document.getElementById('pdf_unlock_password').value = '';
+      document.getElementById('unlock_file_input').value = '';
+      selectedFile = null;
+      fileBytes = null;
+      isUserPassProtected = false;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Invoice Generator with 7 Design Formats - Zenith Growth</title>
+  <meta name="description" content="Create professional client invoices instantly with 7 customizable design formats. Auto-fit to A4, manual layout adjustment, multi-currency, and instant PDF download. 100% private.">
+  <link rel="canonical" href="https://zenithgrowth.tech/invoice.html">
+
+  <meta property="og:title" content="Free Professional Invoice Generator - Zenith Growth">
+  <meta property="og:description" content="Choose from 7 modern invoice design formats. Auto-fit long data, customize colors and fonts, and download printable PDFs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/invoice.html">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- html2pdf for Direct Client-Side PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --accent-color: #059669;
+      --accent-light: #ecfdf5;
+      --accent-border: #a7f3d0;
+      --accent-text: #065f46;
+    }
+
+    /* Template Styles */
+    .template-emerald {
+      --accent-color: #059669;
+      --accent-light: #ecfdf5;
+      --accent-border: #a7f3d0;
+      --accent-text: #065f46;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .template-corporate {
+      --accent-color: #1e3a8a;
+      --accent-light: #eff6ff;
+      --accent-border: #bfdbfe;
+      --accent-text: #1e40af;
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    }
+    .template-corporate .inv-banner {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 1.5rem 2rem;
+      margin: -2.5rem -2.5rem 2rem -2.5rem;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .template-minimal {
+      --accent-color: #0f172a;
+      --accent-light: #f8fafc;
+      --accent-border: #e2e8f0;
+      --accent-text: #0f172a;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .template-creative {
+      --accent-color: #7c3aed;
+      --accent-light: #f5f3ff;
+      --accent-border: #ddd6fe;
+      --accent-text: #6d28d9;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .template-creative .inv-tag {
+      border-radius: 9999px;
+    }
+
+    .template-executive {
+      --accent-color: #b45309;
+      --accent-light: #fffbeb;
+      --accent-border: #fde68a;
+      --accent-text: #92400e;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .template-executive .header-bar {
+      border-top: 6px solid #1e293b;
+      border-bottom: 2px solid var(--accent-color);
+    }
+
+    .template-tech {
+      --accent-color: #0891b2;
+      --accent-light: #ecfeff;
+      --accent-border: #a5f3fc;
+      --accent-text: #155e75;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .template-compact {
+      --accent-color: #475569;
+      --accent-light: #f1f5f9;
+      --accent-border: #cbd5e1;
+      --accent-text: #334155;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .template-compact td, .template-compact th {
+      padding-top: 0.25rem !important;
+      padding-bottom: 0.25rem !important;
+    }
+
+    /* Print Formatting */
+    @page {
+      size: A4;
+      margin: 10mm;
+    }
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #invoice_canvas_wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      #invoice_paper {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        transform: none !important;
+      }
+      input, textarea, select {
+        border: none !important;
+        background: transparent !important;
+        color: black !important;
+        resize: none !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition">← All Tools</a>
+        <button onclick="downloadPdf()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
+          <span>↓</span> Download PDF
+        </button>
+        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
+          <span>🖨️</span> Print / Save
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+    <!-- Top Configuration Bar (No-Print) -->
+    <div class="no-print space-y-4 mb-8">
+      
+      <!-- Template Selector Card -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-xs">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span>🎨</span> Choose Invoice Design Format (7 Styles)
+            </h2>
+            <p class="text-xs text-slate-500">Pick any design. Your filled details automatically adjust to match each template layout.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="autoFitToPage()" class="px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold transition flex items-center gap-1.5">
+              <span>✨</span> Auto-Fit to 1 Page
+            </button>
+            <button onclick="fillSampleData()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+              Sample Data
+            </button>
+            <button onclick="clearInvoice()" class="px-3 py-1.5 rounded-xl text-xs text-slate-400 hover:text-rose-600 underline">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- 7 Template Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
+          <button onclick="setTemplate('emerald')" id="btn_tpl_emerald" class="tpl-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-emerald-700">1. Modern</span>
+            <span class="text-xs font-bold text-slate-800">Emerald Clean</span>
+            <div class="w-full h-1.5 rounded-full bg-emerald-500"></div>
+          </button>
+          <button onclick="setTemplate('corporate')" id="btn_tpl_corporate" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-blue-700">2. Classic</span>
+            <span class="text-xs font-bold text-slate-800">Navy Corporate</span>
+            <div class="w-full h-1.5 rounded-full bg-blue-700"></div>
+          </button>
+          <button onclick="setTemplate('minimal')" id="btn_tpl_minimal" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-slate-700">3. Swiss</span>
+            <span class="text-xs font-bold text-slate-800">Minimalist Slate</span>
+            <div class="w-full h-1.5 rounded-full bg-slate-900"></div>
+          </button>
+          <button onclick="setTemplate('creative')" id="btn_tpl_creative" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-purple-700">4. Studio</span>
+            <span class="text-xs font-bold text-slate-800">Creative Violet</span>
+            <div class="w-full h-1.5 rounded-full bg-purple-600"></div>
+          </button>
+          <button onclick="setTemplate('executive')" id="btn_tpl_executive" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-amber-700">5. Luxury</span>
+            <span class="text-xs font-bold text-slate-800">Executive Gold</span>
+            <div class="w-full h-1.5 rounded-full bg-amber-600"></div>
+          </button>
+          <button onclick="setTemplate('tech')" id="btn_tpl_tech" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-cyan-700">6. Startup</span>
+            <span class="text-xs font-bold text-slate-800">Tech Monospace</span>
+            <div class="w-full h-1.5 rounded-full bg-cyan-600"></div>
+          </button>
+          <button onclick="setTemplate('compact')" id="btn_tpl_compact" class="tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20">
+            <span class="text-[10px] font-black uppercase text-slate-500">7. Receipt</span>
+            <span class="text-xs font-bold text-slate-800">Compact Density</span>
+            <div class="w-full h-1.5 rounded-full bg-slate-500"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Manual Layout & Fine-Tuning Controls -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Scale / Zoom Control -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-xs font-bold uppercase text-slate-500">Page Scale (Fit Data):</label>
+            <span id="scale_val_label" class="text-xs font-bold text-slate-800">100%</span>
+          </div>
+          <input type="range" id="scale_slider" min="70" max="115" value="100" oninput="applyScale(this.value)" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+          <p class="text-[10px] text-slate-400 mt-1">Shrink if you have many line items so it fits on 1 page.</p>
+        </div>
+
+        <!-- Spacing / Density Control -->
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Table Density:</label>
+          <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            <button onclick="setDensity('compact')" id="btn_dens_compact" class="py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Tight</button>
+            <button onclick="setDensity('normal')" id="btn_dens_normal" class="py-1 rounded-lg bg-white text-slate-900 shadow-xs transition">Normal</button>
+            <button onclick="setDensity('spacious')" id="btn_dens_spacious" class="py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Spacious</button>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Adjusts vertical padding between items.</p>
+        </div>
+
+        <!-- Currency Selector -->
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Currency Symbol:</label>
+          <select id="inv_currency" onchange="updateCalculations()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 outline-none focus:border-emerald-600">
+            <option value="$" selected>USD ($ - US Dollar)</option>
+            <option value="€">EUR (€ - Euro)</option>
+            <option value="£">GBP (£ - British Pound)</option>
+            <option value="₹">INR (₹ - Indian Rupee)</option>
+            <option value="CA$">CAD (CA$ - Canadian Dollar)</option>
+            <option value="AU$">AUD (AU$ - Australian Dollar)</option>
+            <option value="¥">JPY (¥ - Japanese Yen)</option>
+            <option value="AED ">AED (AED - UAE Dirham)</option>
+            <option value="CHF ">CHF (CHF - Swiss Franc)</option>
+            <option value="SG$">SGD (SG$ - Singapore Dollar)</option>
+          </select>
+          <p class="text-[10px] text-slate-400 mt-1">Changes prefix symbol across all items.</p>
+        </div>
+
+        <!-- Accent Color Picker -->
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Custom Brand Color:</label>
+          <div class="flex items-center gap-2">
+            <input type="color" id="brand_color_picker" value="#059669" oninput="setCustomColor(this.value)" class="w-9 h-9 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white">
+            <div class="flex gap-1.5">
+              <button onclick="setCustomColor('#059669')" class="w-6 h-6 rounded-full bg-emerald-600" title="Emerald"></button>
+              <button onclick="setCustomColor('#1e3a8a')" class="w-6 h-6 rounded-full bg-blue-900" title="Navy"></button>
+              <button onclick="setCustomColor('#4f46e5')" class="w-6 h-6 rounded-full bg-indigo-600" title="Indigo"></button>
+              <button onclick="setCustomColor('#7c3aed')" class="w-6 h-6 rounded-full bg-purple-600" title="Violet"></button>
+              <button onclick="setCustomColor('#b45309')" class="w-6 h-6 rounded-full bg-amber-600" title="Amber"></button>
+              <button onclick="setCustomColor('#0f172a')" class="w-6 h-6 rounded-full bg-slate-900" title="Black"></button>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Tints headers, badges, and totals.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Live Invoice Paper Workspace -->
+    <div id="invoice_canvas_wrapper" class="flex justify-center w-full overflow-x-auto pb-12">
+      <div id="invoice_paper" class="template-emerald bg-white border border-slate-200 rounded-3xl p-6 sm:p-12 shadow-sm w-full max-w-[850px] transition-all origin-top">
+        
+        <!-- Header Banner for Corporate Style -->
+        <div id="corp_banner" class="hidden inv-banner mb-6">
+          <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-widest uppercase">INVOICE</h1>
+            <span class="text-xs opacity-90">Commercial Document</span>
+          </div>
+        </div>
+
+        <!-- Top Section: Company & Invoice Info -->
+        <div class="header-bar flex flex-col sm:flex-row justify-between items-start gap-6 border-b border-slate-200 pb-8 mb-8">
+          
+          <!-- Company & Logo -->
+          <div class="w-full sm:w-1/2">
+            <div class="flex items-center gap-3 mb-3">
+              <div id="logo_container" class="hidden relative group">
+                <img id="company_logo_img" src="" alt="Company Logo" class="max-h-16 w-auto object-contain rounded-lg">
+                <button onclick="removeLogo()" class="no-print absolute -top-2 -right-2 bg-rose-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-sm">✕</button>
+              </div>
+              <label class="no-print cursor-pointer inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-emerald-600 border border-dashed border-slate-300 rounded-xl px-2.5 py-1.5 hover:bg-slate-50 transition">
+                <span>📷</span> Add Logo
+                <input type="file" accept="image/*" class="hidden" onchange="handleLogoUpload(this.files[0])">
+              </label>
+            </div>
+
+            <input type="text" id="company_name" value="Zenith Growth Tech LLC" placeholder="Your Business / Full Name" class="text-2xl sm:text-3xl font-extrabold bg-transparent text-slate-900 border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-full mb-1">
+            <textarea id="company_details" rows="3" placeholder="Address, City, Country&#10;Email: billing@zenithgrowth.tech&#10;Tax / VAT: US987654321" class="w-full text-xs text-slate-600 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none leading-relaxed">742 Evergreen Terrace, Suite 100&#10;San Francisco, CA 94107, USA&#10;billing@zenithgrowth.tech | VAT: US987654321</textarea>
+          </div>
+
+          <!-- Invoice Metadata -->
+          <div class="w-full sm:w-1/3 flex flex-col items-start sm:items-end">
+            <h2 id="invoice_title_text" class="text-3xl font-black tracking-wider mb-4" style="color: var(--accent-color);">INVOICE</h2>
+            
+            <div class="space-y-2 text-xs w-full">
+              <div class="flex justify-between items-center gap-2">
+                <span class="text-slate-500 font-medium">Invoice No:</span>
+                <input type="text" id="inv_number" value="INV-2026-001" class="text-right font-bold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-32 font-mono">
+              </div>
+              <div class="flex justify-between items-center gap-2">
+                <span class="text-slate-500 font-medium">Invoice Date:</span>
+                <input type="date" id="inv_date" class="text-right text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-32 font-mono">
+              </div>
+              <div class="flex justify-between items-center gap-2">
+                <span class="text-slate-500 font-medium">Due Date:</span>
+                <input type="date" id="inv_due_date" class="text-right text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-32 font-mono">
+              </div>
+              <div class="flex justify-between items-center gap-2">
+                <span class="text-slate-500 font-medium">PO Number:</span>
+                <input type="text" id="inv_po" placeholder="Optional PO-99" class="text-right text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-32 font-mono">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bill To Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+          <div>
+            <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Billed To (Client):</h3>
+            <input type="text" id="client_name" value="Acme Corporation Inc." placeholder="Client Name or Company" class="text-base font-bold bg-transparent text-slate-900 border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-full mb-1">
+            <textarea id="client_details" rows="2" placeholder="Client Address, Email, or VAT ID" class="w-full text-xs text-slate-600 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none">100 Market Street, 4th Floor&#10;New York, NY 10001 | accounts@acme.com</textarea>
+          </div>
+          <div>
+            <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Project / Subject:</h3>
+            <input type="text" id="inv_subject" value="Full-Stack Web Development & SEO Suite" placeholder="e.g. Website Redesign & Optimization" class="text-xs font-semibold bg-transparent text-slate-800 border-b border-transparent hover:border-slate-300 focus:border-emerald-600 outline-none w-full mb-2">
+            <span class="inv-tag inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg" style="background-color: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent-border);">
+              Payment Due Upon Receipt
+            </span>
+          </div>
+        </div>
+
+        <!-- Line Items Table -->
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full text-left border-collapse text-xs" id="items_table">
+            <thead>
+              <tr class="border-b-2 text-slate-600 font-bold" style="border-color: var(--accent-color); background-color: var(--accent-light);">
+                <th class="py-2.5 px-3 w-1/2">
+                  <input type="text" value="Item & Description" class="bg-transparent font-bold outline-none w-full" style="color: var(--accent-text);">
+                </th>
+                <th class="py-2.5 px-3 text-right w-20">
+                  <input type="text" value="Qty / Hrs" class="bg-transparent font-bold text-right outline-none w-full" style="color: var(--accent-text);">
+                </th>
+                <th class="py-2.5 px-3 text-right w-28">
+                  <input type="text" value="Rate" class="bg-transparent font-bold text-right outline-none w-full" style="color: var(--accent-text);">
+                </th>
+                <th class="py-2.5 px-3 text-right w-28">
+                  <input type="text" value="Amount" class="bg-transparent font-bold text-right outline-none w-full" style="color: var(--accent-text);">
+                </th>
+                <th class="py-2.5 px-2 text-center w-10 no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="line_items_body">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add Row Button (No Print) -->
+        <div class="no-print mb-8">
+          <button onclick="addLineItem()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition flex items-center gap-1.5 border border-slate-200">
+            <span>+</span> Add Line Item
+          </button>
+        </div>
+
+        <!-- Summary & Totals Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-8 border-t border-slate-200 pt-6">
+          
+          <!-- Notes & Terms -->
+          <div class="w-full sm:w-1/2">
+            <h4 class="text-[11px] font-bold uppercase text-slate-400 mb-2">Payment Details & Bank Instructions:</h4>
+            <textarea id="inv_notes" rows="4" placeholder="Bank Name: Chase Bank&#10;Account: 123456789 | Routing: 987654321&#10;Wire / Wise: payment@zenithgrowth.tech&#10;Thank you for your business!" class="w-full text-xs text-slate-700 bg-slate-50 p-3 rounded-2xl border border-slate-200 focus:border-emerald-600 outline-none leading-relaxed">Bank: JPMorgan Chase Bank N.A.&#10;Account Name: Zenith Growth Tech LLC&#10;Routing (ABA): 021000021 | Account #: 9876543210&#10;Wise / International: billing@zenithgrowth.tech</textarea>
+          </div>
+
+          <!-- Totals Calculations Box -->
+          <div class="w-full sm:w-1/3 space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">Subtotal:</span>
+              <span id="subtotal_display" class="font-bold text-slate-800 font-mono">$0.00</span>
+            </div>
+
+            <!-- Tax / VAT -->
+            <div class="flex justify-between items-center py-1 border-b border-slate-100">
+              <div class="flex items-center gap-1">
+                <span class="text-slate-500 font-medium">Tax / VAT (%):</span>
+              </div>
+              <input type="number" id="tax_rate" value="5" min="0" max="100" step="any" oninput="updateCalculations()" class="w-16 text-right bg-slate-100 text-slate-800 rounded px-1.5 py-1 outline-none border border-slate-200 font-mono">
+            </div>
+
+            <!-- Discount -->
+            <div class="flex justify-between items-center py-1 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">Discount (%):</span>
+              <input type="number" id="discount_rate" value="0" min="0" max="100" step="any" oninput="updateCalculations()" class="w-16 text-right bg-slate-100 text-slate-800 rounded px-1.5 py-1 outline-none border border-slate-200 font-mono">
+            </div>
+
+            <!-- Shipping / Other -->
+            <div class="flex justify-between items-center py-1 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">Shipping / Fee:</span>
+              <input type="number" id="shipping_fee" value="0" min="0" step="any" oninput="updateCalculations()" class="w-16 text-right bg-slate-100 text-slate-800 rounded px-1.5 py-1 outline-none border border-slate-200 font-mono">
+            </div>
+
+            <!-- Total Due Card -->
+            <div class="p-3 rounded-2xl flex justify-between items-center mt-3" style="background-color: var(--accent-light); border: 1.5px solid var(--accent-border);">
+              <span class="font-extrabold text-xs uppercase" style="color: var(--accent-text);">Total Due:</span>
+              <span id="total_display" class="text-lg font-black font-mono" style="color: var(--accent-color);">$0.00</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white py-6 text-xs text-slate-500 text-center no-print">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <span>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Invoice Studio.</span>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-slate-800">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-800">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-800">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Engine -->
+  <script>
+    let currentTemplate = 'emerald';
+    let currentDensity = 'normal';
+    let lineItems = [
+      { desc: "Full-Stack Web Application Development (Phase 1)", qty: 40, rate: 85.00 },
+      { desc: "Client-Side WebAssembly Architecture & Security Hardening", qty: 25, rate: 95.00 },
+      { desc: "Responsive UI/UX Engineering & Multi-Device Testing", qty: 15, rate: 75.00 }
+    ];
+
+    function renderLineItems() {
+      const tbody = document.getElementById("line_items_body");
+      const currency = document.getElementById("inv_currency").value;
+      tbody.innerHTML = "";
+
+      const paddingClass = currentDensity === 'compact' ? 'py-1.5 px-3' : (currentDensity === 'spacious' ? 'py-4 px-3' : 'py-2.5 px-3');
+
+      lineItems.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b border-slate-100 hover:bg-slate-50/60";
+        tr.innerHTML = `
+          <td class="${paddingClass}">
+            <input type="text" value="${item.desc}" oninput="updateItem(${index}, 'desc', this.value)" class="w-full bg-transparent text-slate-800 border-b border-transparent focus:border-emerald-600 outline-none" placeholder="Item description">
+          </td>
+          <td class="${paddingClass} text-right">
+            <input type="number" min="0" step="any" value="${item.qty}" oninput="updateItem(${index}, 'qty', this.value)" class="w-16 text-right bg-transparent text-slate-800 border-b border-transparent focus:border-emerald-600 outline-none font-mono">
+          </td>
+          <td class="${paddingClass} text-right">
+            <input type="number" min="0" step="any" value="${item.rate}" oninput="updateItem(${index}, 'rate', this.value)" class="w-20 text-right bg-transparent text-slate-800 border-b border-transparent focus:border-emerald-600 outline-none font-mono">
+          </td>
+          <td class="${paddingClass} text-right font-bold text-slate-800 font-mono">
+            ${currency}${(item.qty * item.rate).toFixed(2)}
+          </td>
+          <td class="${paddingClass} text-center no-print">
+            <button onclick="removeLineItem(${index})" class="text-rose-400 hover:text-rose-600 font-bold px-1" title="Remove line item">✕</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateCalculations();
+    }
+
+    function addLineItem() {
+      lineItems.push({ desc: "", qty: 1, rate: 0 });
+      renderLineItems();
+    }
+
+    function removeLineItem(index) {
+      if (lineItems.length > 1) {
+        lineItems.splice(index, 1);
+        renderLineItems();
+      }
+    }
+
+    function updateItem(index, field, value) {
+      if (field === 'qty' || field === 'rate') {
+        lineItems[index][field] = parseFloat(value) || 0;
+      } else {
+        lineItems[index][field] = value;
+      }
+      updateCalculations();
+    }
+
+    function updateCalculations() {
+      const currency = document.getElementById("inv_currency").value;
+      let subtotal = 0;
+      lineItems.forEach(i => subtotal += (i.qty * i.rate));
+
+      const taxRate = parseFloat(document.getElementById("tax_rate").value) || 0;
+      const discountRate = parseFloat(document.getElementById("discount_rate").value) || 0;
+      const shippingFee = parseFloat(document.getElementById("shipping_fee").value) || 0;
+
+      const discountAmt = subtotal * (discountRate / 100);
+      const afterDiscount = subtotal - discountAmt;
+      const taxAmt = afterDiscount * (taxRate / 100);
+      const total = afterDiscount + taxAmt + shippingFee;
+
+      document.getElementById("subtotal_display").textContent = `${currency}${subtotal.toFixed(2)}`;
+      document.getElementById("total_display").textContent = `${currency}${total.toFixed(2)}`;
+    }
+
+    // Template Switching
+    function setTemplate(tplName) {
+      currentTemplate = tplName;
+      const paper = document.getElementById("invoice_paper");
+      paper.className = `template-${tplName} bg-white border border-slate-200 rounded-3xl p-6 sm:p-12 shadow-sm w-full max-w-[850px] transition-all origin-top`;
+
+      // Update button highlights
+      document.querySelectorAll('.tpl-btn').forEach(b => {
+        b.className = "tpl-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-400 text-left transition flex flex-col justify-between h-20";
+      });
+      const activeBtn = document.getElementById(`btn_tpl_${tplName}`);
+      if (activeBtn) {
+        activeBtn.className = "tpl-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 text-left transition flex flex-col justify-between h-20";
+      }
+
+      // Show/hide corporate banner
+      const corpBanner = document.getElementById("corp_banner");
+      if (tplName === 'corporate') {
+        corpBanner.classList.remove('hidden');
+      } else {
+        corpBanner.classList.add('hidden');
+      }
+
+      renderLineItems();
+    }
+
+    // Density / Spacing
+    function setDensity(density) {
+      currentDensity = density;
+      document.getElementById("btn_dens_compact").className = density === 'compact' ? "py-1 rounded-lg bg-white text-slate-900 shadow-xs transition" : "py-1 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      document.getElementById("btn_dens_normal").className = density === 'normal' ? "py-1 rounded-lg bg-white text-slate-900 shadow-xs transition" : "py-1 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      document.getElementById("btn_dens_spacious").className = density === 'spacious' ? "py-1 rounded-lg bg-white text-slate-900 shadow-xs transition" : "py-1 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      renderLineItems();
+    }
+
+    // Scale / Zoom
+    function applyScale(percent) {
+      const scale = percent / 100;
+      document.getElementById("scale_val_label").textContent = `${percent}%`;
+      const paper = document.getElementById("invoice_paper");
+      paper.style.transform = `scale(${scale})`;
+      paper.style.marginBottom = `${(scale - 1) * paper.scrollHeight}px`;
+    }
+
+    // Smart Auto-Fit to A4 single page
+    function autoFitToPage() {
+      const paper = document.getElementById("invoice_paper");
+      paper.style.transform = "none";
+      paper.style.marginBottom = "0px";
+
+      const currentHeight = paper.scrollHeight;
+      const targetHeight = 1050; // standard single A4 printable height
+
+      if (currentHeight > targetHeight) {
+        const neededScale = Math.max(0.70, Math.min(1.0, targetHeight / currentHeight));
+        const percent = Math.round(neededScale * 100);
+        document.getElementById("scale_slider").value = percent;
+        applyScale(percent);
+        setDensity('compact');
+        alert(`✨ Smart Auto-Fit applied! Scaled to ${percent}% with compact spacing so all data fits comfortably onto a single page.`);
+      } else {
+        document.getElementById("scale_slider").value = 100;
+        applyScale(100);
+        alert("✨ Your content already fits within a single page!");
+      }
+    }
+
+    // Custom Color
+    function setCustomColor(hex) {
+      document.getElementById("brand_color_picker").value = hex;
+      const paper = document.getElementById("invoice_paper");
+      paper.style.setProperty('--accent-color', hex);
+      paper.style.setProperty('--accent-light', hex + '15'); // 10% opacity tint
+      paper.style.setProperty('--accent-border', hex + '40');
+      paper.style.setProperty('--accent-text', hex);
+      updateCalculations();
+    }
+
+    // Logo Handling
+    function handleLogoUpload(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById("company_logo_img").src = e.target.result;
+        document.getElementById("logo_container").classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeLogo() {
+      document.getElementById("company_logo_img").src = "";
+      document.getElementById("logo_container").classList.add("hidden");
+    }
+
+    // Direct PDF Download via html2pdf
+    function downloadPdf() {
+      const paper = document.getElementById("invoice_paper");
+      const invNum = document.getElementById("inv_number").value || "INV-001";
+      
+      // Temporary unscale for high-DPI rasterization
+      const origTransform = paper.style.transform;
+      const origMargin = paper.style.marginBottom;
+      paper.style.transform = "none";
+      paper.style.marginBottom = "0px";
+
+      const opt = {
+        margin: [8, 8, 8, 8],
+        filename: `Invoice_${invNum}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(paper).save().then(() => {
+        paper.style.transform = origTransform;
+        paper.style.marginBottom = origMargin;
+      });
+    }
+
+    // Sample Data
+    function fillSampleData() {
+      lineItems = [
+        { desc: "Full-Stack Web Application Development (Phase 1)", qty: 40, rate: 85.00 },
+        { desc: "Client-Side WebAssembly Architecture & Security Hardening", qty: 25, rate: 95.00 },
+        { desc: "Responsive UI/UX Engineering & Multi-Device Testing", qty: 15, rate: 75.00 },
+        { desc: "Continuous Integration & Hostinger Deployment Setup", qty: 10, rate: 80.00 }
+      ];
+      renderLineItems();
+    }
+
+    function clearInvoice() {
+      lineItems = [{ desc: "Service Description", qty: 1, rate: 100 }];
+      document.getElementById("company_name").value = "";
+      document.getElementById("company_details").value = "";
+      document.getElementById("client_name").value = "";
+      document.getElementById("client_details").value = "";
+      document.getElementById("inv_subject").value = "";
+      removeLogo();
+      renderLineItems();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split('T')[0];
+      const due = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
+      document.getElementById("inv_date").value = today;
+      document.getElementById("inv_due_date").value = due;
+      
+      // Load official logo by default
+      document.getElementById("company_logo_img").src = "logo.png";
+      document.getElementById("logo_container").classList.remove("hidden");
+
+      renderLineItems();
+    });
+  </script>
+</body>
+</html>

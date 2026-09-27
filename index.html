@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith Growth - High-Performance Client-Side PDF & Graphics Suite</title>
+  <meta name="description" content="Fast, 100% private, client-side document and graphic utilities. Compress PDFs, remove background to transparent PNG, unlock, sign, merge, split, rotate 90°, and watermark with zero server uploads.">
+  <meta name="keywords" content="remove background free, compress pdf, unlock pdf, sign pdf, merge pdf, split pdf, rotate pdf 90 degrees, image to pdf, watermark pdf, invoice maker, zenith growth">
+  <link rel="canonical" href="https://zenithgrowth.tech/">
+
+  <!-- OpenGraph Meta Tags -->
+  <meta property="og:title" content="Zenith Growth - High-Performance Document Suite">
+  <meta property="og:description" content="100% private in-browser document & graphic utilities. Fast, zero-server latency, and free forever.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Structured Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Zenith Growth PDF & Graphic Suite",
+    "url": "https://zenithgrowth.tech/",
+    "applicationCategory": "OfficeApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Comprehensive client-side suite for PDF compression, background removal, 90-degree rotation, digital signatures, splitting, merging, converting, and watermarking."
+  }
+  </script>
+
+  <style>
+    .card-surface {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-surface:hover {
+      border-color: rgba(148, 163, 184, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.03);
+    }
+  </style>
+</head>
+<body class="bg-[#fafbfc] text-slate-900 min-h-screen flex flex-col font-sans antialiased selection:bg-slate-900 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <img src="logo.png" alt="Zenith Growth" class="h-8 w-auto rounded-lg object-contain shadow-xs">
+          <span class="text-base font-extrabold tracking-tight text-slate-950 flex items-center gap-1">
+            Zenith<span class="text-slate-400 font-normal">/</span>Growth
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600">
+          <a href="bg-remover.html" class="hover:text-slate-950 transition">Background Remover</a>
+          <a href="compress-pdf.html" class="hover:text-slate-950 transition">Compress</a>
+          <a href="unlock-pdf.html" class="hover:text-slate-950 transition">Unlock</a>
+          <a href="sign-pdf.html" class="hover:text-slate-950 transition">Sign</a>
+          <a href="merge-pdf.html" class="hover:text-slate-950 transition">Merge</a>
+          <a href="split-pdf.html" class="hover:text-slate-950 transition">Split</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          100% Client-Side WASM
+        </span>
+        <a href="bg-remover.html" class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
+          Open Tools
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 w-full">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-mono text-slate-600 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        Zero Server Uploads • Infinite Speed • Free Forever
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-[-0.04em] text-slate-950 leading-[1.15] mb-4">
+        Every tool you need.<br class="hidden sm:inline"> Processed privately on your device.
+      </h1>
+      <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+        Compress, remove photo backgrounds, unlock, sign, merge, and protect documents with zero latency. Confidential files never leave your computer.
+      </p>
+    </div>
+
+    <!-- Quick Search & Keyboard Command Bar -->
+    <div class="max-w-2xl mx-auto relative group mb-8">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+      <input type="text" id="tool_search_input" oninput="handleSearch(this.value)" placeholder="Search 14+ tools (e.g. 'compress', 'background', 'sign', 'unlock')..." class="w-full pl-11 pr-24 py-3 bg-white border border-slate-200 rounded-xl shadow-xs text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition">
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
+        <kbd class="font-mono text-[10px] bg-slate-100 border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded shadow-2xs">⌘K</kbd>
+        <span class="text-slate-300">/</span>
+        <kbd class="font-mono text-[10px] bg-slate-100 border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded shadow-2xs">/</kbd>
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-10 text-xs font-semibold" id="filter_pills">
+      <button onclick="filterCategory('all')" id="pill_all" class="px-3.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-xs transition">All Utilities (14)</button>
+      <button onclick="filterCategory('graphics')" id="pill_graphics" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition">Graphics &amp; Images</button>
+      <button onclick="filterCategory('optimize')" id="pill_optimize" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition">Optimize &amp; Compress</button>
+      <button onclick="filterCategory('organize')" id="pill_organize" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition">Organize PDF</button>
+      <button onclick="filterCategory('security')" id="pill_security" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition">Security &amp; Sign</button>
+      <button onclick="filterCategory('business')" id="pill_business" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition">Business &amp; Dev</button>
+    </div>
+
+    <!-- Spotlight Top 2 Flagship Tools -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" id="spotlight_section">
+      
+      <!-- Flagship 1: Smart Background Remover -->
+      <a href="bg-remover.html" class="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-slate-400 shadow-xs hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+              ⚡ Flagship Graphic Tool
+            </span>
+            <span class="text-slate-400 group-hover:text-slate-900 transition font-mono text-xs">1-Click Instant</span>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-800 flex-shrink-0 group-hover:bg-slate-900 group-hover:text-white transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-950 tracking-tight group-hover:text-indigo-600 transition">Remove Background</h3>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                Precision subject contour lock with auto letter-loop clearing (O, P, B, A). Instant transparent PNG with zero upload delays.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-400 font-mono text-[11px]">Free Transparent PNG + JPG</span>
+          <span class="font-bold text-slate-900 group-hover:translate-x-0.5 transition">Open Tool →</span>
+        </div>
+      </a>
+
+      <!-- Flagship 2: Compress PDF -->
+      <a href="compress-pdf.html" class="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-slate-400 shadow-xs hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/60">
+              High-DPI Super-Sampling
+            </span>
+            <span class="text-slate-400 group-hover:text-slate-900 transition font-mono text-xs">Up to 80% Reduction</span>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-800 flex-shrink-0 group-hover:bg-slate-900 group-hover:text-white transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-950 tracking-tight group-hover:text-blue-600 transition">Compress PDF</h3>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                Ultra-crisp 150–195 DPI canvas rendering. Shrink heavy government and corporate PDFs without blurry text.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-400 font-mono text-[11px]">Lossless DPI Engine</span>
+          <span class="font-bold text-slate-900 group-hover:translate-x-0.5 transition">Open Tool →</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Main Grid of Tools (14 Tools - Vector Icons, No AI Emojis) -->
+    <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-4 font-semibold">All Document &amp; Graphic Utilities</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-16" id="tools_container">
+
+      <!-- Tool: Remove Background -->
+      <a href="bg-remover.html" data-category="graphics" data-keywords="remove background transparent png erase cutout" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Remove Background</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Instant transparent PNG with subject lock &amp; letter loop cleaner.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Graphic</span>
+          <span>Cutout →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Compress PDF -->
+      <a href="compress-pdf.html" data-category="optimize" data-keywords="compress pdf shrink size reduce mb kb" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Compress PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">High-DPI super-sampling. Shrink file size while preserving razor text.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Optimize</span>
+          <span>Compress →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Unlock PDF -->
+      <a href="unlock-pdf.html" data-category="security" data-keywords="unlock pdf remove password decrypt restriction" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Unlock PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Remove passwords and restrictions locally via native QPDF WASM.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Security</span>
+          <span>Unlock →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Sign PDF -->
+      <a href="sign-pdf.html" data-category="security" data-keywords="sign pdf digital signature stamp draw contract" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Sign PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Stamp, draw, or type digital legal signatures with 0 registration.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Security</span>
+          <span>Sign →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Merge PDF -->
+      <a href="merge-pdf.html" data-category="organize" data-keywords="merge pdf combine join multiple reorder" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Merge PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Combine multiple documents into one seamless PDF with page drag.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Organize</span>
+          <span>Merge →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Split PDF -->
+      <a href="split-pdf.html" data-category="organize" data-keywords="split pdf extract separate pages ranges zip" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Split PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Extract custom ranges (1-2, 3-6) into distinct PDF files in a ZIP bundle.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Organize</span>
+          <span>Split →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Rotate PDF (90°) -->
+      <a href="rotate-pdf.html" data-category="organize" data-keywords="rotate pdf 90 degrees turn orientation clockwise" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Rotate PDF 90°</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Rotate pages clockwise or counter-clockwise with live visual preview.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Organize</span>
+          <span>Rotate →</span>
+        </div>
+      </a>
+
+      <!-- Tool: PDF to JPG -->
+      <a href="pdf-to-jpg.html" data-category="optimize" data-keywords="pdf to jpg convert images extract pictures zip" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">PDF to JPG</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Export every page into high-definition JPG pictures in a ZIP archive.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Convert</span>
+          <span>Export →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Image to PDF -->
+      <a href="image-to-pdf.html" data-category="optimize" data-keywords="image to pdf convert jpg png webp create pdf" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Image to PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Convert JPG, PNG, and WebP images into a standardized PDF file.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Convert</span>
+          <span>Convert →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Watermark PDF -->
+      <a href="watermark-pdf.html" data-category="optimize" data-keywords="watermark pdf stamp logo copyright opacity" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Watermark PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Stamp logos or custom text with live drag, opacity, and angle controls.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Optimize</span>
+          <span>Watermark →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Remove Watermark -->
+      <a href="remove-watermark.html" data-category="optimize" data-keywords="remove watermark erase redact confidential stamp" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Remove Watermark</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Visual redaction tool to erase unwanted stamps or sensitive lines.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Optimize</span>
+          <span>Erase →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Page Numbers -->
+      <a href="page-numbers.html" data-category="organize" data-keywords="page numbers add numbering footer header pagination" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Page Numbers</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Add sequential page numbers (Page X of Y) with custom positions.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Organize</span>
+          <span>Paginate →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Protect PDF -->
+      <a href="protect-pdf.html" data-category="security" data-keywords="protect pdf encrypt password security lock" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Protect PDF</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Encrypt your document with AES encryption to prevent viewing.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Security</span>
+          <span>Encrypt →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Invoice Maker -->
+      <a href="invoice.html" data-category="business" data-keywords="invoice maker billing receipt generator tax calculate" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">Invoice Maker</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Create tax-ready invoices with 7 themes, currencies, and 1-page auto-fit.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Business</span>
+          <span>Create →</span>
+        </div>
+      </a>
+
+      <!-- Tool: JSON Formatter -->
+      <a href="json-formatter.html" data-category="business" data-keywords="json formatter beautifier validator minify developer" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
+        <div>
+          <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 mb-3 group-hover:bg-slate-900 group-hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-slate-950">JSON Formatter</h3>
+          <p class="text-slate-500 text-xs leading-relaxed">Validate, beautify, and inspect structured JSON data in real time.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-slate-950">
+          <span class="font-mono text-[10px] text-slate-400">Developer</span>
+          <span>Format →</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- AdSense High-CTR Banner Placement (Clean minimal container) -->
+    <div class="w-full my-8 p-4 rounded-xl border border-dashed border-slate-200 bg-white/60 flex items-center justify-center text-xs text-slate-400 font-mono tracking-wider min-h-[90px]">
+      <span>Google AdSense Responsive Unit</span>
+    </div>
+  </main>
+
+  <!-- Clean Minimal Footer -->
+  <footer class="border-t border-slate-200/80 bg-white py-10 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-900">Zenith Growth</span>
+        <span>•</span>
+        <span>© 2026 zenithgrowth.tech</span>
+        <span>•</span>
+        <span class="font-mono text-[11px] text-slate-400">100% In-Browser Computation</span>
+      </div>
+      <div class="flex items-center gap-6 font-medium">
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Category Filtering
+    function filterCategory(cat) {
+      const pills = document.querySelectorAll('#filter_pills button');
+      pills.forEach(p => {
+        p.className = "px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90 transition";
+      });
+      document.getElementById(`pill_${cat}`).className = "px-3.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-xs transition";
+
+      const cards = document.querySelectorAll('.tool-card');
+      const spotlight = document.getElementById('spotlight_section');
+      if (spotlight) {
+        spotlight.style.display = (cat === 'all') ? 'grid' : 'none';
+      }
+
+      cards.forEach(card => {
+        const itemCats = card.getAttribute('data-category');
+        if (cat === 'all' || itemCats.includes(cat)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Live Instant Search Filter
+    function handleSearch(query) {
+      const q = query.trim().toLowerCase();
+      const cards = document.querySelectorAll('.tool-card');
+      const spotlight = document.getElementById('spotlight_section');
+
+      if (spotlight) {
+        spotlight.style.display = q ? 'none' : 'grid';
+      }
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+        if (!q || text.includes(q) || keywords.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Keyboard Shortcut Handler (⌘K and / to focus search)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const input = document.getElementById('tool_search_input');
+        input.focus();
+        input.select();
+      } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const input = document.getElementById('tool_search_input');
+        input.focus();
+        input.select();
+      }
+    });
+  </script>
+</body>
+</html>

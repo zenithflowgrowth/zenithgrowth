@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Page Numbers to PDF Online Free - Zenith Growth</title>
+  <meta name="description" content="Add page numbers to PDF documents online for free. Choose positions, formatting (Page X of Y), and typography. 100% private in-browser tool with zero server uploads.">
+  <link rel="canonical" href="https://zenithgrowth.tech/page-numbers.html">
+
+  <meta property="og:title" content="Add Page Numbers to PDF Online Free - Zenith Growth">
+  <meta property="og:description" content="Insert customizable page numbers into your PDF files in seconds with zero data uploads.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/page-numbers.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF-Lib for Client-Side PDF Pagination -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+        <img src="logo.png" alt="Zenith Flow Growth" class="h-9 w-auto rounded-lg shadow-xs object-contain">
+        <span>Zenith<span class="text-emerald-600">Growth</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-emerald-600 transition">All Tools</a>
+        <a href="page-numbers.html" class="text-purple-600 font-bold">Page Numbers</a>
+        <a href="merge-pdf.html" class="hover:text-emerald-600 transition">Merge PDF</a>
+        <a href="split-pdf.html" class="hover:text-emerald-600 transition">Split PDF</a>
+      </nav>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
+        Automatic Pagination
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <span class="inline-block px-3 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full mb-3">
+        🔢 Automated Pagination
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
+        Add Page Numbers to PDF
+      </h1>
+      <p class="text-slate-600 text-base">
+        Add sequential page numbers to your document with custom positioning and formatting. <strong class="text-slate-800">100% private.</strong>
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="num_upload_zone" onclick="document.getElementById('num_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-purple-500 hover:bg-purple-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+      <input type="file" id="num_file_input" accept="application/pdf" class="hidden" onchange="handleNumFile(this.files[0])">
+      <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+        🔢
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Select PDF file</h3>
+      <p class="text-xs text-slate-500 mb-4">Choose a PDF document to number pages</p>
+      <button type="button" class="px-6 py-2.5 rounded-xl bg-purple-600 group-hover:bg-purple-700 text-white font-bold text-sm shadow-md shadow-purple-500/20 transition">
+        Choose PDF
+      </button>
+    </div>
+
+    <!-- Config Panel -->
+    <div id="num_config_panel" class="w-full hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm mb-8">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+        <div>
+          <h3 id="num_doc_name" class="text-base font-bold text-slate-900 truncate max-w-md">Document.pdf</h3>
+          <p id="num_doc_info" class="text-xs text-slate-400">Total pages: 0</p>
+        </div>
+        <button onclick="document.getElementById('num_file_input').click()" class="text-xs text-slate-400 hover:text-purple-600 underline">Change PDF</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Numbering Format:</label>
+          <select id="num_format" class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-800 outline-none">
+            <option value="page_x_of_y" selected>Page X of Y (e.g. Page 1 of 12)</option>
+            <option value="x_of_y">X of Y (e.g. 1 of 12)</option>
+            <option value="x_slash_y">X / Y (e.g. 1 / 12)</option>
+            <option value="only_x">Only Number (e.g. 1, 2, 3...)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-2">Position on Page:</label>
+          <select id="num_position" class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-800 outline-none">
+            <option value="bottom-center" selected>Bottom Center</option>
+            <option value="bottom-right">Bottom Right Corner</option>
+            <option value="bottom-left">Bottom Left Corner</option>
+            <option value="top-right">Top Right Corner</option>
+            <option value="top-center">Top Center</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-purple-50 border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-purple-950 text-sm">Add Numbers & Save</h4>
+          <p class="text-xs text-purple-700">Applies pagination across all pages using embedded vector Helvetica font.</p>
+        </div>
+        <button id="add_numbers_btn" onclick="executeAddPageNumbers()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-2">
+          <span>Number Pages & Download</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
+      <div class="flex gap-6">
+        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let numFile = null;
+    let numBytes = null;
+    let numTotalPages = 0;
+
+    async function handleNumFile(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a valid PDF file.');
+        return;
+      }
+      numFile = file;
+      numBytes = await file.arrayBuffer();
+
+      const { PDFDocument } = PDFLib;
+      const doc = await PDFDocument.load(numBytes);
+      numTotalPages = doc.getPageCount();
+
+      document.getElementById('num_upload_zone').classList.add('hidden');
+      document.getElementById('num_config_panel').classList.remove('hidden');
+      document.getElementById('num_doc_name').textContent = file.name;
+      document.getElementById('num_doc_info').textContent = `Total pages: ${numTotalPages} (${(file.size / (1024*1024)).toFixed(2)} MB)`;
+    }
+
+    async function executeAddPageNumbers() {
+      const btn = document.getElementById('add_numbers_btn');
+      const format = document.getElementById('num_format').value;
+      const position = document.getElementById('num_position').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Numbering pages...';
+
+      try {
+        const { PDFDocument, rgb, StandardFonts } = PDFLib;
+        const pdfDoc = await PDFDocument.load(numBytes);
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const pages = pdfDoc.getPages();
+        const total = pages.length;
+
+        pages.forEach((page, idx) => {
+          const pageNum = idx + 1;
+          let label = "";
+
+          if (format === 'page_x_of_y') label = `Page ${pageNum} of ${total}`;
+          else if (format === 'x_of_y') label = `${pageNum} of ${total}`;
+          else if (format === 'x_slash_y') label = `${pageNum} / ${total}`;
+          else label = `${pageNum}`;
+
+          const { width, height } = page.getSize();
+          const fontSize = 10;
+          const textWidth = font.widthOfTextAtSize(label, fontSize);
+
+          let x = 0;
+          let y = 0;
+
+          if (position === 'bottom-center') {
+            x = (width / 2) - (textWidth / 2);
+            y = 25;
+          } else if (position === 'bottom-right') {
+            x = width - textWidth - 30;
+            y = 25;
+          } else if (position === 'bottom-left') {
+            x = 30;
+            y = 25;
+          } else if (position === 'top-right') {
+            x = width - textWidth - 30;
+            y = height - 30;
+          } else if (position === 'top-center') {
+            x = (width / 2) - (textWidth / 2);
+            y = height - 30;
+          }
+
+          page.drawText(label, {
+            x: x,
+            y: y,
+            size: fontSize,
+            font: font,
+            color: rgb(0.3, 0.3, 0.3)
+          });
+        });
+
+        const modifiedBytes = await pdfDoc.save();
+        const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
+        const downloadUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `numbered_${numFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        alert('🎉 Successfully added page numbers! Download started.');
+      } catch (err) {
+        alert('Error adding page numbers: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Number Pages & Download →';
+      }
+    }
+  </script>
+</body>
+</html>
