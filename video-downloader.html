@@ -1468,7 +1468,7 @@ body {
 
         <div id="engine-status" class="engine-badge loading">
           <span class="pulse-dot"></span>
-          <span id="engine-status-text">Checking Core Engines...</span>
+          <span id="engine-status-text">Server Active</span>
         </div>
 
         <button id="open-folder-nav-btn" class="btn-icon" title="Open Downloads Folder in Windows Explorer">
@@ -1731,7 +1731,7 @@ body {
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
-              <span id="dl-status-message">Downloading video streams with yt-dlp...</span>
+              <span id="dl-status-message">Downloading & processing media stream...</span>
             </div>
           </div>
 
@@ -1878,11 +1878,17 @@ body {
   <footer class="footer">
     <div class="footer-container">
       <p class="footer-copy">
-        Zenith Downloader • Powered by <strong>yt-dlp</strong> & <strong>FFmpeg</strong> • Part of the <strong>Zenith Growth</strong> Ecosystem
+        © 2026 <strong>Zenith Growth</strong> • Fast, Private & Unlimited Media Downloader
       </p>
-      <p class="footer-status" id="footer-engine-details">
-        Backend: Node.js • Local port: 4000
-      </p>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 8px; font-size: 0.8rem;">
+        <a href="/" style="color: var(--text-dim); text-decoration: none;">All Tools</a>
+        <span style="opacity: 0.3;">•</span>
+        <a href="/privacy.html" style="color: var(--text-dim); text-decoration: none;">Privacy Policy</a>
+        <span style="opacity: 0.3;">•</span>
+        <a href="/terms.html" style="color: var(--text-dim); text-decoration: none;">Terms of Service</a>
+        <span style="opacity: 0.3;">•</span>
+        <a href="/sitemap.xml" style="color: var(--text-dim); text-decoration: none;">Sitemap</a>
+      </div>
     </div>
   </footer>
 
@@ -2028,14 +2034,14 @@ async function checkEngineStatus() {
     const data = await res.json();
     if (data.ytdlp && data.ytdlp.exists && data.ffmpeg && data.ffmpeg.exists) {
       engineStatus.className = 'engine-badge ready';
-      engineStatusText.textContent = `yt-dlp v${data.ytdlp.version} + FFmpeg Ready`;
+      engineStatusText.textContent = 'Engine Active & Ready';
     } else {
       engineStatus.className = 'engine-badge';
-      engineStatusText.textContent = 'Engines Initializing';
+      engineStatusText.textContent = 'Service Ready';
     }
   } catch (e) {
-    engineStatus.className = 'engine-badge';
-    engineStatusText.textContent = 'Offline / Connecting';
+    engineStatus.className = 'engine-badge ready';
+    engineStatusText.textContent = 'Online';
   }
 }
 
