@@ -1,0 +1,8 @@
+node_modules/
+universal-video-downloader/node_modules/
+universal-video-downloader/downloads/*
+!universal-video-downloader/downloads/.gitkeep
+scratch/
+*.log
+.DS_Store
+Thumbs.db

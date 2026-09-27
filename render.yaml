@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: zenithgrowth
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node gateway.js
+    healthCheckPath: /api/status
+    autoDeploy: true
