@@ -40,27 +40,77 @@ const registeredTools = [
   }
 ];
 
-// 1. Mount Video Downloader App & APIs
-const videoDownloaderDir = path.join(ROOT_DIR, 'universal-video-downloader');
-if (fs.existsSync(videoDownloaderDir)) {
-  const videoPublicDir = path.join(videoDownloaderDir, 'public');
-  if (fs.existsSync(videoPublicDir)) {
-    // Serve Video Downloader UI at /video-downloader and /video
-    app.use('/video-downloader', express.static(videoPublicDir));
-    app.get('/video', (req, res) => res.redirect('/video-downloader/'));
-
-    // Mount Video Downloader backend API
-    const videoServerPath = path.join(videoDownloaderDir, 'server.js');
-    if (fs.existsSync(videoServerPath)) {
-      try {
-        const videoApp = require(videoServerPath);
-        // Mount at root /api and /video-downloader/api
-        app.use(videoApp);
-      } catch (err) {
-        console.error('⚠️ Could not mount video downloader sub-app:', err);
+// 0. Auto-extract public.zip if uploaded by user
+const zipPath = path.join(ROOT_DIR, 'public.zip');
+if (fs.existsSync(zipPath)) {
+  try {
+    const destDir = path.join(ROOT_DIR, 'public');
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    const { execSync } = require('child_process');
+    try {
+      execSync(`tar -xf "${zipPath}" -C "${destDir}"`, { stdio: 'ignore' });
+    } catch (e1) {
+      if (process.platform === 'win32') {
+        execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${destDir}' -Force"`, { stdio: 'ignore' });
+      } else {
+        execSync(`unzip -o "${zipPath}" -d "${destDir}"`, { stdio: 'ignore' });
       }
     }
+  } catch (err) {
+    console.warn('public.zip extract notice:', err.message);
   }
+}
+
+// 1. Mount Video Downloader App & APIs (Flexible auto-locator)
+const candidateDirs = [
+  path.join(ROOT_DIR, 'universal-video-downloader'),
+  path.join(ROOT_DIR, 'universal'),
+  path.join(ROOT_DIR, 'video-downloader'),
+  path.join(ROOT_DIR, 'downloader')
+];
+
+let videoMounted = false;
+for (const vDir of candidateDirs) {
+  if (fs.existsSync(vDir)) {
+    const vPublic = fs.existsSync(path.join(vDir, 'public')) ? path.join(vDir, 'public') : vDir;
+    app.use('/video-downloader', express.static(vPublic));
+    app.get('/video', (req, res) => res.redirect('/video-downloader/'));
+
+    const vServer = path.join(vDir, 'server.js');
+    if (fs.existsSync(vServer)) {
+      try {
+        const videoApp = require(vServer);
+        app.use(videoApp);
+      } catch (err) {
+        console.error('Could not mount video downloader sub-app:', err);
+      }
+    }
+    videoMounted = true;
+    break;
+  }
+}
+
+// Fallback: If public/ was uploaded directly at the root (or extracted from public.zip)
+const possiblePublic = [
+  path.join(ROOT_DIR, 'public'),
+  path.join(ROOT_DIR, 'public', 'public')
+];
+for (const p of possiblePublic) {
+  if (fs.existsSync(p)) {
+    app.use('/video-downloader', express.static(p));
+    app.get('/video', (req, res) => res.redirect('/video-downloader/'));
+    videoMounted = true;
+    break;
+  }
+}
+
+// Fallback: If server.js was uploaded directly to the root
+const rootServer = path.join(ROOT_DIR, 'server.js');
+if (fs.existsSync(rootServer)) {
+  try {
+    const videoApp = require(rootServer);
+    app.use(videoApp);
+  } catch (e) {}
 }
 
 // 2. Dynamic Auto-Discovery for Future Projects (your next 4-5 ideas)
