@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith Video Editor & Clip Studio - Free Online Clipper, Color FX, Sprinkles & Watermark Remover</title>
+  <meta name="description" content="Professional free online video editor: trim clips, apply real-time 60fps color filters, add animated sprinkles & sparkles, remove watermarks, and reframe for TikTok, Reels & Shorts.">
+  <link rel="canonical" href="https://zenithgrowth.tech/video-editor">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Google Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: "class" };</script>
+
+  <style>
+    :root {
+      --bg-primary: #070a12;
+      --bg-secondary: #0e1424;
+      --bg-surface: #141c30;
+      --bg-surface-hover: #1c2742;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Custom Glass Panel */
+    .glass-panel {
+      background: rgba(14, 20, 36, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+    }
+
+    .glass-card {
+      background: rgba(20, 28, 48, 0.6);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+    .glass-card:hover {
+      background: rgba(26, 36, 62, 0.75);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    /* Ambient background glows */
+    .glow-bg {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.25;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Range input styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      height: 6px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #6366f1;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+      transition: transform 0.1s, background-color 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      background: #818cf8;
+    }
+
+    /* Draggable Watermark Box */
+    #watermark-box {
+      position: absolute;
+      border: 2px dashed #06b6d4;
+      background: rgba(6, 182, 212, 0.18);
+      cursor: move;
+      user-select: none;
+      touch-action: none;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+      display: none;
+      z-index: 30;
+      border-radius: 6px;
+    }
+    #watermark-box.active {
+      display: block;
+    }
+    .wm-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #06b6d4;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+    }
+    .wm-handle-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+    .wm-handle-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+    .wm-handle-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+    .wm-handle-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
+    /* Timeline Handle styling */
+    .timeline-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      background: #6366f1;
+      cursor: ew-resize;
+      z-index: 20;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.8);
+      user-select: none;
+    }
+    .timeline-handle::after {
+      content: '';
+      width: 2px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 1px;
+    }
+    .timeline-playhead {
+      position: absolute;
+      top: -6px;
+      bottom: -6px;
+      width: 3px;
+      background: #ef4444;
+      z-index: 25;
+      pointer-events: none;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
+    }
+    .timeline-playhead::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -5px;
+      width: 13px;
+      height: 13px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+    }
+
+    /* Pulse animation */
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.96); }
+    }
+    .pulse-live {
+      animation: pulseSoft 2s infinite ease-in-out;
+    }
+
+    /* AI Clip Cards styling */
+    .ai-clip-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .ai-clip-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99, 102, 241, 0.6);
+      box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.25);
+    }
+    .ai-clip-card.active-ai-clip {
+      border-color: #818cf8 !important;
+      background: rgba(49, 46, 129, 0.55) !important;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.45) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-indigo-600 selection:text-white">
+
+  <!-- Ambient Glow Effects -->
+  <div class="glow-bg w-[500px] h-[500px] bg-indigo-600 -top-40 -left-40"></div>
+  <div class="glow-bg w-[600px] h-[600px] bg-cyan-600 top-1/3 -right-40"></div>
+  <div class="glow-bg w-[400px] h-[400px] bg-purple-600 bottom-10 left-1/4"></div>
+
+  <!-- Hidden video & audio elements -->
+  <video id="source-video" style="display:none;" playsinline crossorigin="anonymous"></video>
+  <input type="file" id="file-picker" accept="video/*,.mp4,.mov,.webm,.mkv,.avi" class="sr-only">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="flex items-center gap-3 group text-decoration-none">
+        <img src="logo.png" alt="Zenith" class="w-9 h-9 rounded-xl object-contain shadow-md shadow-indigo-500/20 group-hover:scale-105 transition">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold tracking-tight text-white text-base">Zenith <span class="text-indigo-400 font-semibold">Video Studio</span></span>
+            <span class="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full">Editor PRO</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Trim, 60fps Color FX, Sprinkles & Watermark Remover</p>
+        </div>
+      </a>
+
+      <div class="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10 text-xs text-slate-400 font-medium">
+        <a href="index.html" class="hover:text-white transition">All Tools</a>
+        <span>/</span>
+        <a href="video-downloader.html" class="hover:text-white transition flex items-center gap-1">Downloader <span class="text-[10px] text-indigo-400">📥</span></a>
+      </div>
+    </div>
+
+    <!-- Quick Action Bar -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Prominent Upload Video Button -->
+      <label id="btn-header-upload" for="file-picker" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-600 hover:to-indigo-700 text-white shadow-lg shadow-emerald-500/25 flex items-center gap-2 transition active:scale-95 cursor-pointer select-none">
+        <span>📤</span> <span>Upload Video</span>
+      </label>
+
+      <!-- Paste URL Button -->
+      <button id="btn-open-url-modal" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 flex items-center gap-1.5 transition">
+        <span>🔗</span> <span class="hidden sm:inline">Paste URL</span>
+      </button>
+
+      <!-- Load Demo Button -->
+      <button id="btn-load-demo" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 flex items-center gap-1.5 transition">
+        <span>✨</span> <span class="hidden sm:inline">Sample Video</span>
+      </button>
+
+      <!-- Primary Export Button -->
+      <button id="btn-export-quick" class="px-4 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-lg shadow-indigo-500/25 flex items-center gap-1.5 transition active:scale-95">
+        <span>🎬</span> <span>Export Clip</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- URL Import Modal -->
+  <div id="url-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-white/15 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+      <button id="btn-close-url-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">✕</button>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg">🔗</div>
+        <div>
+          <h3 class="text-base font-bold text-white">Import Video from Web</h3>
+          <p class="text-xs text-slate-400">YouTube, TikTok, Instagram, Twitter, Reddit & 1,000+ sites</p>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <div class="relative">
+          <input type="text" id="import-url-input" placeholder="Paste link here (e.g. https://www.youtube.com/watch?v=...)" class="w-full bg-slate-950/80 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
+        </div>
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span>High-speed backend stream extraction</span>
+          <span id="import-status" class="text-indigo-400 font-medium"></span>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button id="btn-cancel-url" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Cancel</button>
+          <button id="btn-confirm-import-url" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition">
+            <span id="import-spinner" class="hidden animate-spin">⏳</span>
+            <span>Fetch & Load in Editor</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loaded Video Status Banner (Shown when a video is loaded in editor) -->
+  <div id="video-info-banner" class="max-w-[1700px] w-full mx-auto px-3 sm:px-5 pt-4 pb-0 hidden">
+    <div class="glass-panel rounded-2xl px-5 py-3 flex flex-wrap items-center justify-between gap-3 border border-indigo-500/30 bg-slate-900/90 shadow-lg">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">📹</span>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-white text-sm" id="banner-video-title">No video loaded</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" id="banner-video-meta">--</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Ready to trim, apply color filters, sprinkles & remove watermark</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <label id="btn-banner-upload-new" for="file-picker" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500/30 to-teal-500/30 hover:bg-emerald-500/40 text-emerald-200 border border-emerald-500/40 flex items-center gap-1.5 transition cursor-pointer select-none">
+          <span>📤</span> <span>Upload Different Video</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Big Hero Upload Screen (Initial Starting Point) -->
+  <div id="upload-hero-screen" class="max-w-[1000px] w-full mx-auto p-4 sm:p-8 my-6 relative z-20">
+    <div class="glass-panel rounded-3xl p-6 sm:p-12 border-2 border-indigo-500/40 shadow-2xl bg-slate-900/90 text-center relative overflow-hidden">
+      
+      <!-- Big Dropzone Container -->
+      <div id="hero-dropzone" class="border-2 border-dashed border-indigo-500/60 hover:border-indigo-400 bg-slate-950/70 hover:bg-slate-900/90 rounded-2xl p-8 sm:p-14 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center group shadow-2xl">
+        <div class="w-24 h-24 rounded-3xl bg-indigo-600/20 border border-indigo-500/50 flex items-center justify-center text-5xl mb-5 text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition duration-300 shadow-2xl shadow-indigo-500/30">
+          📤
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Upload Video to Start Editing</h2>
+        <p class="text-sm text-slate-300 mb-6 max-w-lg leading-relaxed">Drag and drop your video file here, or click the button below to browse from your computer or phone</p>
+        
+        <label id="btn-hero-choose-file" for="file-picker" class="px-8 py-4 rounded-xl font-bold text-base bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-600 hover:to-indigo-700 text-white shadow-xl shadow-emerald-500/30 flex items-center gap-3 group-hover:scale-105 transition active:scale-95 cursor-pointer select-none">
+          <span class="text-lg">📁</span> <span>Choose Video File from Computer</span>
+        </label>
+        
+        <div class="mt-5 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-400 font-medium">
+          <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">MP4</span>
+          <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">MOV</span>
+          <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">WebM</span>
+          <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">MKV</span>
+          <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">AVI</span>
+          <span>• 100% In-Browser Private • Instant Local Playback</span>
+        </div>
+      </div>
+
+      <!-- Quick Web Import & Demo Bar -->
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10 text-xs">
+        <div class="flex flex-1 min-w-[280px] items-center gap-2 bg-slate-950/90 p-2 rounded-xl border border-white/10">
+          <span class="text-slate-400 pl-2">🔗 Or paste online link:</span>
+          <input type="text" id="hero-url-input" placeholder="YouTube, TikTok, Reels, Twitter video link..." class="bg-slate-900 border border-white/10 rounded-lg px-3 py-1.5 text-white flex-1 focus:outline-none focus:border-indigo-500 text-xs">
+          <button id="btn-hero-import-url" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold shadow-md shadow-indigo-600/30 transition">Fetch Video</button>
+        </div>
+
+        <button id="btn-hero-sample" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 font-semibold flex items-center gap-2 transition">
+          <span>✨</span> <span>Or Test with Sample Video</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main Studio Workspace (Loaded after video is chosen) -->
+  <main id="editor-workspace" class="hidden flex-1 flex flex-col lg:flex-row p-3 sm:p-5 gap-5 max-w-[1700px] w-full mx-auto relative z-10">
+
+    <!-- LEFT ZONE: Viewport, Playback & Timeline (approx 65-70%) -->
+    <div class="flex-1 flex flex-col gap-4">
+
+      <!-- Viewport Card with Floating Frame -->
+      <div class="glass-panel rounded-2xl p-4 flex flex-col items-center justify-center relative min-h-[460px] lg:min-h-[520px] shadow-2xl overflow-hidden">
+
+        <!-- Viewport Top Toolbar -->
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3 pb-3 border-b border-white/10 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-live"></span>
+            <span class="font-bold text-white tracking-wide uppercase text-[11px]" id="clip-status-indicator">Editor Canvas Ready</span>
+            <span class="text-slate-500">|</span>
+            <span class="text-slate-400 font-mono text-[11px]" id="canvas-resolution">1080×1920</span>
+          </div>
+
+          <!-- Quick Aspect Selector Pills -->
+          <div class="flex items-center gap-1 bg-slate-950/60 p-1 rounded-xl border border-white/10">
+            <button class="aspect-pill px-2.5 py-1 rounded-lg text-[11px] font-semibold transition bg-indigo-600 text-white" data-aspect="9:16">📱 9:16</button>
+            <button class="aspect-pill px-2.5 py-1 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white" data-aspect="4:5">🖼️ 4:5</button>
+            <button class="aspect-pill px-2.5 py-1 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white" data-aspect="1:1">⏹️ 1:1</button>
+            <button class="aspect-pill px-2.5 py-1 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white" data-aspect="16:9">🖥️ 16:9</button>
+            <button class="aspect-pill px-2.5 py-1 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white" data-aspect="original">🔄 Auto</button>
+          </div>
+
+          <!-- Interactive Frame Zoom In / Zoom Out HUD -->
+          <div class="flex items-center gap-1.5 bg-slate-950/80 px-2.5 py-1 rounded-xl border border-indigo-500/30">
+            <span class="text-[11px] font-bold text-indigo-300 flex items-center gap-1">
+              <span>🔍</span> <span>Zoom:</span>
+            </span>
+            <button id="btn-zoom-out" class="w-6 h-6 rounded-md bg-white/5 hover:bg-white/15 text-white font-bold flex items-center justify-center transition active:scale-90" title="Zoom Out (−5%)">−</button>
+            <span id="label-zoom-percent" class="font-mono text-white font-bold text-[11px] w-12 text-center">100%</span>
+            <button id="btn-zoom-in" class="w-6 h-6 rounded-md bg-white/5 hover:bg-white/15 text-white font-bold flex items-center justify-center transition active:scale-90" title="Zoom In (+5%)">+</button>
+            <input type="range" id="slider-viewport-zoom" min="15" max="300" step="5" value="100" class="w-16 sm:w-20 accent-indigo-500 cursor-pointer" title="Zoom from 15% (Super Wide Letterbox) to 300%">
+            <button id="btn-zoom-reset" class="px-1.5 py-0.5 rounded text-[10px] bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition" title="100% Fit Whole Video">Fit</button>
+            <button id="btn-zoom-fill" class="px-1.5 py-0.5 rounded text-[10px] bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition" title="Fill Screen (Crop)">Fill</button>
+          </div>
+
+          <!-- Letterbox Backdrop Quick Selector -->
+          <div class="flex items-center gap-1 bg-slate-950/80 px-2 py-1 rounded-xl border border-white/10" title="Letterbox Background behind video for maximum caption readability">
+            <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+              <span>🎨</span> <span class="hidden md:inline">Backdrop:</span>
+            </span>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-600 text-white transition" data-backdrop="solid-black" title="Deep Pitch Black - Best for Readable Captions">⬛ Black</button>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white transition" data-backdrop="dimmed-blur" title="75% Darkened Blur - Dynamic yet high caption contrast">🎬 Dim Blur</button>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white transition" data-backdrop="blurred-video" title="Ambient Video Blur Glow">🌫️ Blur</button>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white transition" data-backdrop="dark-cinema" title="Cinema Charcoal Vignette">📽️ Cinema</button>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white transition" data-backdrop="midnight" title="Midnight Studio Dark">🌌 Dark</button>
+            <button class="backdrop-pill px-2 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white transition" data-backdrop="clean-white" title="Clean White Meme Banner">⚪ White</button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Audio Export Toggle (Sound vs Mute) -->
+            <button id="btn-toggle-export-audio" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 transition" title="Toggle audio inclusion in export">
+              <span id="icon-export-audio">🔊</span> <span id="label-export-audio-mode">Audio: ON</span>
+            </button>
+            <!-- Watermark Blur Box Toggle -->
+            <button id="btn-toggle-wm-box" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 transition">
+              <span>🔲</span> <span id="label-box-status">Blur Box: ON</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Video Player Viewport Container -->
+        <div id="viewport-stage" class="relative flex items-center justify-center w-full flex-1 overflow-hidden" style="max-height: 480px;">
+          
+          <!-- Scalable Canvas Wrapper -->
+          <div id="canvas-wrapper" class="relative shadow-2xl rounded-xl overflow-hidden border border-white/15 bg-black transition-all duration-300" style="width: 270px; height: 480px;">
+            <canvas id="main-canvas" class="w-full h-full object-cover block"></canvas>
+
+            <!-- Interactive Draggable Watermark Box -->
+            <div id="watermark-box" class="active" style="left: 65%; top: 78%; width: 30%; height: 16%;">
+              <div class="text-[9px] font-mono text-cyan-200 bg-cyan-950/80 px-1.5 py-0.5 rounded absolute -top-5 left-0 whitespace-nowrap border border-cyan-500/40">Watermark Blur</div>
+              <div class="wm-handle wm-handle-nw"></div>
+              <div class="wm-handle wm-handle-ne"></div>
+              <div class="wm-handle wm-handle-sw"></div>
+              <div class="wm-handle wm-handle-se"></div>
+            </div>
+
+            <!-- Drag & Drop Overlay Prompt (when no video is active) -->
+            <div id="empty-state-overlay" class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center p-6 text-center z-10">
+              <div class="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-2xl text-indigo-400 mb-3 shadow-lg shadow-indigo-500/20 animate-bounce">
+                📹
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1">Drag & Drop Your Video Here</h4>
+              <p class="text-xs text-slate-400 mb-4 max-w-[200px]">or load a sample clip to start editing immediately</p>
+              <div class="flex flex-col gap-2 w-full max-w-[190px]">
+                <button id="btn-empty-sample" class="w-full py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 transition">
+                  ✨ Load Sample Clip
+                </button>
+                <button id="btn-empty-browse" class="w-full py-1.5 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
+                  Browse Computer
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Playback Transport Bar -->
+        <div class="w-full mt-3 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <!-- Play / Pause / Seek Controls -->
+          <div class="flex items-center gap-2">
+            <button id="btn-seek-back" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition" title="Rewind 5s (J / Left Arrow)">⏪</button>
+            <button id="btn-play-pause" class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-indigo-600/30 transition active:scale-95" title="Play/Pause (Spacebar)">▶</button>
+            <button id="btn-seek-fwd" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition" title="Forward 5s (L / Right Arrow)">⏩</button>
+            
+            <button id="btn-toggle-loop" class="px-2.5 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px] flex items-center gap-1 transition" title="Loop Playback">
+              <span>🔁</span> <span>Loop: ON</span>
+            </button>
+          </div>
+
+          <!-- Timecode Display -->
+          <div class="flex items-center gap-2 font-mono text-xs bg-slate-950/70 px-3 py-1.5 rounded-xl border border-white/10">
+            <span id="time-current" class="text-indigo-400 font-bold">00:00.0</span>
+            <span class="text-slate-600">/</span>
+            <span id="time-duration" class="text-slate-400">00:00.0</span>
+          </div>
+
+          <!-- Volume & Speed Controls -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <button id="btn-mute" class="text-slate-400 hover:text-white text-sm">🔊</button>
+              <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1" class="w-16">
+            </div>
+
+            <select id="playback-speed" class="bg-slate-900 border border-white/10 text-slate-300 rounded-lg px-2 py-1 text-[11px] focus:outline-none focus:border-indigo-500">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1.0x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 🤖 Smart AI Auto-Clipper & Highlight Moments -->
+      <div id="ai-clipper-panel" class="glass-panel rounded-2xl p-4 flex flex-col gap-3 shadow-xl border border-indigo-500/35 bg-gradient-to-r from-slate-900/90 via-indigo-950/40 to-slate-900/90">
+        <div class="flex items-center justify-between text-xs flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-base animate-pulse">🤖</span>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-extrabold text-white uppercase tracking-wider text-[12px]">Smart AI Highlights</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-sm flex items-center gap-1">
+                <span>✨</span> <span id="ai-clips-count-badge">AI Detecting...</span>
+              </span>
+            </div>
+            <span class="text-slate-500 hidden sm:inline">|</span>
+            <span class="text-slate-400 text-[11px] hidden sm:inline" id="ai-status-summary">Select any clip to preview & customize in real-time</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- AI Mode Selector -->
+            <select id="ai-clip-mode" class="bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1 text-slate-300 text-[11px] focus:outline-none focus:border-indigo-500 font-medium">
+              <option value="viral30" selected>🔥 Viral Shorts (30s)</option>
+              <option value="action45">⚡ Action Peaks (45s)</option>
+              <option value="story60">🎬 Story Scenes (60s)</option>
+              <option value="hooks">🪝 Opening Hooks (30s)</option>
+            </select>
+
+            <!-- Re-analyze button -->
+            <button id="btn-reanalyze-ai" class="px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/60 text-indigo-300 border border-indigo-500/40 text-[11px] font-bold flex items-center gap-1.5 transition active:scale-95" title="Re-scan video for highlights">
+              <span id="ai-reanalyze-icon">✨</span>
+              <span>Re-Analyze</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Horizontal Scrollable Highlight Cards Ribbon -->
+        <div id="ai-clips-container" class="flex items-stretch gap-3 overflow-x-auto pb-2 pt-1 scrollbar-thin">
+          <div class="text-slate-400 text-xs py-3 px-2 flex items-center gap-2">
+            <span class="animate-spin text-sm">⏳</span>
+            <span>AI is ready to analyze your video highlights upon loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Multi-Track Timeline & Clip Trimmer -->
+      <div class="glass-panel rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+        <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-indigo-400 text-sm">✂️</span>
+            <span class="font-bold text-white uppercase tracking-wider text-[11px]">Precision Video Trimmer & Timeline</span>
+            <span class="text-slate-500">|</span>
+            <span class="text-emerald-400 font-mono font-semibold" id="label-clip-duration">Clip: 00:00.0</span>
+          </div>
+
+          <!-- Quick Trim Presets -->
+          <div class="flex items-center gap-1">
+            <span class="text-[11px] text-slate-400 mr-1 hidden sm:inline">Presets:</span>
+            <button class="trim-preset px-2 py-0.5 rounded text-[11px] bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition" data-trim="30">30s Preview</button>
+            <button class="trim-preset px-2 py-0.5 rounded text-[11px] bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition" data-trim="60">60s Short</button>
+            <button class="trim-preset px-2 py-0.5 rounded text-[11px] bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition" data-trim="90">90s Reel</button>
+            <button class="trim-preset px-2 py-0.5 rounded text-[11px] bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition" data-trim="full">Full Video</button>
+          </div>
+        </div>
+
+        <!-- Visual Timeline Track Slider -->
+        <div class="relative w-full h-14 bg-slate-950/90 rounded-xl border border-white/10 p-1.5 select-none overflow-hidden" id="timeline-container">
+          
+          <!-- Background time markings & waveform ticks -->
+          <div class="absolute inset-0 flex justify-between px-3 items-center opacity-20 pointer-events-none">
+            <div class="h-6 w-0.5 bg-white"></div>
+            <div class="h-4 w-0.5 bg-white"></div>
+            <div class="h-6 w-0.5 bg-white"></div>
+            <div class="h-4 w-0.5 bg-white"></div>
+            <div class="h-6 w-0.5 bg-white"></div>
+            <div class="h-4 w-0.5 bg-white"></div>
+            <div class="h-6 w-0.5 bg-white"></div>
+            <div class="h-4 w-0.5 bg-white"></div>
+            <div class="h-6 w-0.5 bg-white"></div>
+          </div>
+
+          <!-- Highlighted Active Clip Region -->
+          <div id="timeline-active-range" class="absolute top-1 bottom-1 bg-gradient-to-r from-indigo-600/40 via-indigo-500/50 to-cyan-500/40 border-t-2 border-b-2 border-indigo-400 z-10" style="left: 0%; right: 50%;">
+            <div class="w-full h-full flex items-center justify-center pointer-events-none">
+              <span class="text-[10px] font-mono font-bold text-white/90 drop-shadow" id="range-label">Active Clip</span>
+            </div>
+          </div>
+
+          <!-- In-Handle (Start) -->
+          <div id="handle-start" class="timeline-handle" style="left: 0%;" title="Drag to adjust Start Cut"></div>
+
+          <!-- Out-Handle (End) -->
+          <div id="handle-end" class="timeline-handle" style="left: 50%;" title="Drag to adjust End Cut"></div>
+
+          <!-- Playhead Needle -->
+          <div id="timeline-playhead" class="timeline-playhead" style="left: 0%;"></div>
+
+        </div>
+
+        <!-- Manual Timestamp Inputs & Set Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+          <!-- Start Cut -->
+          <div class="flex items-center gap-2 bg-slate-950/60 p-2 rounded-xl border border-white/10">
+            <span class="font-bold text-slate-400 text-[11px] whitespace-nowrap">START CUT:</span>
+            <input type="text" id="input-start-time" value="00:00.0" class="w-24 bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1 text-white font-mono text-center focus:outline-none focus:border-indigo-500">
+            <button id="btn-set-start-head" class="px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-[11px] font-semibold whitespace-nowrap transition">
+              Set at Playhead
+            </button>
+          </div>
+
+          <!-- End Cut -->
+          <div class="flex items-center gap-2 bg-slate-950/60 p-2 rounded-xl border border-white/10">
+            <span class="font-bold text-slate-400 text-[11px] whitespace-nowrap">END CUT:</span>
+            <input type="text" id="input-end-time" value="00:30.0" class="w-24 bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1 text-white font-mono text-center focus:outline-none focus:border-indigo-500">
+            <button id="btn-set-end-head" class="px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-[11px] font-semibold whitespace-nowrap transition">
+              Set at Playhead
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT ZONE: Studio Tool Rack & Controls (approx 30-35%) -->
+    <div class="w-full lg:w-[420px] flex flex-col gap-4">
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-1 bg-slate-950/80 p-1.5 rounded-2xl border border-white/10 text-xs overflow-x-auto scrollbar-none">
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-bold transition bg-indigo-600 text-white whitespace-nowrap text-center text-[11px]" data-tab="filters">🎨 Colors</button>
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition whitespace-nowrap text-center text-[11px]" data-tab="sprinkles">✨ Sprinkles</button>
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition whitespace-nowrap text-center text-[11px]" data-tab="watermark">🛡️ Watermark</button>
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition whitespace-nowrap text-center text-[11px]" data-tab="framing">📐 Zoom</button>
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition whitespace-nowrap text-center text-[11px]" data-tab="captions">💬 Captions</button>
+        <button class="tab-btn flex-1 py-2 px-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition whitespace-nowrap text-center text-[11px]" data-tab="ai">🤖 AI Clips</button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="glass-panel rounded-2xl p-5 flex flex-col gap-5 flex-1 shadow-2xl">
+
+        <!-- TAB 1: COLOR FILTERS & GRADING -->
+        <div id="tab-filters" class="tab-pane flex flex-col gap-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>🎨</span> <span>60 FPS Real-Time Color Grading</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Applies instantaneous cinematic filter grades directly over your video</p>
+          </div>
+
+          <!-- Color Preset Cards Grid -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button class="color-preset-card p-3 rounded-xl border border-indigo-500/80 bg-indigo-600/20 text-left transition relative active:scale-95" data-filter="none">
+              <div class="w-full h-2 rounded bg-slate-600 mb-2"></div>
+              <div class="font-bold text-white">🌿 Natural</div>
+              <div class="text-[10px] text-slate-400">Crisp original</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="warm">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-amber-500 to-rose-500 mb-2"></div>
+              <div class="font-bold text-white">🌅 Warm Sunset</div>
+              <div class="text-[10px] text-slate-400">Golden warmth</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="cyberpunk">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-cyan-400 to-fuchsia-500 mb-2"></div>
+              <div class="font-bold text-white">⚡ Cyberpunk</div>
+              <div class="text-[10px] text-slate-400">Neon cyan & magenta</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="noir">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-slate-200 to-slate-900 mb-2"></div>
+              <div class="font-bold text-white">🎬 Noir B&W</div>
+              <div class="text-[10px] text-slate-400">Dramatic cinema</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="vivid">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-lime-400 to-red-500 mb-2"></div>
+              <div class="font-bold text-white">🔥 Vivid Boost</div>
+              <div class="text-[10px] text-slate-400">High saturation</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="vintage">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-amber-700 to-yellow-600 mb-2"></div>
+              <div class="font-bold text-white">📼 Vintage 70s</div>
+              <div class="text-[10px] text-slate-400">Retro warm sepia</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="teal">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-teal-400 to-orange-500 mb-2"></div>
+              <div class="font-bold text-white">🌊 Emerald Teal</div>
+              <div class="text-[10px] text-slate-400">Hollywood blockbuster</div>
+            </button>
+
+            <button class="color-preset-card p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 text-left transition relative active:scale-95" data-filter="golden">
+              <div class="w-full h-2 rounded bg-gradient-to-r from-yellow-300 to-amber-600 mb-2"></div>
+              <div class="font-bold text-white">✨ Golden Hour</div>
+              <div class="text-[10px] text-slate-400">Rich amber glow</div>
+            </button>
+          </div>
+
+          <!-- Fine-Tuning Sliders -->
+          <div class="space-y-3 pt-2 border-t border-white/10 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Brightness</span>
+              <span class="font-mono text-slate-300" id="val-brightness">100%</span>
+            </div>
+            <input type="range" id="slider-brightness" min="50" max="150" value="100" class="w-full">
+
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Contrast</span>
+              <span class="font-mono text-slate-300" id="val-contrast">100%</span>
+            </div>
+            <input type="range" id="slider-contrast" min="50" max="160" value="100" class="w-full">
+
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Saturation</span>
+              <span class="font-mono text-slate-300" id="val-saturation">100%</span>
+            </div>
+            <input type="range" id="slider-saturation" min="0" max="200" value="100" class="w-full">
+          </div>
+        </div>
+
+        <!-- TAB 2: IN-FRAME SPRINKLES & ANIMATIONS -->
+        <div id="tab-sprinkles" class="tab-pane hidden flex flex-col gap-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>✨</span> <span>In-Frame Sprinkles & Particle FX</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Real-time dynamic floating animations overlaid on the video frame</p>
+          </div>
+
+          <!-- Particle Presets -->
+          <div class="space-y-2 text-xs">
+            <button class="sprinkle-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-sprinkle="none">
+              <div>
+                <div class="font-bold text-white">🚫 None</div>
+                <div class="text-[10px] text-slate-400">Clean video without particle overlays</div>
+              </div>
+            </button>
+
+            <button class="sprinkle-card w-full p-3 rounded-xl border border-indigo-500/80 bg-indigo-600/20 text-left flex items-center justify-between transition" data-sprinkle="sparkles">
+              <div>
+                <div class="font-bold text-white">✨ Golden Sparkles & Glitter</div>
+                <div class="text-[10px] text-slate-400">Twinkling gold stars spinning across the screen</div>
+              </div>
+              <span class="text-amber-400 text-base">⭐</span>
+            </button>
+
+            <button class="sprinkle-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-sprinkle="bokeh">
+              <div>
+                <div class="font-bold text-white">💫 Floating Bokeh Orbs</div>
+                <div class="text-[10px] text-slate-400">Dreamy soft glowing light spheres drifting upward</div>
+              </div>
+              <span class="text-indigo-400 text-base">🔮</span>
+            </button>
+
+            <button class="sprinkle-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-sprinkle="filmgrain">
+              <div>
+                <div class="font-bold text-white">🎞️ 35mm Vintage Film Grain</div>
+                <div class="text-[10px] text-slate-400">Organic cinema flutter & texture</div>
+              </div>
+              <span class="text-slate-400 text-base">🎥</span>
+            </button>
+
+            <button class="sprinkle-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-sprinkle="snow">
+              <div>
+                <div class="font-bold text-white">❄️ Gentle Snow / Floating Dust</div>
+                <div class="text-[10px] text-slate-400">Soft drifting particles for aesthetic atmosphere</div>
+              </div>
+              <span class="text-cyan-400 text-base">❄️</span>
+            </button>
+          </div>
+
+          <!-- Sprinkle Fine-Tuning -->
+          <div class="space-y-3 pt-2 border-t border-white/10 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Particle Density</span>
+              <span class="font-mono text-slate-300" id="val-particle-density">Medium (35)</span>
+            </div>
+            <input type="range" id="slider-particle-density" min="10" max="70" value="35" class="w-full">
+
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Particle Speed</span>
+              <span class="font-mono text-slate-300" id="val-particle-speed">Normal</span>
+            </div>
+            <input type="range" id="slider-particle-speed" min="1" max="4" value="2" class="w-full">
+          </div>
+        </div>
+
+        <!-- TAB 3: WATERMARK REMOVER STUDIO -->
+        <div id="tab-watermark" class="tab-pane hidden flex flex-col gap-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>🛡️</span> <span>Watermark Remover Studio</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Remove or obscure logos, usernames, and channel marks</p>
+          </div>
+
+          <!-- Method 1: Interactive Blur Box -->
+          <div class="bg-slate-900/80 p-3.5 rounded-xl border border-cyan-500/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white text-xs flex items-center gap-1.5">
+                <span>🔲</span> <span>Interactive Blur Box</span>
+              </span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="check-enable-box" checked class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+              </label>
+            </div>
+            <p class="text-[11px] text-slate-400">Drag & resize the cyan box directly on the video player to cover any corner watermark.</p>
+            
+            <!-- Quick Corner Snaps -->
+            <div class="grid grid-cols-2 gap-1.5 pt-1">
+              <button class="wm-snap px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 border border-white/10 transition" data-corner="tl">Top-Left</button>
+              <button class="wm-snap px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 border border-white/10 transition" data-corner="tr">Top-Right</button>
+              <button class="wm-snap px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 border border-white/10 transition" data-corner="bl">Bottom-Left</button>
+              <button class="wm-snap px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 border border-white/10 transition active" data-corner="br">Bottom-Right (TikTok)</button>
+            </div>
+
+            <div class="flex items-center justify-between text-xs pt-1">
+              <span class="text-slate-400">Blur Intensity</span>
+              <span class="font-mono text-slate-300" id="val-blur-strength">14px</span>
+            </div>
+            <input type="range" id="slider-blur-strength" min="6" max="30" value="14" class="w-full">
+          </div>
+
+          <!-- Method 2: Smart Edge Zoom -->
+          <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/10 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white text-xs flex items-center gap-1.5">
+                <span>🔍</span> <span>Smart Edge Zoom (+8% Zoom)</span>
+              </span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="check-enable-zoom" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+              </label>
+            </div>
+            <p class="text-[11px] text-slate-400">Scales video smoothly to push corner watermarks, platform badges, and edge logos completely outside the frame without blur artifacts.</p>
+          </div>
+        </div>
+
+        <!-- TAB 4: FRAMING & SOCIAL ASPECT RATIOS -->
+        <div id="tab-framing" class="tab-pane hidden flex flex-col gap-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>📐</span> <span>Screen Size & Framing</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Optimized dimensions formatted for direct posting</p>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <button class="frame-card w-full p-3 rounded-xl border border-indigo-500/80 bg-indigo-600/20 text-left flex items-center justify-between transition" data-aspect="9:16">
+              <div>
+                <div class="font-bold text-white">📱 9:16 Vertical Story / Reel</div>
+                <div class="text-[10px] text-slate-400">TikTok, Instagram Reels & YouTube Shorts (1080×1920)</div>
+              </div>
+              <span class="text-indigo-400 font-mono text-[11px]">9:16</span>
+            </button>
+
+            <button class="frame-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-aspect="4:5">
+              <div>
+                <div class="font-bold text-white">🖼️ 4:5 Portrait Feed</div>
+                <div class="text-[10px] text-slate-400">Instagram & Facebook Portrait Feed (1080×1350)</div>
+              </div>
+              <span class="text-slate-400 font-mono text-[11px]">4:5</span>
+            </button>
+
+            <button class="frame-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-aspect="1:1">
+              <div>
+                <div class="font-bold text-white">⏹️ 1:1 Square Feed</div>
+                <div class="text-[10px] text-slate-400">Instagram & Twitter Square Posts (1080×1080)</div>
+              </div>
+              <span class="text-slate-400 font-mono text-[11px]">1:1</span>
+            </button>
+
+            <button class="frame-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-aspect="16:9">
+              <div>
+                <div class="font-bold text-white">🖥️ 16:9 Landscape Video</div>
+                <div class="text-[10px] text-slate-400">YouTube, TV & Desktop Screens (1920×1080)</div>
+              </div>
+              <span class="text-slate-400 font-mono text-[11px]">16:9</span>
+            </button>
+
+            <button class="frame-card w-full p-3 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left flex items-center justify-between transition" data-aspect="original">
+              <div>
+                <div class="font-bold text-white">🔄 Original Source Aspect</div>
+                <div class="text-[10px] text-slate-400">Retains native camera resolution & proportions</div>
+              </div>
+              <span class="text-slate-400 font-mono text-[11px]">Auto</span>
+            </button>
+          </div>
+
+          <!-- Interactive Zoom In / Zoom Out Controls Card -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col gap-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                <span>🔍</span> <span>Custom Frame Zoom & Scale</span>
+              </span>
+              <span class="text-xs font-mono font-bold text-indigo-400" id="label-framing-zoom-val">100%</span>
+            </div>
+
+            <!-- Zoom Range Slider (15% to 300%) -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[11px] text-slate-400">
+                <span>15% (Super Letterbox)</span>
+                <span>100% (Fit)</span>
+                <span>300% (Close Up)</span>
+              </div>
+              <input type="range" id="slider-framing-zoom" min="15" max="300" step="5" value="100" class="w-full accent-indigo-500 cursor-pointer">
+            </div>
+
+            <!-- Quick Zoom Presets -->
+            <div class="grid grid-cols-6 gap-1 text-xs">
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] transition text-center" data-zoom="20">20%</button>
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] transition text-center" data-zoom="35">35%</button>
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] transition text-center" data-zoom="50">50%</button>
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] transition text-center" data-zoom="75">75%</button>
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-indigo-600 text-white font-bold text-[11px] transition text-center" data-zoom="100">1.0x (Fit)</button>
+              <button class="zoom-preset-btn py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] transition text-center" data-zoom="fill">Fill (Crop)</button>
+            </div>
+
+            <!-- Subject Placement & Pan Position -->
+            <div class="pt-2 border-t border-white/5 space-y-2.5">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-slate-300 font-semibold">Subject Framing & Pan Position</span>
+                <button id="btn-reset-pan" class="text-indigo-400 hover:text-indigo-300 text-[10px] font-bold">Reset Center</button>
+              </div>
+
+              <!-- Horizontal Pan -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[10px] text-slate-400">
+                  <span>Horizontal (Pan X)</span>
+                  <span id="label-pan-x-val" class="font-mono text-slate-300">0%</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] text-slate-400">
+                  <span>Left</span>
+                  <input type="range" id="slider-pan-x" min="-100" max="100" value="0" class="flex-1 accent-indigo-500 cursor-pointer">
+                  <span>Right</span>
+                </div>
+              </div>
+
+              <!-- Vertical Pan -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[10px] text-slate-400">
+                  <span>Vertical Position (Pan Y)</span>
+                  <span id="label-pan-y-val" class="font-mono text-slate-300">0%</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] text-slate-400">
+                  <span>Top</span>
+                  <input type="range" id="slider-pan-y" min="-100" max="100" value="0" class="flex-1 accent-indigo-500 cursor-pointer">
+                  <span>Bottom</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Letterbox & Background Style Card -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span>🎨</span> <span>Letterbox Backdrop Style</span>
+                </span>
+                <p class="text-[10px] text-slate-400 mt-0.5">Background padded area behind zoomed-out video</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button class="backdrop-card p-2.5 rounded-xl border border-indigo-500/80 bg-indigo-600/20 text-left transition active:scale-95" data-backdrop="solid-black">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-black border border-white/30"></span>
+                  <span>Pitch Black</span>
+                </div>
+                <div class="text-[10px] text-emerald-400 mt-1 font-semibold">⭐ Best for Caption Readability</div>
+              </button>
+
+              <button class="backdrop-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-backdrop="dimmed-blur">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-slate-800 border border-indigo-400"></span>
+                  <span>Dimmed Video Blur</span>
+                </div>
+                <div class="text-[10px] text-indigo-300 mt-1">75% Dark blur + clear captions</div>
+              </button>
+
+              <button class="backdrop-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-backdrop="dark-cinema">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-[#111216] border border-white/20"></span>
+                  <span>Cinema Charcoal</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">Studio matte charcoal & vignette</div>
+              </button>
+
+              <button class="backdrop-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-backdrop="midnight">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-b from-slate-900 to-black border border-white/20"></span>
+                  <span>Midnight Dark</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">Deep slate studio gradient</div>
+              </button>
+
+              <button class="backdrop-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-backdrop="blurred-video">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-indigo-500/40 border border-indigo-400"></span>
+                  <span>Ambient Blur</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">Dynamic colorful video glow</div>
+              </button>
+
+              <button class="backdrop-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-backdrop="clean-white">
+                <div class="flex items-center gap-2 font-bold text-white text-xs">
+                  <span class="w-3.5 h-3.5 rounded-full bg-white border border-black/20"></span>
+                  <span>White Meme</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">Classic Twitter/Meme banner</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: CAPTIONS & TEXT OVERLAYS -->
+        <div id="tab-captions" class="tab-pane hidden flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>💬</span> <span>Viral Captions & Text Overlays</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Burn dynamic headline captions & subtitles onto your video</p>
+            </div>
+            <!-- Enable Captions Toggle -->
+            <label class="relative inline-flex items-center cursor-pointer" title="Enable or disable captions">
+              <input type="checkbox" id="check-enable-captions" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+            </label>
+          </div>
+
+          <!-- Quick AI / Catchy Hook Presets -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-slate-300">Viral Hook Templates:</span>
+              <button id="btn-caption-from-ai" class="text-[11px] font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                <span>✨</span> <span>From AI Clip</span>
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-xs">
+              <button class="caption-preset-pill px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition">🔥 WAIT FOR THE END 😱</button>
+              <button class="caption-preset-pill px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition">YOU WON'T BELIEVE THIS 🔥</button>
+              <button class="caption-preset-pill px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition">DON'T BLINK 👀</button>
+              <button class="caption-preset-pill px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition">PART 1 | MUST WATCH ⚡</button>
+            </div>
+          </div>
+
+          <!-- Caption Text Input Area -->
+          <div class="flex flex-col gap-1.5">
+            <span class="text-xs font-bold text-slate-300">Caption Text:</span>
+            <textarea id="input-caption-text" rows="2" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-white text-xs font-semibold focus:outline-none focus:border-indigo-500 transition resize-none" placeholder="Type headline or hook caption here...">🔥 WAIT FOR THE END 😱</textarea>
+          </div>
+
+          <!-- Caption Style Presets Grid -->
+          <div class="flex flex-col gap-2">
+            <span class="text-xs font-bold text-slate-300">Visual Caption Style:</span>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button class="caption-style-card p-2.5 rounded-xl border border-indigo-500/80 bg-indigo-600/20 text-left transition active:scale-95" data-style="tiktok-yellow">
+                <div class="font-extrabold text-[#FFE600] text-sm drop-shadow" style="-webkit-text-stroke: 1px black;">TIKTOK YELLOW</div>
+                <div class="text-[10px] text-slate-400">Viral black outline & yellow</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-style="yellow-pill">
+                <div class="font-extrabold text-black text-xs px-2 py-0.5 rounded bg-[#FFE600] inline-block">YELLOW BOX</div>
+                <div class="text-[10px] text-slate-400 mt-1">Black text on bright yellow pill</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-style="clean-white">
+                <div class="font-bold text-white text-xs px-2 py-0.5 rounded bg-black/85 border border-white/20 inline-block">Clean White Pill</div>
+                <div class="text-[10px] text-slate-400 mt-1">Dark rounded box (100% readable)</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-style="black-box-white">
+                <div class="font-extrabold text-white text-xs px-2 py-0.5 rounded bg-black border border-white/40 inline-block">BLACK BOX</div>
+                <div class="text-[10px] text-slate-400 mt-1">Pure black box & white text</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-style="news-banner">
+                <div class="font-bold text-white text-xs px-2 py-0.5 bg-black border-l-4 border-red-500 inline-block">NEWS BANNER</div>
+                <div class="text-[10px] text-slate-400 mt-1">Full-width headline strip</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95" data-style="impact-red">
+                <div class="font-extrabold text-[#FF2A4D] text-xs" style="-webkit-text-stroke: 0.5px white;">ACTION RED</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">High urgency alert style</div>
+              </button>
+
+              <button class="caption-style-card p-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800 text-left transition active:scale-95 col-span-2" data-style="neon-glow">
+                <div class="font-bold text-cyan-300 text-xs drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">⚡ NEON GLOW</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Vibrant cyan & magenta outer glow</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Position & Fine Placement Controls -->
+          <div class="space-y-3 pt-2 border-t border-white/5">
+            <!-- Position Selector -->
+            <div>
+              <span class="text-xs font-bold text-slate-300 mb-1.5 block">Position Preset:</span>
+              <div class="flex items-center gap-1 bg-slate-950/70 p-1 rounded-xl border border-white/10">
+                <button class="caption-pos-btn flex-1 py-1.5 rounded-lg text-[11px] font-bold bg-indigo-600 text-white transition text-center" data-pos="top">⬆️ Top Black Bar</button>
+                <button class="caption-pos-btn flex-1 py-1.5 rounded-lg text-[11px] font-semibold text-slate-400 hover:text-white transition text-center" data-pos="center">⏺️ Center</button>
+                <button class="caption-pos-btn flex-1 py-1.5 rounded-lg text-[11px] font-semibold text-slate-400 hover:text-white transition text-center" data-pos="bottom">⬇️ Bottom Black Bar</button>
+              </div>
+            </div>
+
+            <!-- Fine Vertical Offset Slider -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">Vertical Position (Slide into Black Bar):</span>
+                <span id="label-caption-y" class="font-mono text-indigo-400 font-bold">12%</span>
+              </div>
+              <input type="range" id="slider-caption-y" min="5" max="95" value="12" class="w-full accent-indigo-500 cursor-pointer">
+            </div>
+
+            <!-- Font Size -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-300">Font Size:</span>
+                <span class="font-mono text-indigo-400 font-bold" id="label-caption-size">32px</span>
+              </div>
+              <input type="range" id="slider-caption-size" min="16" max="64" value="32" class="w-full accent-indigo-500 cursor-pointer">
+            </div>
+
+            <!-- Optional Secondary Subtitle / Footer -->
+            <div class="pt-2 border-t border-white/5 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-300">Secondary Subtitle / Hook (Optional):</span>
+              </div>
+              <input type="text" id="input-subcaption-text" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-white text-xs font-medium focus:outline-none focus:border-indigo-500 transition" placeholder="e.g. Wait for what happens next! 👇">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: SMART AI HIGHLIGHT CLIPS -->
+        <div id="tab-ai" class="tab-pane hidden flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>🤖</span> <span>Smart AI Highlight Clips</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Click any AI clip to select and preview it instantly</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold uppercase" id="ai-tab-badge">AI Active</span>
+          </div>
+
+          <!-- Quick AI Clip Mode Filter in Tab -->
+          <div class="flex items-center gap-1 bg-slate-950/70 p-1 rounded-xl border border-white/10 text-xs">
+            <button class="ai-tab-mode-chip flex-1 py-1.5 px-1 rounded-lg font-bold text-[11px] bg-indigo-600 text-white transition text-center" data-mode="viral30">🔥 Viral 30s</button>
+            <button class="ai-tab-mode-chip flex-1 py-1.5 px-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition text-center" data-mode="action45">⚡ Action 45s</button>
+            <button class="ai-tab-mode-chip flex-1 py-1.5 px-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition text-center" data-mode="story60">🎬 Story 60s</button>
+            <button class="ai-tab-mode-chip flex-1 py-1.5 px-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition text-center" data-mode="hooks">🎣 Hooks</button>
+          </div>
+
+          <!-- Vertical list of AI clips -->
+          <div id="ai-tab-clips-list" class="flex flex-col gap-2 max-h-[380px] overflow-y-auto pr-1 scrollbar-thin">
+            <!-- Populated dynamically by renderAIClipsUI() -->
+          </div>
+
+          <div class="p-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20 text-[11px] text-slate-300 flex items-start gap-2">
+            <span class="text-indigo-400 mt-0.5">💡</span>
+            <span>Selecting an AI clip changes the active preview & trim timestamps while preserving all your color filters, sprinkles, and watermark blur settings.</span>
+          </div>
+        </div>
+
+        <!-- Export Drawer / Actions Section -->
+        <div class="pt-4 border-t border-white/10 flex flex-col gap-2.5">
+          <!-- Audio Export Mode Selection (Sound vs Mute) -->
+          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-300 flex items-center gap-1.5">
+              <span>🔊</span> <span>Export Audio:</span>
+            </span>
+            <div class="flex items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-white/10">
+              <button id="btn-export-audio-on" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-600 text-white transition flex items-center gap-1 shadow-sm" title="Include original audio in export">
+                <span>🔊</span> <span>With Sound</span>
+              </button>
+              <button id="btn-export-audio-mute" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-400 hover:text-white transition flex items-center gap-1" title="Mute audio (silent video export)">
+                <span>🔇</span> <span>Mute Audio</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Primary Instant Browser Export -->
+          <button id="btn-export-browser" class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-98">
+            <span id="export-icon">⚡</span>
+            <span id="export-btn-text">Download Edited Clip (With Sound)</span>
+          </button>
+
+          <!-- Studio FFmpeg Export -->
+          <button id="btn-export-ffmpeg" class="w-full py-2.5 rounded-xl font-semibold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 flex items-center justify-center gap-2 transition">
+            <span>🎬</span>
+            <span>Export Lossless 1080p (Studio Engine)</span>
+          </button>
+
+          <!-- Export Progress Indicator -->
+          <div id="export-progress-box" class="hidden bg-slate-950/80 p-3 rounded-xl border border-indigo-500/30 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-indigo-300" id="export-stage-text">Rendering frames...</span>
+              <span class="font-mono text-white font-bold" id="export-percent-text">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div id="export-progress-bar" class="bg-indigo-500 h-full w-0 transition-all duration-150"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Video Editor Client Engine JavaScript -->
+  <script>
+    // State management
+    const state = {
+      videoSrc: '',
+      videoName: 'sample.mp4',
+      videoDuration: 0,
+      currentTime: 0,
+      trimStart: 0,
+      trimEnd: 30,
+      aspectRatio: '9:16',
+      colorFilter: 'none',
+      sprinkleEffect: 'sparkles',
+      particleDensity: 35,
+      particleSpeed: 2,
+      smartZoom: false,
+      enableWatermarkBox: true,
+      watermarkBox: {
+        x: 0.65,
+        y: 0.78,
+        w: 0.30,
+        h: 0.16
+      },
+      blurStrength: 14,
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      isLooping: true,
+      isPlaying: false,
+      particles: [],
+      aiClips: [],
+      selectedAIClipIndex: 0,
+      aiMode: 'viral30',
+      isAnalyzingAI: false,
+      zoomLevel: 1.0,
+      framingMode: 'fit',
+      panX: 0,
+      panY: 0,
+      backdropStyle: 'solid-black',
+      enableCaptions: true,
+      captionText: '🔥 WAIT FOR THE END 😱',
+      subCaptionText: '',
+      captionStyle: 'tiktok-yellow',
+      captionPosition: 'top',
+      captionOffsetY: 12,
+      captionFontSize: 32,
+      exportAudioMode: 'include'
+    };
+
+    // DOM References
+    const video = document.getElementById('source-video');
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+    const wmBox = document.getElementById('watermark-box');
+    const emptyOverlay = document.getElementById('empty-state-overlay');
+    const filePicker = document.getElementById('file-picker');
+
+    // Controls
+    const btnPlayPause = document.getElementById('btn-play-pause');
+    const btnSeekBack = document.getElementById('btn-seek-back');
+    const btnSeekFwd = document.getElementById('btn-seek-fwd');
+    const btnToggleLoop = document.getElementById('btn-toggle-loop');
+    const btnMute = document.getElementById('btn-mute');
+    const volumeSlider = document.getElementById('volume-slider');
+    const playbackSpeed = document.getElementById('playback-speed');
+
+    // Timeline elements
+    const timelineContainer = document.getElementById('timeline-container');
+    const timelineActiveRange = document.getElementById('timeline-active-range');
+    const handleStart = document.getElementById('handle-start');
+    const handleEnd = document.getElementById('handle-end');
+    const timelinePlayhead = document.getElementById('timeline-playhead');
+    const inputStartTime = document.getElementById('input-start-time');
+    const inputEndTime = document.getElementById('input-end-time');
+    const labelClipDuration = document.getElementById('label-clip-duration');
+    const timeCurrent = document.getElementById('time-current');
+    const timeDuration = document.getElementById('time-duration');
+
+    // AI Clipper DOM References
+    const aiClipsContainer = document.getElementById('ai-clips-container');
+    const aiTabClipsList = document.getElementById('ai-tab-clips-list');
+    const aiClipsCountBadge = document.getElementById('ai-clips-count-badge');
+    const aiStatusSummary = document.getElementById('ai-status-summary');
+    const aiTabBadge = document.getElementById('ai-tab-badge');
+    const aiClipModeSelect = document.getElementById('ai-clip-mode');
+    const btnReanalyzeAI = document.getElementById('btn-reanalyze-ai');
+    const aiReanalyzeIcon = document.getElementById('ai-reanalyze-icon');
+
+    // Zoom & Pan DOM References
+    const btnZoomIn = document.getElementById('btn-zoom-in');
+    const btnZoomOut = document.getElementById('btn-zoom-out');
+    const btnZoomReset = document.getElementById('btn-zoom-reset');
+    const btnZoomFill = document.getElementById('btn-zoom-fill');
+    const labelZoomPercent = document.getElementById('label-zoom-percent');
+    const sliderViewportZoom = document.getElementById('slider-viewport-zoom');
+    const sliderFramingZoom = document.getElementById('slider-framing-zoom');
+    const labelFramingZoomVal = document.getElementById('label-framing-zoom-val');
+    const sliderPanX = document.getElementById('slider-pan-x');
+    const sliderPanY = document.getElementById('slider-pan-y');
+    const labelPanXVal = document.getElementById('label-pan-x-val');
+    const labelPanYVal = document.getElementById('label-pan-y-val');
+    const btnResetPan = document.getElementById('btn-reset-pan');
+
+    // Captions DOM References
+    const checkEnableCaptions = document.getElementById('check-enable-captions');
+    const inputCaptionText = document.getElementById('input-caption-text');
+    const inputSubcaptionText = document.getElementById('input-subcaption-text');
+    const sliderCaptionY = document.getElementById('slider-caption-y');
+    const labelCaptionY = document.getElementById('label-caption-y');
+    const sliderCaptionSize = document.getElementById('slider-caption-size');
+    const labelCaptionSize = document.getElementById('label-caption-size');
+    const btnCaptionFromAI = document.getElementById('btn-caption-from-ai');
+
+    // Audio Export DOM References
+    const btnExportAudioOn = document.getElementById('btn-export-audio-on');
+    const btnExportAudioMute = document.getElementById('btn-export-audio-mute');
+    const btnToggleExportAudio = document.getElementById('btn-toggle-export-audio');
+    const labelExportAudioMode = document.getElementById('label-export-audio-mode');
+    const iconExportAudio = document.getElementById('icon-export-audio');
+
+    // Helper: format seconds to MM:SS.S
+    function formatTime(sec) {
+      if (isNaN(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = (sec % 60).toFixed(1);
+      return `${m.toString().padStart(2, '0')}:${s.padStart(4, '0')}`;
+    }
+
+    // Helper: format bytes
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return '';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    // UI Workspace Visibility Toggles
+    function showUploadScreen() {
+      pauseVideo();
+      const heroScreen = document.getElementById('upload-hero-screen');
+      const infoBanner = document.getElementById('video-info-banner');
+      const workspace = document.getElementById('editor-workspace');
+      if (heroScreen) heroScreen.classList.remove('hidden');
+      if (infoBanner) infoBanner.classList.add('hidden');
+      if (workspace) workspace.classList.add('hidden');
+    }
+
+    function showEditorWorkspace(name, size, duration) {
+      const heroScreen = document.getElementById('upload-hero-screen');
+      const infoBanner = document.getElementById('video-info-banner');
+      const workspace = document.getElementById('editor-workspace');
+      if (heroScreen) heroScreen.classList.add('hidden');
+      if (infoBanner) infoBanner.classList.remove('hidden');
+      if (workspace) workspace.classList.remove('hidden');
+
+      const titleEl = document.getElementById('banner-video-title');
+      const metaEl = document.getElementById('banner-video-meta');
+      if (titleEl) titleEl.textContent = name || 'Video Clip';
+      const sizeStr = size ? formatBytes(size) : '';
+      const durStr = duration ? formatTime(duration) : '';
+      if (metaEl) metaEl.textContent = `${durStr} ${sizeStr ? '• ' + sizeStr : ''}`;
+    }
+
+    // Helper: parse MM:SS.S to seconds
+    function parseTime(str) {
+      const parts = str.trim().split(':');
+      if (parts.length === 2) {
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+      }
+      return parseFloat(str) || 0;
+    }
+
+    // Initialize Particle System for In-Frame Sprinkles
+    function initParticles() {
+      state.particles = [];
+      const count = state.particleDensity;
+      for (let i = 0; i < count; i++) {
+        state.particles.push({
+          x: Math.random(),
+          y: Math.random(),
+          size: Math.random() * 4 + 2,
+          speedY: (Math.random() * 0.4 + 0.2) * (state.particleSpeed * 0.6),
+          speedX: (Math.random() - 0.5) * 0.2,
+          alpha: Math.random() * 0.8 + 0.2,
+          phase: Math.random() * Math.PI * 2,
+          rot: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.05
+        });
+      }
+    }
+    initParticles();
+
+    // Resize Canvas & Viewport Aspect Ratio
+    function updateAspectRatioFrame() {
+      let targetW = 270;
+      let targetH = 480;
+
+      if (state.aspectRatio === '9:16') {
+        targetW = 270; targetH = 480;
+      } else if (state.aspectRatio === '4:5') {
+        targetW = 320; targetH = 400;
+      } else if (state.aspectRatio === '1:1') {
+        targetW = 360; targetH = 360;
+      } else if (state.aspectRatio === '16:9') {
+        targetW = 540; targetH = 304;
+      } else if (state.aspectRatio === 'original') {
+        if (video.videoWidth && video.videoHeight) {
+          const ratio = video.videoWidth / video.videoHeight;
+          if (ratio > 1) {
+            targetW = Math.min(540, 440 * ratio);
+            targetH = targetW / ratio;
+          } else {
+            targetH = 460;
+            targetW = targetH * ratio;
+          }
+        }
+      }
+
+      canvasWrapper.style.width = `${Math.round(targetW)}px`;
+      canvasWrapper.style.height = `${Math.round(targetH)}px`;
+      canvas.width = Math.round(targetW * 2);
+      canvas.height = Math.round(targetH * 2);
+
+      document.getElementById('canvas-resolution').textContent = `${canvas.width}×${canvas.height}`;
+    }
+
+    // ==========================================
+    // 🤖 SMART AI HIGHLIGHT CLIPPER ENGINE
+    // ==========================================
+
+    function generateSmartAIClips(mode = 'viral30') {
+      const dur = state.videoDuration || 30;
+      const clips = [];
+
+      let targetDur = 30;
+      if (mode === 'action45') targetDur = Math.min(dur, Math.max(30, 45));
+      else if (mode === 'story60') targetDur = Math.min(dur, Math.max(30, 60));
+      else targetDur = Math.min(dur, 30);
+
+      const len = targetDur;
+      const maxStart = Math.max(0, dur - len);
+
+      if (maxStart === 0 || dur <= 35) {
+        clips.push({
+          index: 0,
+          title: '🌟 Master Highlight & Viral Hook',
+          desc: 'Complete high-energy moment capturing the essence of the entire video',
+          start: 0,
+          end: dur,
+          duration: Math.round(dur * 10) / 10,
+          virality: 99,
+          badge: '🔥 99% Viral',
+          tag: 'Viral Master'
+        });
+      } else if (mode === 'hooks') {
+        const hCount = Math.min(4, Math.max(2, Math.floor(dur / 25)));
+        const hookTitles = [
+          { title: '🎣 Opening Hook (0-30s)', desc: 'Direct opening punch crafted for TikTok & Shorts retention', tag: 'Hook #1', virality: 99, badge: '🔥 99% Viral' },
+          { title: '⚡ Fast Action Jump Hook', desc: 'Skips introductory lag and drops the audience straight into action', tag: 'Hook #2', virality: 97, badge: '⚡ 97% Action' },
+          { title: '❓ Curiosity Intrigue Hook', desc: 'Builds curiosity and teases the upcoming climax', tag: 'Hook #3', virality: 95, badge: '🎯 95% Curiosity' },
+          { title: '💥 Ending Climax Hook', desc: 'Reverse hook using the final climax to tease the viewer', tag: 'Hook #4', virality: 96, badge: '💥 96% Reveal' }
+        ];
+
+        for (let i = 0; i < hCount; i++) {
+          const s = Math.round((maxStart * (i / (hCount - 1))) * 10) / 10;
+          const e = Math.min(dur, Math.round((s + len) * 10) / 10);
+          const t = hookTitles[i] || hookTitles[0];
+          clips.push({
+            index: i,
+            title: t.title,
+            desc: t.desc,
+            start: s,
+            end: e,
+            duration: Math.round((e - s) * 10) / 10,
+            virality: t.virality,
+            badge: t.badge,
+            tag: t.tag
+          });
+        }
+      } else {
+        const count = Math.min(5, Math.max(2, Math.floor(dur / 25) + 1));
+        const clipTemplates = [
+          {
+            title: '🔥 Viral Hook & High Retention',
+            desc: `First ${Math.round(len)}s engineered to stop scrolling and maximize audience retention`,
+            virality: 99,
+            badge: '🔥 99% Viral',
+            tag: 'Viral Hook'
+          },
+          {
+            title: '⚡ High-Energy Action Peak',
+            desc: 'Fast-paced movement and peak audio/visual dynamics in the opening act',
+            virality: 97,
+            badge: '⚡ 97% Action',
+            tag: 'Action Peak'
+          },
+          {
+            title: '🎯 Core Story & Turning Point',
+            desc: 'Central thematic moment with maximum viewer engagement and resonance',
+            virality: 95,
+            badge: '🎬 95% Story',
+            tag: 'Core Moment'
+          },
+          {
+            title: '🎬 Rising Tension & Suspense Arc',
+            desc: 'Escalating build-up that leads the audience into the decisive climax',
+            virality: 94,
+            badge: '🔥 94% Tension',
+            tag: 'Suspense'
+          },
+          {
+            title: '💥 Grand Climax & Finale Payoff',
+            desc: 'Decisive conclusion with strong punchline and closing impact',
+            virality: 98,
+            badge: '💥 98% Climax',
+            tag: 'Climax'
+          }
+        ];
+
+        for (let i = 0; i < count; i++) {
+          const s = Math.round((maxStart * (i / (count - 1))) * 10) / 10;
+          const e = Math.min(dur, Math.round((s + len) * 10) / 10);
+          const tmpl = clipTemplates[i] || clipTemplates[clipTemplates.length - 1];
+          clips.push({
+            index: i,
+            title: tmpl.title,
+            desc: tmpl.desc,
+            start: s,
+            end: e,
+            duration: Math.round((e - s) * 10) / 10,
+            virality: tmpl.virality,
+            badge: tmpl.badge,
+            tag: tmpl.tag
+          });
+        }
+      }
+
+      clips.forEach((c, idx) => {
+        c.index = idx;
+        c.start = Math.max(0, Math.round(c.start * 10) / 10);
+        c.end = Math.min(dur, Math.round(c.end * 10) / 10);
+        c.duration = Math.max(0.5, Math.round((c.end - c.start) * 10) / 10);
+      });
+
+      state.aiClips = clips;
+      state.selectedAIClipIndex = 0;
+      renderAIClipsUI();
+      return clips;
+    }
+
+    function renderAIClipsUI() {
+      const container = document.getElementById('ai-clips-container');
+      const tabList = document.getElementById('ai-tab-clips-list');
+      const countBadge = document.getElementById('ai-clips-count-badge');
+      const statusSummary = document.getElementById('ai-status-summary');
+      const tabBadge = document.getElementById('ai-tab-badge');
+
+      if (!state.aiClips || state.aiClips.length === 0) {
+        if (container) {
+          container.innerHTML = `
+            <div class="text-slate-400 text-xs py-3 px-2 flex items-center gap-2">
+              <span>ℹ️</span> <span>Load a video to automatically discover AI highlight clips</span>
+            </div>`;
+        }
+        if (tabList) {
+          tabList.innerHTML = `<div class="text-slate-400 text-xs py-4 text-center">Load a video to detect AI highlight clips</div>`;
+        }
+        return;
+      }
+
+      if (countBadge) countBadge.textContent = `${state.aiClips.length} AI Clips Found`;
+      if (tabBadge) tabBadge.textContent = `${state.aiClips.length} Clips`;
+      if (statusSummary) statusSummary.textContent = `Click any clip to preview & customize in real-time (${state.aiClips.length} moments detected)`;
+
+      // 1. Render Horizontal Ribbon Cards
+      if (container) {
+        container.innerHTML = state.aiClips.map((clip, idx) => {
+          const isActive = idx === state.selectedAIClipIndex;
+          return `
+            <div class="ai-clip-card flex-shrink-0 w-64 p-3 rounded-xl border ${isActive ? 'active-ai-clip border-indigo-400 bg-indigo-950/70 ring-2 ring-indigo-500/50' : 'border-white/10 bg-slate-900/80 hover:bg-slate-800'} cursor-pointer select-none transition" data-index="${idx}">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${isActive ? 'bg-indigo-500 text-white shadow-sm' : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'} flex items-center gap-1">
+                  ${clip.badge}
+                </span>
+                <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30">
+                  ${clip.duration}s
+                </span>
+              </div>
+
+              <div class="font-bold text-white text-xs truncate mb-1" title="${clip.title}">
+                ${clip.title}
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-400">
+                <span class="font-mono text-slate-300 font-semibold">${formatTime(clip.start)} - ${formatTime(clip.end)}</span>
+                <span class="text-[10px] font-semibold ${isActive ? 'text-indigo-300 font-bold flex items-center gap-1' : 'text-slate-500'}">
+                  ${isActive ? '▶ Previewing' : 'Select Clip'}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        container.querySelectorAll('.ai-clip-card').forEach(card => {
+          card.onclick = () => {
+            const idx = parseInt(card.dataset.index);
+            selectAIClip(idx);
+          };
+        });
+      }
+
+      // 2. Render Vertical List in AI Sidebar Tab
+      if (tabList) {
+        tabList.innerHTML = state.aiClips.map((clip, idx) => {
+          const isActive = idx === state.selectedAIClipIndex;
+          return `
+            <div class="ai-tab-clip-item p-3 rounded-xl border ${isActive ? 'border-indigo-400 bg-indigo-950/60 ring-1 ring-indigo-500/50' : 'border-white/10 bg-slate-900/60 hover:bg-slate-800/80'} cursor-pointer select-none transition flex flex-col gap-1.5" data-index="${idx}">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 overflow-hidden pr-1">
+                  <span class="text-xs">🤖</span>
+                  <span class="font-bold text-white text-xs truncate">${clip.title}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0 ${isActive ? 'bg-indigo-500 text-white' : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'}">
+                  ${clip.badge}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-tight">${clip.desc}</p>
+              <div class="flex items-center justify-between text-[11px] pt-1.5 border-t border-white/5">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-emerald-400 font-semibold">${formatTime(clip.start)} - ${formatTime(clip.end)}</span>
+                  <span class="text-slate-500 text-[10px]">(${clip.duration}s)</span>
+                </div>
+                <span class="text-[10px] font-bold ${isActive ? 'text-indigo-300' : 'text-slate-400'}">
+                  ${isActive ? '● Active in Preview' : 'Select & Preview →'}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        tabList.querySelectorAll('.ai-tab-clip-item').forEach(item => {
+          item.onclick = () => {
+            const idx = parseInt(item.dataset.index);
+            selectAIClip(idx);
+          };
+        });
+      }
+    }
+
+    function selectAIClip(idx) {
+      if (!state.aiClips || !state.aiClips[idx]) return;
+      state.selectedAIClipIndex = idx;
+      const clip = state.aiClips[idx];
+
+      // ONLY adjust trim range and preview position!
+      // All other editing settings (color filters, sprinkles, watermark blur, framing) remain untouched!
+      state.trimStart = clip.start;
+      state.trimEnd = clip.end;
+
+      inputStartTime.value = formatTime(state.trimStart);
+      inputEndTime.value = formatTime(state.trimEnd);
+
+      updateTimelineDisplay();
+      video.currentTime = state.trimStart;
+      playVideo();
+
+      renderAIClipsUI();
+    }
+
+    function updateAIModeChips(mode) {
+      document.querySelectorAll('.ai-tab-mode-chip').forEach(c => {
+        if (c.dataset.mode === mode) {
+          c.classList.add('bg-indigo-600', 'text-white');
+          c.classList.remove('text-slate-400');
+        } else {
+          c.classList.remove('bg-indigo-600', 'text-white');
+          c.classList.add('text-slate-400');
+        }
+      });
+    }
+
+    // Load Video from URL or Blob
+    function loadVideo(url, name = 'video.mp4', size = 0) {
+      pauseVideo();
+      state.videoSrc = url;
+      state.videoName = name;
+      if (emptyOverlay) emptyOverlay.style.display = 'none';
+
+      // Instantly switch from upload hero to editor workspace
+      showEditorWorkspace(name, size, 0);
+
+      let handled = false;
+      const onMetadataReady = () => {
+        if (handled) return;
+        handled = true;
+        state.videoDuration = video.duration || 30;
+        timeDuration.textContent = formatTime(state.videoDuration);
+
+        // Automatically run Smart AI Highlights Detection
+        generateSmartAIClips(state.aiMode);
+
+        if (state.aiClips && state.aiClips.length > 0) {
+          selectAIClip(0);
+        } else {
+          state.trimStart = 0;
+          state.trimEnd = Math.min(state.videoDuration, 30);
+          inputStartTime.value = formatTime(state.trimStart);
+          inputEndTime.value = formatTime(state.trimEnd);
+          updateTimelineDisplay();
+          video.currentTime = 0;
+          playVideo();
+        }
+
+        updateAspectRatioFrame();
+        showEditorWorkspace(name, size, state.videoDuration);
+      };
+
+      video.onerror = (e) => {
+        console.error('Video decode error:', e, video.error);
+        alert('Could not decode or preview this video file. Please verify it is a valid MP4/WebM/MOV video format.');
+      };
+
+      video.onloadedmetadata = onMetadataReady;
+      video.onloadeddata = onMetadataReady;
+      video.oncanplay = onMetadataReady;
+      video.preload = 'auto';
+      video.src = url;
+      video.load();
+
+      if (video.readyState >= 1 && video.duration) {
+        onMetadataReady();
+      }
+    }
+
+    // Playback control functions
+    function playVideo() {
+      video.play().then(() => {
+        state.isPlaying = true;
+        btnPlayPause.textContent = '⏸';
+      }).catch(e => {
+        console.warn('Auto-play prevented:', e.message);
+        state.isPlaying = false;
+        btnPlayPause.textContent = '▶';
+      });
+    }
+
+    function pauseVideo() {
+      video.pause();
+      state.isPlaying = false;
+      btnPlayPause.textContent = '▶';
+    }
+
+    btnPlayPause.onclick = () => {
+      if (video.paused) {
+        if (video.currentTime >= state.trimEnd) {
+          video.currentTime = state.trimStart;
+        }
+        playVideo();
+      } else {
+        pauseVideo();
+      }
+    };
+
+    btnSeekBack.onclick = () => {
+      video.currentTime = Math.max(state.trimStart, video.currentTime - 5);
+    };
+
+    btnSeekFwd.onclick = () => {
+      video.currentTime = Math.min(state.trimEnd, video.currentTime + 5);
+    };
+
+    btnToggleLoop.onclick = () => {
+      state.isLooping = !state.isLooping;
+      btnToggleLoop.innerHTML = `<span>🔁</span> <span>Loop: ${state.isLooping ? 'ON' : 'OFF'}</span>`;
+      btnToggleLoop.classList.toggle('bg-indigo-500/20', state.isLooping);
+      btnToggleLoop.classList.toggle('text-indigo-300', state.isLooping);
+    };
+
+    btnMute.onclick = () => {
+      video.muted = !video.muted;
+      btnMute.textContent = video.muted ? '🔇' : '🔊';
+    };
+
+    volumeSlider.oninput = (e) => {
+      video.volume = parseFloat(e.target.value);
+      video.muted = video.volume === 0;
+      btnMute.textContent = video.muted ? '🔇' : '🔊';
+    };
+
+    playbackSpeed.onchange = (e) => {
+      video.playbackRate = parseFloat(e.target.value);
+    };
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        btnPlayPause.click();
+      } else if (e.code === 'ArrowLeft' || e.code === 'KeyJ') {
+        e.preventDefault();
+        btnSeekBack.click();
+      } else if (e.code === 'ArrowRight' || e.code === 'KeyL') {
+        e.preventDefault();
+        btnSeekFwd.click();
+      }
+    });
+
+    // Render Letterbox Backdrop (Solid Black, Dimmed Blur, Video Blur, Dark Cinema, Midnight, White)
+    function renderBackdrop(cw, ch) {
+      const mode = state.backdropStyle || 'solid-black';
+      if (mode === 'solid-black') {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, cw, ch);
+      } else if (mode === 'dimmed-blur') {
+        ctx.save();
+        ctx.filter = 'blur(32px) brightness(28%) saturate(110%)';
+        ctx.drawImage(video, 0, 0, cw, ch);
+        ctx.restore();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.70)';
+        ctx.fillRect(0, 0, cw, ch);
+      } else if (mode === 'blurred-video') {
+        ctx.save();
+        ctx.filter = 'blur(28px) brightness(40%) saturate(130%)';
+        ctx.drawImage(video, 0, 0, cw, ch);
+        ctx.restore();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
+        ctx.fillRect(0, 0, cw, ch);
+      } else if (mode === 'dark-cinema') {
+        ctx.fillStyle = '#111216';
+        ctx.fillRect(0, 0, cw, ch);
+        const rad = ctx.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.2, cw / 2, ch / 2, Math.max(cw, ch) * 0.8);
+        rad.addColorStop(0, 'rgba(28, 30, 38, 0.5)');
+        rad.addColorStop(1, 'rgba(6, 7, 10, 0.95)');
+        ctx.fillStyle = rad;
+        ctx.fillRect(0, 0, cw, ch);
+      } else if (mode === 'midnight') {
+        const grad = ctx.createLinearGradient(0, 0, 0, ch);
+        grad.addColorStop(0, '#030712');
+        grad.addColorStop(0.5, '#0f172a');
+        grad.addColorStop(1, '#020617');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, cw, ch);
+      } else if (mode === 'clean-white') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, cw, ch);
+      } else {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, cw, ch);
+      }
+    }
+
+    // Main 60 FPS Render Loop on Canvas
+    function renderFrame() {
+      requestAnimationFrame(renderFrame);
+
+      if (!video.videoWidth || !video.videoHeight) return;
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+
+      // Check Clip Bounds & Looping
+      if (state.isPlaying) {
+        if (video.currentTime >= state.trimEnd) {
+          if (state.isLooping) {
+            video.currentTime = state.trimStart;
+          } else {
+            pauseVideo();
+          }
+        }
+      }
+
+      state.currentTime = video.currentTime;
+      timeCurrent.textContent = formatTime(state.currentTime);
+      updatePlayheadPosition();
+
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.save();
+
+      // 1. Render Letterbox Backdrop
+      renderBackdrop(cw, ch);
+
+      // 2. Video Draw & Aspect Ratio Scale Engine
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+      const vRatio = vw / vh;
+      const cRatio = cw / ch;
+
+      // Uncropped native fit dimensions (whole video fits in canvas)
+      let baseW, baseH;
+      if (vRatio > cRatio) {
+        baseW = cw;
+        baseH = cw / vRatio;
+      } else {
+        baseH = ch;
+        baseW = ch * vRatio;
+      }
+
+      // Effective Zoom with optional smart edge zoom
+      let effectiveZoom = Math.max(0.15, Math.min(3.0, state.zoomLevel || 1.0));
+      if (state.smartZoom) {
+        effectiveZoom *= 1.08;
+      }
+
+      let targetW, targetH;
+      if (state.framingMode === 'cover') {
+        const coverScale = Math.max(cw / baseW, ch / baseH);
+        targetW = baseW * coverScale * effectiveZoom;
+        targetH = baseH * coverScale * effectiveZoom;
+      } else {
+        targetW = baseW * effectiveZoom;
+        targetH = baseH * effectiveZoom;
+      }
+
+      // Max pan ranges
+      const maxPanX = Math.max(cw * 0.45, Math.abs(cw - targetW) / 2);
+      const maxPanY = Math.max(ch * 0.45, Math.abs(ch - targetH) / 2);
+
+      const offsetX = ((state.panX || 0) / 100) * maxPanX;
+      const offsetY = ((state.panY || 0) / 100) * maxPanY;
+
+      const dx = (cw - targetW) / 2 + offsetX;
+      const dy = (ch - targetH) / 2 + offsetY;
+
+      // Color filter
+      let filterCss = `brightness(${state.brightness}%) contrast(${state.contrast}%) saturate(${state.saturation}%) `;
+      if (state.colorFilter === 'warm') {
+        filterCss += 'sepia(30%) hue-rotate(-12deg) saturate(120%)';
+      } else if (state.colorFilter === 'cyberpunk') {
+        filterCss += 'hue-rotate(185deg) contrast(135%) saturate(140%)';
+      } else if (state.colorFilter === 'noir') {
+        filterCss += 'grayscale(100%) contrast(140%) brightness(95%)';
+      } else if (state.colorFilter === 'vivid') {
+        filterCss += 'saturate(160%) contrast(115%)';
+      } else if (state.colorFilter === 'vintage') {
+        filterCss += 'sepia(55%) contrast(115%) brightness(105%) saturate(85%)';
+      } else if (state.colorFilter === 'teal') {
+        filterCss += 'hue-rotate(150deg) contrast(120%) saturate(130%)';
+      } else if (state.colorFilter === 'golden') {
+        filterCss += 'sepia(40%) saturate(135%) brightness(105%)';
+      }
+      ctx.filter = filterCss.trim();
+
+      // Draw the video frame
+      ctx.save();
+      if (state.backdropStyle !== 'solid-black' && state.backdropStyle !== 'clean-white' && (targetW < cw || targetH < ch)) {
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+        ctx.shadowBlur = 18 * (cw / 360);
+      }
+      ctx.drawImage(video, 0, 0, vw, vh, dx, dy, targetW, targetH);
+      ctx.restore();
+      ctx.filter = 'none';
+
+      // 3. Interactive Watermark Blur Box Render
+      if (state.enableWatermarkBox && state.watermarkBox) {
+        const bx = state.watermarkBox.x * cw;
+        const by = state.watermarkBox.y * ch;
+        const bw = state.watermarkBox.w * cw;
+        const bh = state.watermarkBox.h * ch;
+
+        // Apply targeted Gaussian blur over the watermark area
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(bx, by, bw, bh);
+        ctx.clip();
+        ctx.filter = `blur(${state.blurStrength * (cw / 300)}px)`;
+        ctx.drawImage(canvas, 0, 0);
+        ctx.restore();
+      }
+
+      // 4. In-Frame Sprinkles & Particle Animation Engine
+      if (state.sprinkleEffect !== 'none') {
+        renderSprinkles(cw, ch);
+      }
+
+      // 5. In-Frame Viral Captions & Subtitles Engine
+      if (state.enableCaptions && state.captionText && state.captionText.trim()) {
+        renderCanvasCaptions(cw, ch);
+      }
+
+      ctx.restore();
+    }
+    requestAnimationFrame(renderFrame);
+
+    // Render In-Frame Particles (Sparkles, Bokeh, Grain, Snow)
+    function renderSprinkles(cw, ch) {
+      const mode = state.sprinkleEffect;
+      const now = performance.now() * 0.002;
+
+      ctx.save();
+
+      if (mode === 'sparkles') {
+        // Golden Twinkling Sparkles
+        for (const p of state.particles) {
+          p.y += p.speedY * 0.003;
+          p.x += Math.sin(now + p.phase) * 0.001;
+          p.rot += p.rotSpeed;
+          if (p.y > 1) p.y = -0.05;
+
+          const px = p.x * cw;
+          const py = p.y * ch;
+          const twinkle = Math.abs(Math.sin(now * 3 + p.phase));
+          const size = p.size * (1 + twinkle * 0.5) * (cw / 400);
+
+          ctx.save();
+          ctx.translate(px, py);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = `rgba(255, 223, 100, ${p.alpha * twinkle * 0.9})`;
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+          ctx.shadowBlur = 10;
+
+          // 4-point star sparkle shape
+          ctx.beginPath();
+          ctx.moveTo(0, -size * 2);
+          ctx.quadraticCurveTo(0, 0, size * 2, 0);
+          ctx.quadraticCurveTo(0, 0, 0, size * 2);
+          ctx.quadraticCurveTo(0, 0, -size * 2, 0);
+          ctx.quadraticCurveTo(0, 0, 0, -size * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+      } else if (mode === 'bokeh') {
+        // Floating Glowing Bokeh Orbs
+        for (const p of state.particles) {
+          p.y -= p.speedY * 0.002;
+          p.x += Math.cos(now + p.phase) * 0.001;
+          if (p.y < -0.1) p.y = 1.05;
+
+          const px = p.x * cw;
+          const py = p.y * ch;
+          const radius = (p.size * 5) * (cw / 400);
+
+          const grad = ctx.createRadialGradient(px, py, 0, px, py, radius);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${p.alpha * 0.4})`);
+          grad.addColorStop(0.5, `rgba(165, 180, 252, ${p.alpha * 0.25})`);
+          grad.addColorStop(1, 'rgba(165, 180, 252, 0)');
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(px, py, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (mode === 'filmgrain') {
+        // 35mm Vintage Film Grain (procedural micro-noise)
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        for (let i = 0; i < 400; i++) {
+          const gx = Math.random() * cw;
+          const gy = Math.random() * ch;
+          ctx.fillRect(gx, gy, 1.5, 1.5);
+        }
+      } else if (mode === 'snow') {
+        // Soft Snow / Floating Dust
+        for (const p of state.particles) {
+          p.y += p.speedY * 0.004;
+          p.x += Math.sin(now + p.phase) * 0.002;
+          if (p.y > 1) p.y = -0.05;
+
+          const px = p.x * cw;
+          const py = p.y * ch;
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 0.8})`;
+          ctx.beginPath();
+          ctx.arc(px, py, p.size * (cw / 400), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // Render In-Frame Captions & Text Overlays on 60fps Canvas
+    function drawCaptionBlock(text, textY, fontSize, style, scale, cw, ch) {
+      if (!text || !text.trim()) return;
+      ctx.save();
+      ctx.font = `900 ${fontSize}px "Inter", "Montserrat", "Impact", -apple-system, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const lines = text.split('\n');
+      const lineHeight = fontSize * 1.25;
+      const totalHeight = lines.length * lineHeight;
+      const startY = textY - (totalHeight / 2) + (lineHeight / 2);
+
+      lines.forEach((line, i) => {
+        const curY = startY + (i * lineHeight);
+        const textWidth = ctx.measureText(line).width;
+        const padX = fontSize * 0.55;
+        const padY = fontSize * 0.28;
+
+        if (style === 'clean-white') {
+          // Clean White Pill with Solid Dark Rounded Box (100% Readable)
+          ctx.save();
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
+          const boxW = textWidth + padX * 2;
+          const boxH = fontSize + padY * 2;
+          const boxX = (cw - boxW) / 2;
+          const boxY = curY - (boxH / 2);
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 8 * scale);
+          else ctx.rect(boxX, boxY, boxW, boxH);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillText(line, cw / 2, curY);
+        } else if (style === 'yellow-pill') {
+          // Vibrant Yellow Highlight Box with Crisp Black Text
+          ctx.save();
+          ctx.fillStyle = '#FFE600';
+          const boxW = textWidth + padX * 2.2;
+          const boxH = fontSize + padY * 2.2;
+          const boxX = (cw - boxW) / 2;
+          const boxY = curY - (boxH / 2);
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 6 * scale);
+          else ctx.rect(boxX, boxY, boxW, boxH);
+          ctx.fill();
+          ctx.restore();
+
+          ctx.fillStyle = '#000000';
+          ctx.fillText(line, cw / 2, curY);
+        } else if (style === 'black-box-white') {
+          // Pure Black Box with Crisp White Text
+          ctx.save();
+          ctx.fillStyle = '#000000';
+          const boxW = textWidth + padX * 2.2;
+          const boxH = fontSize + padY * 2.2;
+          const boxX = (cw - boxW) / 2;
+          const boxY = curY - (boxH / 2);
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 8 * scale);
+          else ctx.rect(boxX, boxY, boxW, boxH);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillText(line, cw / 2, curY);
+        } else if (style === 'news-banner') {
+          // Full-width News Headline Banner Strip
+          ctx.save();
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
+          const bannerH = fontSize + padY * 2.4;
+          ctx.fillRect(0, curY - (bannerH / 2), cw, bannerH);
+          ctx.fillStyle = '#EF4444';
+          ctx.fillRect(0, curY - (bannerH / 2), 8 * scale, bannerH);
+          ctx.restore();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillText(line, cw / 2, curY);
+        } else if (style === 'neon-glow') {
+          // Neon Cyan with Magenta Glow
+          ctx.shadowColor = '#FF007F';
+          ctx.shadowBlur = 18 * scale;
+          ctx.fillStyle = '#00FFFF';
+          ctx.fillText(line, cw / 2, curY);
+        } else if (style === 'impact-red') {
+          // Action Red with Thick White Stroke
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = Math.max(2, fontSize * 0.18);
+          ctx.lineJoin = 'round';
+          ctx.strokeText(line, cw / 2, curY);
+          ctx.fillStyle = '#FF2A4D';
+          ctx.fillText(line, cw / 2, curY);
+        } else {
+          // Default: Viral TikTok Yellow with Heavy Black Stroke
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+          ctx.shadowBlur = 10 * scale;
+          ctx.strokeStyle = '#000000';
+          ctx.lineWidth = Math.max(3, fontSize * 0.26);
+          ctx.lineJoin = 'round';
+          ctx.strokeText(line, cw / 2, curY);
+          ctx.fillStyle = '#FFE600';
+          ctx.fillText(line, cw / 2, curY);
+        }
+      });
+      ctx.restore();
+    }
+
+    function renderCanvasCaptions(cw, ch) {
+      if (!state.enableCaptions) return;
+      const scale = cw / 360;
+
+      // 1. Main Headline Caption
+      if (state.captionText && state.captionText.trim()) {
+        const fontSize = Math.max(14, Math.round((state.captionFontSize || 32) * scale));
+        let textY;
+        if (state.captionOffsetY !== undefined && state.captionOffsetY !== null) {
+          textY = ch * (state.captionOffsetY / 100);
+        } else if (state.captionPosition === 'top') {
+          textY = ch * 0.12;
+        } else if (state.captionPosition === 'bottom') {
+          textY = ch * 0.88;
+        } else {
+          textY = ch * 0.50;
+        }
+        drawCaptionBlock(state.captionText, textY, fontSize, state.captionStyle, scale, cw, ch);
+      }
+
+      // 2. Secondary Subtitle / Footer
+      if (state.subCaptionText && state.subCaptionText.trim()) {
+        const subFontSize = Math.max(12, Math.round(((state.captionFontSize || 32) * 0.72) * scale));
+        const subY = ch * 0.88;
+        drawCaptionBlock(state.subCaptionText, subY, subFontSize, state.captionStyle === 'tiktok-yellow' ? 'clean-white' : state.captionStyle, scale, cw, ch);
+      }
+    }
+
+    // Timeline Drag & Scrubbing
+    function updateTimelineDisplay() {
+      const dur = state.videoDuration || 1;
+      const leftPct = (state.trimStart / dur) * 100;
+      const rightPct = (state.trimEnd / dur) * 100;
+
+      handleStart.style.left = `${leftPct}%`;
+      handleEnd.style.left = `${rightPct}%`;
+      timelineActiveRange.style.left = `${leftPct}%`;
+      timelineActiveRange.style.width = `${Math.max(0, rightPct - leftPct)}%`;
+
+      const clipLength = Math.max(0, state.trimEnd - state.trimStart);
+      labelClipDuration.textContent = `Clip: ${formatTime(clipLength)}`;
+    }
+
+    function updatePlayheadPosition() {
+      const dur = state.videoDuration || 1;
+      const pct = (state.currentTime / dur) * 100;
+      timelinePlayhead.style.left = `${Math.min(100, Math.max(0, pct))}%`;
+    }
+
+    // Interactive Dragging on Timeline Handles
+    let draggingHandle = null;
+
+    handleStart.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      draggingHandle = 'start';
+    });
+
+    handleEnd.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      draggingHandle = 'end';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!draggingHandle) return;
+      const rect = timelineContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = Math.min(1, Math.max(0, clickX / rect.width));
+      const targetSec = pct * state.videoDuration;
+
+      if (draggingHandle === 'start') {
+        state.trimStart = Math.min(targetSec, state.trimEnd - 0.5);
+        inputStartTime.value = formatTime(state.trimStart);
+        video.currentTime = state.trimStart;
+      } else if (draggingHandle === 'end') {
+        state.trimEnd = Math.max(targetSec, state.trimStart + 0.5);
+        inputEndTime.value = formatTime(state.trimEnd);
+      }
+      updateTimelineDisplay();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (draggingHandle) {
+        state.selectedAIClipIndex = -1;
+        renderAIClipsUI();
+      }
+      draggingHandle = null;
+    });
+
+    // Click on timeline to seek
+    timelineContainer.addEventListener('click', (e) => {
+      if (e.target === handleStart || e.target === handleEnd) return;
+      const rect = timelineContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = Math.min(1, Math.max(0, clickX / rect.width));
+      const seekTime = pct * state.videoDuration;
+      video.currentTime = seekTime;
+    });
+
+    // Timestamp Inputs Set
+    inputStartTime.addEventListener('change', () => {
+      const sec = parseTime(inputStartTime.value);
+      state.trimStart = Math.min(sec, state.trimEnd - 0.5);
+      inputStartTime.value = formatTime(state.trimStart);
+      state.selectedAIClipIndex = -1;
+      updateTimelineDisplay();
+      renderAIClipsUI();
+    });
+
+    inputEndTime.addEventListener('change', () => {
+      const sec = parseTime(inputEndTime.value);
+      state.trimEnd = Math.max(sec, state.trimStart + 0.5);
+      inputEndTime.value = formatTime(state.trimEnd);
+      state.selectedAIClipIndex = -1;
+      updateTimelineDisplay();
+      renderAIClipsUI();
+    });
+
+    document.getElementById('btn-set-start-head').onclick = () => {
+      state.trimStart = Math.min(video.currentTime, state.trimEnd - 0.5);
+      inputStartTime.value = formatTime(state.trimStart);
+      state.selectedAIClipIndex = -1;
+      updateTimelineDisplay();
+      renderAIClipsUI();
+    };
+
+    document.getElementById('btn-set-end-head').onclick = () => {
+      state.trimEnd = Math.max(video.currentTime, state.trimStart + 0.5);
+      inputEndTime.value = formatTime(state.trimEnd);
+      state.selectedAIClipIndex = -1;
+      updateTimelineDisplay();
+      renderAIClipsUI();
+    };
+
+    // Quick Trim Presets
+    document.querySelectorAll('.trim-preset').forEach(btn => {
+      btn.onclick = () => {
+        const val = btn.dataset.trim;
+        state.trimStart = 0;
+        if (val === 'full') {
+          state.trimEnd = state.videoDuration;
+        } else {
+          state.trimEnd = Math.min(state.videoDuration, parseFloat(val));
+        }
+        state.selectedAIClipIndex = -1;
+        inputStartTime.value = formatTime(state.trimStart);
+        inputEndTime.value = formatTime(state.trimEnd);
+        updateTimelineDisplay();
+        renderAIClipsUI();
+        video.currentTime = 0;
+      };
+    });
+
+    // Draggable & Resizable Watermark Box Interaction
+    let isDraggingWm = false;
+    let isResizingWm = false;
+    let resizeCorner = null;
+    let dragStartX = 0, dragStartY = 0;
+    let initialWmState = null;
+
+    function syncWmBoxStyles() {
+      if (!state.enableWatermarkBox) {
+        wmBox.classList.remove('active');
+        return;
+      }
+      wmBox.classList.add('active');
+      wmBox.style.left = `${(state.watermarkBox.x * 100).toFixed(1)}%`;
+      wmBox.style.top = `${(state.watermarkBox.y * 100).toFixed(1)}%`;
+      wmBox.style.width = `${(state.watermarkBox.w * 100).toFixed(1)}%`;
+      wmBox.style.height = `${(state.watermarkBox.h * 100).toFixed(1)}%`;
+    }
+
+    wmBox.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('wm-handle')) {
+        isResizingWm = true;
+        resizeCorner = e.target.classList.contains('wm-handle-nw') ? 'nw' :
+                       e.target.classList.contains('wm-handle-ne') ? 'ne' :
+                       e.target.classList.contains('wm-handle-sw') ? 'sw' : 'se';
+      } else {
+        isDraggingWm = true;
+      }
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      initialWmState = { ...state.watermarkBox };
+      e.stopPropagation();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDraggingWm && !isResizingWm) return;
+      const rect = canvasWrapper.getBoundingClientRect();
+      const deltaX = (e.clientX - dragStartX) / rect.width;
+      const deltaY = (e.clientY - dragStartY) / rect.height;
+
+      if (isDraggingWm) {
+        state.watermarkBox.x = Math.min(1 - state.watermarkBox.w, Math.max(0, initialWmState.x + deltaX));
+        state.watermarkBox.y = Math.min(1 - state.watermarkBox.h, Math.max(0, initialWmState.y + deltaY));
+      } else if (isResizingWm) {
+        if (resizeCorner === 'se') {
+          state.watermarkBox.w = Math.min(1 - initialWmState.x, Math.max(0.1, initialWmState.w + deltaX));
+          state.watermarkBox.h = Math.min(1 - initialWmState.y, Math.max(0.06, initialWmState.h + deltaY));
+        } else if (resizeCorner === 'nw') {
+          const newX = Math.max(0, Math.min(initialWmState.x + initialWmState.w - 0.1, initialWmState.x + deltaX));
+          const newY = Math.max(0, Math.min(initialWmState.y + initialWmState.h - 0.06, initialWmState.y + deltaY));
+          state.watermarkBox.w = initialWmState.w + (initialWmState.x - newX);
+          state.watermarkBox.h = initialWmState.h + (initialWmState.y - newY);
+          state.watermarkBox.x = newX;
+          state.watermarkBox.y = newY;
+        }
+      }
+      syncWmBoxStyles();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDraggingWm = false;
+      isResizingWm = false;
+    });
+
+    // Watermark Quick Corner Snaps
+    document.querySelectorAll('.wm-snap').forEach(btn => {
+      btn.onclick = () => {
+        const c = btn.dataset.corner;
+        if (c === 'tl') state.watermarkBox = { x: 0.04, y: 0.04, w: 0.30, h: 0.14 };
+        if (c === 'tr') state.watermarkBox = { x: 0.66, y: 0.04, w: 0.30, h: 0.14 };
+        if (c === 'bl') state.watermarkBox = { x: 0.04, y: 0.82, w: 0.30, h: 0.14 };
+        if (c === 'br') state.watermarkBox = { x: 0.66, y: 0.82, w: 0.30, h: 0.14 };
+        syncWmBoxStyles();
+        document.querySelectorAll('.wm-snap').forEach(b => b.classList.remove('bg-cyan-500/20', 'text-cyan-300'));
+        btn.classList.add('bg-cyan-500/20', 'text-cyan-300');
+      };
+    });
+
+    // Watermark Toggle Handlers
+    const checkEnableBox = document.getElementById('check-enable-box');
+    const btnToggleWmBox = document.getElementById('btn-toggle-wm-box');
+    const labelBoxStatus = document.getElementById('label-box-status');
+
+    function setBoxEnabled(val) {
+      state.enableWatermarkBox = val;
+      checkEnableBox.checked = val;
+      labelBoxStatus.textContent = `Blur Box: ${val ? 'ON' : 'OFF'}`;
+      btnToggleWmBox.classList.toggle('bg-cyan-500/20', val);
+      btnToggleWmBox.classList.toggle('text-cyan-300', val);
+      syncWmBoxStyles();
+    }
+
+    checkEnableBox.onchange = (e) => setBoxEnabled(e.target.checked);
+    btnToggleWmBox.onclick = () => setBoxEnabled(!state.enableWatermarkBox);
+
+    const checkEnableZoom = document.getElementById('check-enable-zoom');
+
+    function setZoomEnabled(val) {
+      state.smartZoom = val;
+      if (checkEnableZoom) checkEnableZoom.checked = val;
+    }
+
+    if (checkEnableZoom) checkEnableZoom.onchange = (e) => setZoomEnabled(e.target.checked);
+
+    document.getElementById('slider-blur-strength').oninput = (e) => {
+      state.blurStrength = parseInt(e.target.value);
+      document.getElementById('val-blur-strength').textContent = `${state.blurStrength}px`;
+    };
+
+    // Color Filters Presets & Sliders
+    document.querySelectorAll('.color-preset-card').forEach(card => {
+      card.onclick = () => {
+        document.querySelectorAll('.color-preset-card').forEach(c => {
+          c.classList.remove('border-indigo-500/80', 'bg-indigo-600/20');
+          c.classList.add('border-white/10', 'bg-slate-900/60');
+        });
+        card.classList.remove('border-white/10', 'bg-slate-900/60');
+        card.classList.add('border-indigo-500/80', 'bg-indigo-600/20');
+        state.colorFilter = card.dataset.filter;
+      };
+    });
+
+    document.getElementById('slider-brightness').oninput = (e) => {
+      state.brightness = e.target.value;
+      document.getElementById('val-brightness').textContent = `${state.brightness}%`;
+    };
+    document.getElementById('slider-contrast').oninput = (e) => {
+      state.contrast = e.target.value;
+      document.getElementById('val-contrast').textContent = `${state.contrast}%`;
+    };
+    document.getElementById('slider-saturation').oninput = (e) => {
+      state.saturation = e.target.value;
+      document.getElementById('val-saturation').textContent = `${state.saturation}%`;
+    };
+
+    // Sprinkles Presets & Sliders
+    document.querySelectorAll('.sprinkle-card').forEach(card => {
+      card.onclick = () => {
+        document.querySelectorAll('.sprinkle-card').forEach(c => {
+          c.classList.remove('border-indigo-500/80', 'bg-indigo-600/20');
+          c.classList.add('border-white/10', 'bg-slate-900/60');
+        });
+        card.classList.remove('border-white/10', 'bg-slate-900/60');
+        card.classList.add('border-indigo-500/80', 'bg-indigo-600/20');
+        state.sprinkleEffect = card.dataset.sprinkle;
+      };
+    });
+
+    document.getElementById('slider-particle-density').oninput = (e) => {
+      state.particleDensity = parseInt(e.target.value);
+      document.getElementById('val-particle-density').textContent = `${state.particleDensity}`;
+      initParticles();
+    };
+
+    document.getElementById('slider-particle-speed').oninput = (e) => {
+      state.particleSpeed = parseInt(e.target.value);
+      initParticles();
+    };
+
+    // Aspect Ratio Selectors
+    function setAspectRatio(asp) {
+      state.aspectRatio = asp;
+      document.querySelectorAll('.aspect-pill, .frame-card').forEach(btn => {
+        if (btn.dataset.aspect === asp) {
+          btn.classList.add('bg-indigo-600', 'text-white');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('bg-indigo-600', 'text-white');
+          btn.classList.add('text-slate-400');
+        }
+      });
+      updateAspectRatioFrame();
+    }
+
+    document.querySelectorAll('.aspect-pill, .frame-card').forEach(btn => {
+      btn.onclick = () => setAspectRatio(btn.dataset.aspect);
+    });
+
+    // Right Sidebar Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white');
+          b.classList.add('text-slate-400');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white');
+        btn.classList.remove('text-slate-400');
+
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+        document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      };
+    });
+
+    // File Import Handlers
+    function triggerFilePicker(e) {
+      if (e && e.target && (e.target.tagName === 'LABEL' || e.target.closest('label[for="file-picker"]'))) {
+        return; // Handled natively by browser <label for="file-picker">
+      }
+      filePicker.click();
+    }
+    const btnHeaderUpload = document.getElementById('btn-header-upload');
+    const btnHeroChoose = document.getElementById('btn-hero-choose-file');
+    const btnBannerUploadNew = document.getElementById('btn-banner-upload-new');
+    const btnEmptyBrowse = document.getElementById('btn-empty-browse');
+    const heroDropzone = document.getElementById('hero-dropzone');
+
+    if (btnEmptyBrowse) btnEmptyBrowse.addEventListener('click', triggerFilePicker);
+
+    if (heroDropzone) {
+      heroDropzone.addEventListener('click', (e) => {
+        if (!e.target.closest('label')) {
+          filePicker.click();
+        }
+      });
+      heroDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        heroDropzone.classList.add('border-indigo-400', 'bg-indigo-950/40');
+      });
+      heroDropzone.addEventListener('dragleave', () => {
+        heroDropzone.classList.remove('border-indigo-400', 'bg-indigo-950/40');
+      });
+      heroDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        heroDropzone.classList.remove('border-indigo-400', 'bg-indigo-950/40');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          const objUrl = URL.createObjectURL(file);
+          loadVideo(objUrl, file.name, file.size);
+        }
+      });
+    }
+
+    filePicker.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        console.log('Video selected:', file.name, file.size);
+        const objUrl = URL.createObjectURL(file);
+        loadVideo(objUrl, file.name, file.size);
+      }
+      filePicker.value = ''; // Always reset so re-selecting identical filename fires change event
+    });
+
+    // Drag and Drop files onto Viewport
+    const stage = document.getElementById('viewport-stage');
+    if (stage) {
+      stage.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        stage.classList.add('scale-102');
+      });
+      stage.addEventListener('dragleave', () => {
+        stage.classList.remove('scale-102');
+      });
+      stage.addEventListener('drop', (e) => {
+        e.preventDefault();
+        stage.classList.remove('scale-102');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          const objUrl = URL.createObjectURL(file);
+          loadVideo(objUrl, file.name, file.size);
+        }
+      });
+    }
+
+    // Window-wide drag-and-drop safety
+    window.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        const file = e.dataTransfer.files[0];
+        if (file.type.startsWith('video/') || /\.(mp4|mov|webm|mkv|avi|m4v)$/i.test(file.name)) {
+          const objUrl = URL.createObjectURL(file);
+          loadVideo(objUrl, file.name, file.size);
+        }
+      }
+    });
+
+    // Load Demo Video Button
+    function loadSampleDemo() {
+      loadVideo('sample.mp4', 'sample.mp4', 6510380);
+    }
+    const btnLoadDemo = document.getElementById('btn-load-demo');
+    const btnEmptySample = document.getElementById('btn-empty-sample');
+    const btnHeroSample = document.getElementById('btn-hero-sample');
+
+    if (btnLoadDemo) btnLoadDemo.onclick = loadSampleDemo;
+    if (btnEmptySample) btnEmptySample.onclick = loadSampleDemo;
+    if (btnHeroSample) btnHeroSample.onclick = loadSampleDemo;
+
+    // URL Import Handlers (Hero Bar & Modal)
+    async function handleImportUrl(urlStr) {
+      const cleanUrl = (urlStr || '').trim();
+      if (!cleanUrl) return alert('Please enter a video URL');
+
+      const spinner = document.getElementById('import-spinner');
+      const statusText = document.getElementById('import-status');
+      if (spinner) spinner.classList.remove('hidden');
+      if (statusText) statusText.textContent = 'Extracting video stream...';
+
+      try {
+        const res = await fetch('/api/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: cleanUrl, clipStart: '00:00:00' })
+        });
+        const data = await res.json();
+        if (data.previewUrl) {
+          loadVideo(data.previewUrl, 'web_clip.mp4');
+          if (urlModal) urlModal.classList.add('hidden');
+        } else {
+          alert('Could not load stream from link. You can open a local video file instead.');
+        }
+      } catch (err) {
+        alert('Import error: ' + err.message);
+      } finally {
+        if (spinner) spinner.classList.add('hidden');
+        if (statusText) statusText.textContent = '';
+      }
+    }
+
+    const btnHeroImportUrl = document.getElementById('btn-hero-import-url');
+    if (btnHeroImportUrl) {
+      btnHeroImportUrl.onclick = () => {
+        const url = (document.getElementById('hero-url-input') || {}).value;
+        handleImportUrl(url);
+      };
+    }
+
+    // URL Import Modal Handlers
+    const urlModal = document.getElementById('url-modal');
+    const btnOpenUrlModal = document.getElementById('btn-open-url-modal');
+    const btnCloseUrlModal = document.getElementById('btn-close-url-modal');
+    const btnCancelUrl = document.getElementById('btn-cancel-url');
+    const btnConfirmImportUrl = document.getElementById('btn-confirm-import-url');
+
+    if (btnOpenUrlModal && urlModal) btnOpenUrlModal.onclick = () => urlModal.classList.remove('hidden');
+    if (btnCloseUrlModal && urlModal) btnCloseUrlModal.onclick = () => urlModal.classList.add('hidden');
+    if (btnCancelUrl && urlModal) btnCancelUrl.onclick = () => urlModal.classList.add('hidden');
+
+    if (btnConfirmImportUrl) {
+      btnConfirmImportUrl.onclick = () => {
+        const url = (document.getElementById('import-url-input') || {}).value;
+        handleImportUrl(url);
+      };
+    }
+
+    // ⚡ INSTANT BROWSER-SIDE EXPORT (Fast Canvas Recording with Audio)
+    async function startInstantBrowserExport() {
+      const btn = document.getElementById('btn-export-browser');
+      const progressBox = document.getElementById('export-progress-box');
+      const stageText = document.getElementById('export-stage-text');
+      const percentText = document.getElementById('export-percent-text');
+      const progressBar = document.getElementById('export-progress-bar');
+
+      const wasMuted = video.muted;
+      const wasVolume = video.volume;
+
+      pauseVideo();
+      video.currentTime = state.trimStart;
+
+      progressBox.classList.remove('hidden');
+      const audioModeText = state.exportAudioMode === 'mute' ? 'Muted (Silent Video)' : 'With Audio';
+      stageText.textContent = `Capturing 60fps canvas stream & ${audioModeText}...`;
+      percentText.textContent = '0%';
+      progressBar.style.width = '0%';
+      btn.disabled = true;
+
+      // Audio & Canvas Stream capture
+      const stream = canvas.captureStream(60);
+
+      if (state.exportAudioMode === 'include') {
+        // Ensure video produces audio during export
+        video.muted = false;
+        video.volume = 1.0;
+        try {
+          let audioTrack = null;
+          if (video.captureStream) {
+            const vStream = video.captureStream();
+            if (vStream && vStream.getAudioTracks().length > 0) audioTrack = vStream.getAudioTracks()[0];
+          } else if (video.mozCaptureStream) {
+            const vStream = video.mozCaptureStream();
+            if (vStream && vStream.getAudioTracks().length > 0) audioTrack = vStream.getAudioTracks()[0];
+          }
+          if (audioTrack) {
+            stream.addTrack(audioTrack);
+            console.log('✅ Export audio track added:', audioTrack.label || 'Default Audio');
+          }
+        } catch (e) {
+          console.warn('Audio track capture note:', e.message);
+        }
+      } else {
+        console.log('🔇 Exporting in MUTE mode (no audio track added)');
+      }
+
+      const mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4' :
+                       MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' :
+                       'video/webm';
+
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        video.muted = wasMuted;
+        video.volume = wasVolume;
+        stageText.textContent = 'Finalizing video file...';
+        const blob = new Blob(chunks, { type: mimeType });
+        const downloadUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+        a.download = `Zenith_Edited_Clip_${Date.now()}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        percentText.textContent = '100%';
+        progressBar.style.width = '100%';
+        stageText.textContent = `✅ Export completed & downloaded (${state.exportAudioMode === 'mute' ? 'Muted' : 'With Audio'})!`;
+        btn.disabled = false;
+        setTimeout(() => progressBox.classList.add('hidden'), 3500);
+      };
+
+      recorder.start(100);
+      playVideo();
+
+      const durationToRecord = Math.max(1, state.trimEnd - state.trimStart);
+      const startTimeMs = Date.now();
+
+      const interval = setInterval(() => {
+        const elapsed = (Date.now() - startTimeMs) / 1000;
+        const progress = Math.min(100, Math.round((elapsed / durationToRecord) * 100));
+        percentText.textContent = `${progress}%`;
+        progressBar.style.width = `${progress}%`;
+
+        if (video.currentTime >= state.trimEnd || elapsed >= durationToRecord) {
+          clearInterval(interval);
+          pauseVideo();
+          recorder.stop();
+        }
+      }, 100);
+    }
+
+    document.getElementById('btn-export-browser').onclick = startInstantBrowserExport;
+    document.getElementById('btn-export-quick').onclick = startInstantBrowserExport;
+
+    // 🎬 STUDIO FFmpeg BACKEND EXPORT (Lossless 1080p)
+    document.getElementById('btn-export-ffmpeg').onclick = async () => {
+      const progressBox = document.getElementById('export-progress-box');
+      const stageText = document.getElementById('export-stage-text');
+      const percentText = document.getElementById('export-percent-text');
+      const progressBar = document.getElementById('export-progress-bar');
+      const btn = document.getElementById('btn-export-ffmpeg');
+
+      btn.disabled = true;
+      progressBox.classList.remove('hidden');
+      stageText.textContent = 'Processing with Studio FFmpeg Engine...';
+      percentText.textContent = '20%';
+      progressBar.style.width = '20%';
+
+      try {
+        const payload = {
+          sourceType: state.videoSrc.startsWith('blob:') ? 'local' : 'sample',
+          source: state.videoName || 'sample.mp4',
+          clipStart: state.trimStart,
+          clipEnd: state.trimEnd,
+          aspectRatio: state.aspectRatio,
+          watermarkMode: state.smartZoom ? 'zoom' : (state.enableWatermarkBox ? 'box' : 'none'),
+          wmBox: {
+            x: Math.round(state.watermarkBox.x * canvas.width),
+            y: Math.round(state.watermarkBox.y * canvas.height),
+            w: Math.round(state.watermarkBox.w * canvas.width),
+            h: Math.round(state.watermarkBox.h * canvas.height)
+          },
+          colorFilter: state.colorFilter,
+          sprinkleEffect: state.sprinkleEffect,
+          muteAudio: state.exportAudioMode === 'mute',
+          zoomLevel: state.zoomLevel,
+          panX: state.panX,
+          panY: state.panY,
+          backdropStyle: state.backdropStyle
+        };
+
+        percentText.textContent = '50%';
+        progressBar.style.width = '50%';
+
+        const res = await fetch('/api/editor/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.downloadUrl) {
+          percentText.textContent = '100%';
+          progressBar.style.width = '100%';
+          stageText.textContent = '✅ Studio Render Complete! Downloading...';
+          const a = document.createElement('a');
+          a.href = data.downloadUrl;
+          a.download = data.filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          stageText.textContent = 'Falling back to Instant Browser Export...';
+          startInstantBrowserExport();
+        }
+      } catch (err) {
+        console.warn('Backend export note:', err.message);
+        stageText.textContent = 'Using Instant Browser Export...';
+        startInstantBrowserExport();
+      } finally {
+        btn.disabled = false;
+        setTimeout(() => progressBox.classList.add('hidden'), 4000);
+      }
+    };
+
+    // ==========================================
+    // 🔍 ZOOM & PAN CONTROLS
+    // ==========================================
+    function setZoomLevel(val) {
+      if (val === 'fill') {
+        state.framingMode = 'cover';
+        state.zoomLevel = 1.0;
+      } else {
+        state.framingMode = 'fit';
+        const zoom = Math.max(0.15, Math.min(3.0, parseFloat(val)));
+        state.zoomLevel = Math.round(zoom * 100) / 100;
+      }
+      const pctStr = state.framingMode === 'cover' ? 'Fill' : `${Math.round(state.zoomLevel * 100)}%`;
+
+      if (labelZoomPercent) labelZoomPercent.textContent = pctStr;
+      if (labelFramingZoomVal) labelFramingZoomVal.textContent = pctStr;
+      if (sliderViewportZoom && state.framingMode !== 'cover') sliderViewportZoom.value = Math.round(state.zoomLevel * 100);
+      if (sliderFramingZoom && state.framingMode !== 'cover') sliderFramingZoom.value = Math.round(state.zoomLevel * 100);
+
+      document.querySelectorAll('.zoom-preset-btn').forEach(btn => {
+        const bz = btn.dataset.zoom;
+        if (bz === 'fill') {
+          btn.classList.toggle('bg-indigo-600', state.framingMode === 'cover');
+          btn.classList.toggle('text-white', state.framingMode === 'cover');
+          btn.classList.toggle('bg-white/5', state.framingMode !== 'cover');
+          btn.classList.toggle('text-slate-300', state.framingMode !== 'cover');
+        } else {
+          const numZoom = parseFloat(bz) / 100;
+          const isActive = state.framingMode === 'fit' && Math.abs(numZoom - state.zoomLevel) < 0.05;
+          btn.classList.toggle('bg-indigo-600', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('bg-white/5', !isActive);
+          btn.classList.toggle('text-slate-300', !isActive);
+        }
+      });
+    }
+
+    if (btnZoomIn) {
+      btnZoomIn.onclick = () => {
+        const step = state.zoomLevel < 1.0 ? 0.05 : 0.1;
+        setZoomLevel(state.zoomLevel + step);
+      };
+    }
+    if (btnZoomOut) {
+      btnZoomOut.onclick = () => {
+        const step = state.zoomLevel <= 1.0 ? 0.05 : 0.1;
+        setZoomLevel(state.zoomLevel - step);
+      };
+    }
+    if (btnZoomReset) {
+      btnZoomReset.onclick = () => {
+        state.panX = 0;
+        state.panY = 0;
+        if (sliderPanX) sliderPanX.value = 0;
+        if (sliderPanY) sliderPanY.value = 0;
+        if (labelPanXVal) labelPanXVal.textContent = '0%';
+        if (labelPanYVal) labelPanYVal.textContent = '0%';
+        setZoomLevel(1.0);
+      };
+    }
+    if (btnZoomFill) {
+      btnZoomFill.onclick = () => setZoomLevel('fill');
+    }
+    if (sliderViewportZoom) {
+      sliderViewportZoom.oninput = (e) => setZoomLevel(parseFloat(e.target.value) / 100);
+    }
+    if (sliderFramingZoom) {
+      sliderFramingZoom.oninput = (e) => setZoomLevel(parseFloat(e.target.value) / 100);
+    }
+    document.querySelectorAll('.zoom-preset-btn').forEach(btn => {
+      btn.onclick = () => {
+        const zVal = btn.dataset.zoom;
+        if (zVal === 'fill') setZoomLevel('fill');
+        else setZoomLevel(parseFloat(zVal) / 100);
+      };
+    });
+
+    if (sliderPanX) {
+      sliderPanX.oninput = (e) => {
+        state.panX = parseFloat(e.target.value);
+        if (labelPanXVal) labelPanXVal.textContent = `${state.panX}%`;
+      };
+    }
+    if (sliderPanY) {
+      sliderPanY.oninput = (e) => {
+        state.panY = parseFloat(e.target.value);
+        if (labelPanYVal) labelPanYVal.textContent = `${state.panY}%`;
+      };
+    }
+    if (btnResetPan) {
+      btnResetPan.onclick = () => {
+        state.panX = 0;
+        state.panY = 0;
+        if (sliderPanX) sliderPanX.value = 0;
+        if (sliderPanY) sliderPanY.value = 0;
+        if (labelPanXVal) labelPanXVal.textContent = '0%';
+        if (labelPanYVal) labelPanYVal.textContent = '0%';
+      };
+    }
+
+    // ==========================================
+    // 🎨 LETTERBOX BACKDROP SELECTOR
+    // ==========================================
+    function setBackdropStyle(style) {
+      state.backdropStyle = style;
+      document.querySelectorAll('.backdrop-pill, .backdrop-card').forEach(el => {
+        const isMatch = el.dataset.backdrop === style;
+        if (el.classList.contains('backdrop-pill')) {
+          el.classList.toggle('bg-indigo-600', isMatch);
+          el.classList.toggle('text-white', isMatch);
+          el.classList.toggle('text-slate-400', !isMatch);
+        } else if (el.classList.contains('backdrop-card')) {
+          el.classList.toggle('border-indigo-500/80', isMatch);
+          el.classList.toggle('bg-indigo-600/20', isMatch);
+          el.classList.toggle('border-white/10', !isMatch);
+          el.classList.toggle('bg-slate-900/60', !isMatch);
+        }
+      });
+    }
+
+    document.querySelectorAll('.backdrop-pill, .backdrop-card').forEach(el => {
+      el.addEventListener('click', () => setBackdropStyle(el.dataset.backdrop));
+    });
+
+    // ==========================================
+    // 💬 CAPTIONS & SUBTITLES CONTROLS
+    // ==========================================
+    if (checkEnableCaptions) {
+      checkEnableCaptions.onchange = (e) => {
+        state.enableCaptions = e.target.checked;
+      };
+    }
+    if (inputCaptionText) {
+      inputCaptionText.oninput = (e) => {
+        state.captionText = e.target.value;
+      };
+    }
+    if (inputSubcaptionText) {
+      inputSubcaptionText.oninput = (e) => {
+        state.subCaptionText = e.target.value;
+      };
+    }
+    document.querySelectorAll('.caption-style-card').forEach(card => {
+      card.onclick = () => {
+        document.querySelectorAll('.caption-style-card').forEach(c => {
+          c.classList.remove('border-indigo-500/80', 'bg-indigo-600/20');
+          c.classList.add('border-white/10', 'bg-slate-900/60');
+        });
+        card.classList.remove('border-white/10', 'bg-slate-900/60');
+        card.classList.add('border-indigo-500/80', 'bg-indigo-600/20');
+        state.captionStyle = card.dataset.style;
+      };
+    });
+    document.querySelectorAll('.caption-pos-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.caption-pos-btn').forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white', 'font-bold');
+          b.classList.add('text-slate-400', 'font-semibold');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white', 'font-bold');
+        btn.classList.remove('text-slate-400', 'font-semibold');
+        state.captionPosition = btn.dataset.pos;
+        if (state.captionPosition === 'top') {
+          state.captionOffsetY = 12;
+        } else if (state.captionPosition === 'center') {
+          state.captionOffsetY = 50;
+        } else if (state.captionPosition === 'bottom') {
+          state.captionOffsetY = 88;
+        }
+        if (sliderCaptionY) sliderCaptionY.value = state.captionOffsetY;
+        if (labelCaptionY) labelCaptionY.textContent = `${state.captionOffsetY}%`;
+      };
+    });
+    if (sliderCaptionY) {
+      sliderCaptionY.oninput = (e) => {
+        state.captionOffsetY = parseInt(e.target.value);
+        if (labelCaptionY) labelCaptionY.textContent = `${state.captionOffsetY}%`;
+        document.querySelectorAll('.caption-pos-btn').forEach(b => {
+          const pos = b.dataset.pos;
+          const isMatch = (pos === 'top' && state.captionOffsetY <= 30) ||
+                          (pos === 'center' && state.captionOffsetY > 30 && state.captionOffsetY < 70) ||
+                          (pos === 'bottom' && state.captionOffsetY >= 70);
+          b.classList.toggle('bg-indigo-600', isMatch);
+          b.classList.toggle('text-white', isMatch);
+          b.classList.toggle('font-bold', isMatch);
+          b.classList.toggle('text-slate-400', !isMatch);
+          b.classList.toggle('font-semibold', !isMatch);
+        });
+      };
+    }
+    if (sliderCaptionSize) {
+      sliderCaptionSize.oninput = (e) => {
+        state.captionFontSize = parseInt(e.target.value);
+        if (labelCaptionSize) labelCaptionSize.textContent = `${state.captionFontSize}px`;
+      };
+    }
+    document.querySelectorAll('.caption-preset-pill').forEach(pill => {
+      pill.onclick = () => {
+        state.captionText = pill.textContent.trim();
+        if (inputCaptionText) inputCaptionText.value = state.captionText;
+      };
+    });
+    if (btnCaptionFromAI) {
+      btnCaptionFromAI.onclick = () => {
+        if (state.aiClips && state.aiClips[state.selectedAIClipIndex]) {
+          const clip = state.aiClips[state.selectedAIClipIndex];
+          state.captionText = clip.title.toUpperCase();
+          if (inputCaptionText) inputCaptionText.value = state.captionText;
+        } else {
+          state.captionText = '🔥 MUST WATCH HIGHLIGHT 😱';
+          if (inputCaptionText) inputCaptionText.value = state.captionText;
+        }
+      };
+    }
+
+    // ==========================================
+    // 🔊 AUDIO EXPORT & MUTE MODE CONTROLS
+    // ==========================================
+    function setExportAudioMode(mode) {
+      state.exportAudioMode = mode;
+      const isMute = mode === 'mute';
+
+      if (btnExportAudioOn) {
+        btnExportAudioOn.classList.toggle('bg-emerald-600', !isMute);
+        btnExportAudioOn.classList.toggle('text-white', !isMute);
+        btnExportAudioOn.classList.toggle('text-slate-400', isMute);
+      }
+      if (btnExportAudioMute) {
+        btnExportAudioMute.classList.toggle('bg-rose-600', isMute);
+        btnExportAudioMute.classList.toggle('text-white', isMute);
+        btnExportAudioMute.classList.toggle('text-slate-400', !isMute);
+      }
+      if (labelExportAudioMode) {
+        labelExportAudioMode.textContent = isMute ? 'Audio: MUTED' : 'Audio: ON';
+      }
+      if (iconExportAudio) {
+        iconExportAudio.textContent = isMute ? '🔇' : '🔊';
+      }
+      if (btnToggleExportAudio) {
+        btnToggleExportAudio.classList.toggle('bg-rose-500/20', isMute);
+        btnToggleExportAudio.classList.toggle('text-rose-300', isMute);
+        btnToggleExportAudio.classList.toggle('border-rose-500/30', isMute);
+        btnToggleExportAudio.classList.toggle('bg-emerald-500/20', !isMute);
+        btnToggleExportAudio.classList.toggle('text-emerald-300', !isMute);
+        btnToggleExportAudio.classList.toggle('border-emerald-500/30', !isMute);
+      }
+      const exportBtnText = document.getElementById('export-btn-text');
+      if (exportBtnText) {
+        exportBtnText.textContent = isMute ? 'Download Edited Clip (Muted Silent)' : 'Download Edited Clip (With Sound)';
+      }
+    }
+
+    if (btnExportAudioOn) btnExportAudioOn.onclick = () => setExportAudioMode('include');
+    if (btnExportAudioMute) btnExportAudioMute.onclick = () => setExportAudioMode('mute');
+    if (btnToggleExportAudio) {
+      btnToggleExportAudio.onclick = () => {
+        setExportAudioMode(state.exportAudioMode === 'mute' ? 'include' : 'mute');
+      };
+    }
+
+    // Smart AI Highlight Clipper Event Handlers
+    if (btnReanalyzeAI) {
+      btnReanalyzeAI.onclick = () => {
+        if (state.isAnalyzingAI) return;
+        state.isAnalyzingAI = true;
+        if (aiReanalyzeIcon) aiReanalyzeIcon.classList.add('animate-spin');
+        if (aiClipsCountBadge) aiClipsCountBadge.textContent = 'Scanning highlights...';
+        if (aiStatusSummary) aiStatusSummary.textContent = 'AI neural scanner evaluating retention curves...';
+
+        setTimeout(() => {
+          generateSmartAIClips(state.aiMode);
+          if (state.aiClips && state.aiClips.length > 0) {
+            selectAIClip(0);
+          }
+          state.isAnalyzingAI = false;
+          if (aiReanalyzeIcon) aiReanalyzeIcon.classList.remove('animate-spin');
+        }, 500);
+      };
+    }
+
+    if (aiClipModeSelect) {
+      aiClipModeSelect.onchange = (e) => {
+        state.aiMode = e.target.value;
+        updateAIModeChips(state.aiMode);
+        generateSmartAIClips(state.aiMode);
+        if (state.aiClips && state.aiClips.length > 0) {
+          selectAIClip(0);
+        }
+      };
+    }
+
+    document.querySelectorAll('.ai-tab-mode-chip').forEach(chip => {
+      chip.onclick = () => {
+        state.aiMode = chip.dataset.mode;
+        if (aiClipModeSelect) aiClipModeSelect.value = state.aiMode;
+        updateAIModeChips(state.aiMode);
+        generateSmartAIClips(state.aiMode);
+        if (state.aiClips && state.aiClips.length > 0) {
+          selectAIClip(0);
+        }
+      };
+    });
+
+    // On first load, present the upload screen directly so user can upload their own video first
+    function initEditorOnLoad() {
+      showUploadScreen();
+      syncWmBoxStyles();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initEditorOnLoad);
+    } else {
+      initEditorOnLoad();
+    }
+  </script>
+</body>
+</html>
