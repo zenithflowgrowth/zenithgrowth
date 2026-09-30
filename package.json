@@ -1,10 +1,12 @@
 {
-  "name": "universal-video-downloader",
+  "name": "project-earning",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "gateway.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node gateway.js",
+    "intel": "node growth_agent.js",
+    "postinstall": "node -e \"if(process.platform!=='win32'){const cp=require('child_process'),fs=require('fs'); ['bin','universal-video-downloader/bin'].forEach(d=>fs.mkdirSync(d,{recursive:true})); try{cp.execSync('curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o bin/yt-dlp && chmod a+rx bin/yt-dlp && cp bin/yt-dlp universal-video-downloader/bin/yt-dlp',{stdio:'inherit'});}catch(e){console.warn('yt-dlp setup note:', e.message);}}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

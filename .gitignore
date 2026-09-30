@@ -1,8 +1,22 @@
+# Dependencies
 node_modules/
-universal-video-downloader/node_modules/
+*/node_modules/
+
+# OS-specific binaries (Linux cloud servers auto-install yt-dlp & ffmpeg via package.json)
+bin/*.exe
+*/bin/*.exe
+
+# Downloaded media files
+downloads/*
+!downloads/.gitkeep
 universal-video-downloader/downloads/*
 !universal-video-downloader/downloads/.gitkeep
+
+# Archives & temporary data
+*.zip
 scratch/
+READY-FOR-GITHUB/
 *.log
 .DS_Store
 Thumbs.db
+

@@ -13,12 +13,38 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 
+// Global crash protection
+process.on('uncaughtException', (err) => {
+  console.error('[GATEWAY UNCAUGHT EXCEPTION]:', err.message);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[GATEWAY UNHANDLED REJECTION]:', reason);
+});
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+// Permissive CORS for cross-port, Live Server, and file:// access
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Global API Request Logger
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    console.log(`[API Request] ${req.method} ${req.path} from ${req.headers.origin || 'direct'}`);
+  }
+  next();
+});
 
 const ROOT_DIR = __dirname;
 
@@ -32,10 +58,17 @@ const registeredTools = [
     status: 'Active'
   },
   {
-    name: 'Universal Video Downloader',
+    name: 'Zenith Video Downloader',
     path: '/video-downloader',
     description: 'Download HD/4K videos & MP3 audio from YouTube, Instagram, TikTok, Twitter, Reddit',
     type: 'Full-Stack (yt-dlp + FFmpeg)',
+    status: 'Active'
+  },
+  {
+    name: 'Zenith Video Editor & Clip Studio',
+    path: '/video-editor',
+    description: 'Edit clips, 60fps canvas filters, animated sparkles/sprinkles, watermark remover & 9:16 social framing',
+    type: 'Full-Stack (Canvas 60fps + FFmpeg)',
     status: 'Active'
   }
 ];
@@ -61,8 +94,17 @@ if (fs.existsSync(zipPath)) {
   }
 }
 
+// Route for video-editor.html in root
+app.get(['/video-editor', '/video-editor/', '/editor', '/editor/', '/clip-editor', '/video-editor.html'], (req, res, next) => {
+  const directHtml = path.join(ROOT_DIR, 'video-editor.html');
+  if (fs.existsSync(directHtml)) {
+    return res.sendFile(directHtml);
+  }
+  next();
+});
+
 // Route for video-downloader.html in root
-app.get(['/video-downloader', '/video-downloader/', '/video'], (req, res, next) => {
+app.get(['/video-downloader', '/video-downloader/', '/video', '/video-downloader.html'], (req, res, next) => {
   const directHtml = path.join(ROOT_DIR, 'video-downloader.html');
   if (fs.existsSync(directHtml)) {
     return res.sendFile(directHtml);

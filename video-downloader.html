@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zenith Video & Audio Downloader - Multi-Platform Media Studio</title>
+  <meta name="description" content="Universal free video and audio downloader for X (Twitter), TikTok, Instagram Reels, and YouTube. Fast, high-quality 1080p MP4 and MP3 with zero watermarks.">
+  <link rel="canonical" href="https://zenithgrowth.tech/video-downloader.html">
+  <meta property="og:title" content="Zenith Video & Audio Downloader - Multi-Platform Media Studio">
+  <meta property="og:description" content="Download 1080p HD videos & audio from X, TikTok, IG Reels, and YouTube with zero popups or watermarks.">
+  <meta property="og:url" content="https://zenithgrowth.tech/video-downloader.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
   <script>
@@ -12,7 +19,7 @@
     gtag('js', new Date());
     gtag('config', 'G-FX6GCW9T0X');
   </script>
-  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
 :root {
   --bg-primary: #090d16;
@@ -799,6 +806,61 @@ body {
   display: block;
 }
 
+/* Sprinkles & Filter Animation */
+#sprinkles_canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999999;
+}
+
+.filter-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+.filter-chip-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--text-main);
+}
+.filter-chip-btn:active {
+  transform: scale(0.92);
+}
+.filter-chip-btn.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+@keyframes cardPop {
+  0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.card-animate {
+  animation: cardPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 /* Formats Grid */
 .formats-grid {
   display: grid;
@@ -853,13 +915,21 @@ body {
 }
 
 .badge-tag.tag-4k {
-  background: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.25);
   color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.badge-tag.tag-2k {
+  background: rgba(168, 85, 247, 0.25);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
 .badge-tag.tag-hd {
-  background: rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.25);
   color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .badge-tag.tag-audio {
@@ -1129,197 +1199,6 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* History Section */
-.history-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
-  padding: 26px;
-  margin-bottom: 40px;
-  box-shadow: var(--shadow-sm);
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.section-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.section-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.section-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-
-.section-subtitle {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-}
-
-.section-subtitle code {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px 5px;
-  border-radius: 4px;
-}
-
-.history-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-outline-sm {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  color: var(--text-muted);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-outline-sm:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-main);
-}
-
-.empty-history {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-dim);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.history-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 12px;
-}
-
-.history-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  transition: all 0.2s;
-}
-
-.history-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-glow);
-}
-
-.history-file-details {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.history-filename {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-main);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.history-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.ext-badge {
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 0.65rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
-}
-
-.history-actions-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-history-dl {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: var(--success);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-history-dl:hover {
-  background: var(--success);
-  color: white;
-}
-
-.btn-history-del {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  color: var(--danger);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-history-del:hover {
-  background: var(--danger);
-  color: white;
-}
-
 /* Platform Showcase */
 .showcase-section {
   text-align: center;
@@ -1441,6 +1320,9 @@ body {
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Sprinkles & Confetti Burst Canvas -->
+  <canvas id="sprinkles_canvas"></canvas>
+
   <!-- Ambient background glow elements -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
@@ -1449,8 +1331,8 @@ body {
   <!-- Top Navigation Header -->
   <header class="navbar">
     <div class="nav-container">
-      <a href="/" class="brand" style="text-decoration:none; color:inherit;">
-        <img src="/logo.png" alt="Zenith Growth" style="height:38px; width:auto; border-radius:10px; object-fit:contain;">
+      <a href="index.html" class="brand" style="text-decoration:none; color:inherit;">
+        <img src="logo.png" alt="Zenith Growth" style="height:38px; width:auto; border-radius:10px; object-fit:contain;">
         <div class="brand-text">
           <span class="brand-name">Zenith <span style="opacity:0.4; font-weight:400;">/</span> Downloader <span class="brand-badge">PRO</span></span>
           <span class="brand-sub">Universal Social Media Suite • Zenith Growth</span>
@@ -1458,7 +1340,12 @@ body {
       </a>
 
       <div class="nav-actions">
-        <a href="/" class="btn-icon" title="Return to Main Portal (PDF, Image & Dev Tools)">
+        <a href="video-editor.html" class="btn-icon" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #34d399;" title="Launch Video Editor Studio">
+          <span>✂️</span>
+          <span class="btn-label-desktop">Video Editor Studio</span>
+        </a>
+
+        <a href="index.html" class="btn-icon" title="Return to Main Portal (PDF, Image & Dev Tools)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
@@ -1470,13 +1357,6 @@ body {
           <span class="pulse-dot"></span>
           <span id="engine-status-text">Server Active</span>
         </div>
-
-        <button id="open-folder-nav-btn" class="btn-icon" title="Open Downloads Folder in Windows Explorer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="btn-label-desktop">Downloads Folder</span>
-        </button>
 
         <button id="theme-toggle" class="btn-icon-circle" title="Toggle Dark/Light Mode">
           <svg id="theme-icon-sun" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1515,6 +1395,12 @@ body {
       <p class="hero-subtitle">
         Paste any link to save HD/4K MP4 videos, watermark-free TikToks, Instagram reels, and 320kbps MP3 audio tracks directly to your computer.
       </p>
+
+      <div style="margin-top: 14px; margin-bottom: 24px; text-align: center;">
+        <a href="video-editor.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; border-radius: 999px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.22)'" onmouseout="this.style.background='rgba(16,185,129,0.12)'">
+          <span>✂️</span> <span>Looking for the <strong>Video Editor Studio</strong> (Trim, Color FX, Sprinkles &amp; Watermark Remover)? Launch Studio →</span>
+        </a>
+      </div>
 
       <!-- URL Input Card -->
       <div class="search-card">
@@ -1642,10 +1528,25 @@ body {
         </div>
       </div>
 
+      <!-- Open in Dedicated Video Editor Studio CTA Banner -->
+      <div style="margin-top: 15px; margin-bottom: 25px; padding: 16px 20px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.4rem;">✂️</span>
+          <div>
+            <strong style="color: #fff; font-size: 0.9rem;">Want to cut clips, apply color filters, sprinkles, or remove watermarks?</strong>
+            <p style="color: var(--text-muted); font-size: 0.75rem; margin: 0;">Open this video directly in our dedicated Video Editor Studio</p>
+          </div>
+        </div>
+        <a id="btn-open-in-editor" href="video-editor.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; font-size: 0.82rem; text-decoration: none; border-radius: 10px; background: #6366f1; color: #fff; font-weight: 700; transition: background 0.2s;" onmouseover="this.style.background='#4f46e5'" onmouseout="this.style.background='#6366f1'">
+          <span>Open in Video Editor Studio</span>
+          <span>→</span>
+        </a>
+      </div>
+
       <!-- Format Selection Tabs -->
       <div class="formats-section">
         <div class="tabs-header">
-          <button class="tab-btn active" data-tab="video-tab" onclick="switchTab('video-tab')">
+          <button class="tab-btn active" data-tab="video-tab" onclick="switchTab('video-tab', event)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="23 7 16 12 23 17 23 7"></polygon>
               <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
@@ -1654,7 +1555,7 @@ body {
             <span class="tab-badge" id="video-count-badge">0</span>
           </button>
 
-          <button class="tab-btn" data-tab="audio-tab" onclick="switchTab('audio-tab')">
+          <button class="tab-btn" data-tab="audio-tab" onclick="switchTab('audio-tab', event)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 18V5l12-2v13"></path>
               <circle cx="6" cy="18" r="3"></circle>
@@ -1667,6 +1568,16 @@ body {
 
         <!-- Video Tab Content -->
         <div id="video-tab" class="tab-content active">
+          <!-- Quality Filter Chips with Sprinkles -->
+          <div class="filter-chip-row">
+            <span style="font-size:0.75rem; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:4px;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+              Filter Quality:
+            </span>
+            <button class="filter-chip-btn active" id="chip-filter-all" onclick="filterVideoQuality('all', event)">✨ All Qualities</button>
+            <button class="filter-chip-btn" id="chip-filter-hd" onclick="filterVideoQuality('hd', event)">⚡ 1080p / 4K Ultra HD</button>
+            <button class="filter-chip-btn" id="chip-filter-sd" onclick="filterVideoQuality('sd', event)">📱 720p / 480p</button>
+          </div>
           <div class="formats-grid" id="video-formats-list">
             <!-- Dynamic Video Quality Cards -->
           </div>
@@ -1737,7 +1648,7 @@ body {
 
           <!-- Completed Action Buttons (Shown when finished) -->
           <div id="completed-actions" class="completed-actions hidden">
-            <a id="save-file-btn" href="#" class="btn-action-primary" download>
+            <a id="save-file-btn" href="#" class="btn-action-primary" download style="width:100%; justify-content:center;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -1745,65 +1656,10 @@ body {
               </svg>
               <span>Save File to Browser</span>
             </a>
-
-            <button id="open-local-folder-btn" class="btn-action-secondary" onclick="openDownloadsFolder()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-              </svg>
-              <span>Open in Windows Explorer</span>
-            </button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Downloads History & Local Library -->
-    <section class="history-section">
-      <div class="section-header">
-        <div class="section-title-wrap">
-          <div class="section-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="21 8 21 21 3 21 3 8"></polyline>
-              <rect x="1" y="3" width="22" height="5"></rect>
-              <line x1="10" y1="12" x2="14" y2="12"></line>
-            </svg>
-          </div>
-          <div>
-            <h3 class="section-title">Saved Downloads & Library</h3>
-            <p class="section-subtitle">Files saved in your local <code>/downloads</code> directory</p>
-          </div>
-        </div>
-
-        <div class="history-actions">
-          <button class="btn-outline-sm" onclick="loadHistory()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <polyline points="1 20 1 14 7 14"></polyline>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-            </svg>
-            <span>Refresh</span>
-          </button>
-          <button class="btn-outline-sm" onclick="openDownloadsFolder()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span>Open Folder</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="history-container" class="history-container">
-        <div class="empty-history" id="empty-history-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <p>No downloaded media yet. Paste a link above to get started!</p>
-        </div>
-        <div id="history-items-list" class="history-grid hidden"></div>
-      </div>
-    </section>
 
     <!-- Supported Platforms Grid Showcase -->
     <section class="showcase-section">
@@ -1893,9 +1749,45 @@ body {
   </footer>
 
   <script>
-// State
+// State & Multi-Origin API Resolver
 let currentMediaData = null;
 let currentJobEventSource = null;
+let activeApiBase = null;
+
+async function getApiBase() {
+  if (activeApiBase) return activeApiBase;
+
+  const candidates = [];
+  if (window.location.protocol !== 'file:' && window.location.origin && window.location.origin !== 'null') {
+    candidates.push(window.location.origin);
+  }
+  candidates.push('http://localhost:3000');
+  candidates.push('http://127.0.0.1:3000');
+  candidates.push('http://localhost:5000');
+  candidates.push('http://127.0.0.1:5000');
+  candidates.push('http://localhost:4000');
+
+  for (const base of candidates) {
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 2000);
+      const res = await fetch(`${base}/api/status`, { signal: ctrl.signal, mode: 'cors' });
+      clearTimeout(tid);
+      if (res.ok) {
+        const testData = await res.json();
+        if (testData.status === 'ok') {
+          activeApiBase = base;
+          console.log(`[Zenith Downloader] Connected to active API backend: ${base}`);
+          return base;
+        }
+      }
+    } catch (_) {}
+  }
+
+  return (window.location.protocol !== 'file:' && window.location.origin && window.location.origin !== 'null')
+    ? window.location.origin
+    : 'http://localhost:3000';
+}
 
 // DOM Elements
 const urlInput = document.getElementById('url-input');
@@ -1942,11 +1834,6 @@ const dlStatusBanner = document.getElementById('dl-status-banner');
 const completedActions = document.getElementById('completed-actions');
 const saveFileBtn = document.getElementById('save-file-btn');
 
-// History Elements
-const historyContainer = document.getElementById('history-container');
-const historyItemsList = document.getElementById('history-items-list');
-const emptyHistoryPlaceholder = document.getElementById('empty-history-placeholder');
-
 // Theme Elements
 const themeToggle = document.getElementById('theme-toggle');
 const themeIconSun = document.getElementById('theme-icon-sun');
@@ -1956,7 +1843,6 @@ const themeIconMoon = document.getElementById('theme-icon-moon');
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   checkEngineStatus();
-  loadHistory();
   setupEventListeners();
 });
 
@@ -2023,25 +1909,37 @@ function setupEventListeners() {
   });
 
   themeToggle.addEventListener('click', toggleTheme);
-
-  document.getElementById('open-folder-nav-btn').addEventListener('click', openDownloadsFolder);
 }
 
 // Engine Status Check
 async function checkEngineStatus() {
   try {
-    const res = await fetch('/api/status');
+    const apiBase = await getApiBase();
+    const res = await fetch(`${apiBase}/api/status`, { mode: 'cors' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (data.ytdlp && data.ytdlp.exists && data.ffmpeg && data.ffmpeg.exists) {
       engineStatus.className = 'engine-badge ready';
-      engineStatusText.textContent = 'Engine Active & Ready';
+      engineStatusText.textContent = `Engines Ready (${data.ytdlp.version || 'Active'})`;
+      hideError();
     } else {
       engineStatus.className = 'engine-badge';
-      engineStatusText.textContent = 'Service Ready';
+      engineStatusText.textContent = 'Engines Initializing';
     }
   } catch (e) {
-    engineStatus.className = 'engine-badge ready';
-    engineStatusText.textContent = 'Online';
+    console.warn('[Engine Status] Backend unreachable:', e.message);
+    engineStatus.className = 'engine-badge';
+    engineStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+    engineStatus.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+    engineStatus.style.color = '#f87171';
+    engineStatusText.textContent = 'Backend Offline';
+
+    if (window.location.protocol === 'file:') {
+      showError(
+        'Backend Server Required',
+        'You opened this file directly from your disk (file://). Please start the server by running "node gateway.js" in your terminal and open http://localhost:3000/video-downloader in your browser.'
+      );
+    }
   }
 }
 
@@ -2082,8 +1980,132 @@ function hideError() {
   errorContainer.classList.add('hidden');
 }
 
-// Switch Format Tabs
-function switchTab(tabId) {
+// --- SPRINKLES & CONFETTI PARTICLE ENGINE ---
+class SprinklesEngine {
+  constructor(canvasId = 'sprinkles_canvas') {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) {
+      this.canvas = document.createElement('canvas');
+      this.canvas.id = canvasId;
+      document.body.prepend(this.canvas);
+    }
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.animationFrame = null;
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+  }
+
+  resize() {
+    this.width = this.canvas.width = window.innerWidth;
+    this.height = this.canvas.height = window.innerHeight;
+  }
+
+  burst(x, y, count = 32) {
+    if (!x || !y) {
+      x = window.innerWidth / 2;
+      y = window.innerHeight / 3;
+    }
+    const colors = [
+      '#6366f1', '#a855f7', '#ec4899', '#f43f5e', 
+      '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#fbbf24', '#ffffff'
+    ];
+    const shapes = ['circle', 'rect', 'star', 'diamond'];
+
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * (i / count)) + (Math.random() * 0.4 - 0.2);
+      const speed = 4 + Math.random() * 6.5;
+      const size = 3 + Math.random() * 4.5;
+
+      this.particles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed * (0.8 + Math.random() * 0.5),
+        vy: Math.sin(angle) * speed * (0.8 + Math.random() * 0.5) - 2.8,
+        gravity: 0.16 + Math.random() * 0.08,
+        drag: 0.965,
+        size: size,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 16,
+        alpha: 1,
+        fade: 0.016 + Math.random() * 0.018
+      });
+    }
+
+    if (!this.animationFrame) {
+      this.animate();
+    }
+  }
+
+  animate() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= p.drag;
+      p.vy *= p.drag;
+      p.rotation += p.rotSpeed;
+      p.alpha -= p.fade;
+
+      if (p.alpha <= 0 || p.y > this.height + 30) {
+        this.particles.splice(i, 1);
+        continue;
+      }
+
+      this.ctx.save();
+      this.ctx.globalAlpha = Math.max(0, p.alpha);
+      this.ctx.translate(p.x, p.y);
+      this.ctx.rotate((p.rotation * Math.PI) / 180);
+      this.ctx.fillStyle = p.color;
+
+      if (p.shape === 'circle') {
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
+      } else if (p.shape === 'rect') {
+        this.ctx.fillRect(-p.size, -p.size * 0.45, p.size * 2, p.size * 0.9);
+      } else if (p.shape === 'diamond') {
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -p.size * 1.3);
+        this.ctx.lineTo(p.size, 0);
+        this.ctx.lineTo(0, p.size * 1.3);
+        this.ctx.lineTo(-p.size, 0);
+        this.ctx.closePath();
+        this.ctx.fill();
+      } else if (p.shape === 'star') {
+        this.ctx.beginPath();
+        const s = p.size * 1.4;
+        this.ctx.moveTo(0, -s);
+        this.ctx.quadraticCurveTo(0, 0, s, 0);
+        this.ctx.quadraticCurveTo(0, 0, 0, s);
+        this.ctx.quadraticCurveTo(0, 0, -s, 0);
+        this.ctx.quadraticCurveTo(0, 0, 0, -s);
+        this.ctx.fill();
+      }
+
+      this.ctx.restore();
+    }
+
+    if (this.particles.length > 0) {
+      this.animationFrame = requestAnimationFrame(() => this.animate());
+    } else {
+      this.animationFrame = null;
+    }
+  }
+}
+
+const sprinkles = new SprinklesEngine();
+
+// Switch Format Tabs with Sprinkles
+function switchTab(tabId, event) {
+  if (event && event.clientX && event.clientY) {
+    sprinkles.burst(event.clientX, event.clientY, 28);
+  }
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === tabId);
   });
@@ -2092,10 +2114,52 @@ function switchTab(tabId) {
   });
 }
 
+// Filter Video Qualities with Sprinkles
+let currentQualityFilter = 'all';
+function filterVideoQuality(type, event) {
+  currentQualityFilter = type;
+  if (event && event.clientX && event.clientY) {
+    sprinkles.burst(event.clientX, event.clientY, 24);
+  }
+
+  document.querySelectorAll('.filter-chip-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  const activeBtn = document.getElementById(`chip-filter-${type}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const cards = document.querySelectorAll('#video-formats-list .format-card');
+  let index = 0;
+  cards.forEach(card => {
+    const h = parseInt(card.getAttribute('data-height') || '0', 10);
+    let match = true;
+    if (type === 'hd') {
+      match = (h >= 1080);
+    } else if (type === 'sd') {
+      match = (h < 1080);
+    }
+
+    if (match) {
+      card.style.display = 'flex';
+      card.classList.remove('card-animate');
+      void card.offsetWidth;
+      card.classList.add('card-animate');
+      card.style.animationDelay = `${(index % 6) * 0.04}s`;
+      index++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
 // Inspect URL Handler
 async function handleInspectUrl() {
-  const url = urlInput.value.trim();
+  let url = urlInput.value.trim();
   if (!url) return;
+
+  // Clean trailing commas, periods, quotes, or accidental copy-paste noise
+  url = url.replace(/^["']+|["']+$/g, '').replace(/[,;.\\/]+$/g, '').trim();
+  urlInput.value = url;
 
   hideError();
   resultCard.classList.add('hidden');
@@ -2106,22 +2170,40 @@ async function handleInspectUrl() {
   fetchBtnText.textContent = 'Analyzing Media...';
 
   try {
-    const res = await fetch('/api/inspect', {
+    const apiBase = await getApiBase();
+    const res = await fetch(`${apiBase}/api/inspect`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url })
+      body: JSON.stringify({ url }),
+      mode: 'cors'
     });
 
-    const data = await res.json();
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      if (!res.ok) {
+        throw new Error(`Server returned error status ${res.status}. Please make sure backend service is active.`);
+      }
+      throw new Error('Server returned an unparseable response.');
+    }
 
     if (!res.ok) {
-      throw new Error(data.error || 'Failed to inspect link.');
+      throw new Error(data.error || data.details || 'Failed to inspect link.');
     }
 
     currentMediaData = data;
     renderMediaResult(data);
   } catch (err) {
-    showError('Extraction Failed', err.message || 'Could not fetch media information. Please check the URL.');
+    if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+      showError(
+        'Backend Server Offline',
+        'Could not connect to the video processing engine. Please ensure the server is running by executing "node gateway.js" in the terminal and access the site at http://localhost:3000/video-downloader.'
+      );
+    } else {
+      showError('Extraction Failed', err.message || 'Could not fetch media information. Please check the URL.');
+    }
   } finally {
     fetchBtn.disabled = false;
     fetchSpinner.classList.add('hidden');
@@ -2129,6 +2211,14 @@ async function handleInspectUrl() {
     fetchBtnText.textContent = 'Analyze Link';
   }
 }
+
+// Select specific video from multi-video post
+window.selectVideoIndex = function(idx) {
+  if (!currentMediaData) return;
+  let base = (currentMediaData.webpage_url || urlInput.value).replace(/\/(video|photo)(\/\d+)?.*$/i, '');
+  urlInput.value = `${base}/video/${idx}`;
+  handleInspectUrl();
+};
 
 // Render Media Result Card
 function renderMediaResult(data) {
@@ -2141,17 +2231,51 @@ function renderMediaResult(data) {
   mediaSourceLink.href = data.webpage_url;
   mediaDescription.textContent = data.description || 'No description provided.';
 
+  // Multi-video post selector (for Twitter threads or multi-video tweets)
+  let multiVideoContainer = document.getElementById('multi-video-selector');
+  if (!multiVideoContainer && mediaTitle && mediaTitle.parentNode) {
+    multiVideoContainer = document.createElement('div');
+    multiVideoContainer.id = 'multi-video-selector';
+    multiVideoContainer.className = 'multi-video-bar';
+    mediaTitle.parentNode.insertBefore(multiVideoContainer, mediaTitle.nextSibling);
+  }
+
+  if (multiVideoContainer) {
+    if (data.entries && data.entries.length > 1) {
+      multiVideoContainer.innerHTML = `
+        <div style="margin: 8px 0 12px 0; padding: 10px 14px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+          <span style="font-size: 12px; font-weight: 700; color: #a5b4fc; display: flex; items-center; gap: 4px;">
+            <span>🎬</span> <span>Multiple Videos Found (${data.entries.length}):</span>
+          </span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            ${data.entries.map(e => `
+              <button class="multi-video-chip" onclick="selectVideoIndex(${e.index})" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid ${e.isSelected ? '#6366f1' : 'rgba(255,255,255,0.15)'}; background: ${e.isSelected ? '#4f46e5' : 'rgba(15,23,42,0.6)'}; color: ${e.isSelected ? '#ffffff' : '#cbd5e1'};">
+                Video #${e.index} (${e.durationFormatted || 'Clip'})
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      multiVideoContainer.style.display = 'block';
+    } else {
+      multiVideoContainer.style.display = 'none';
+    }
+  }
+
   // Video Formats
   videoFormatsList.innerHTML = '';
   const vOptions = data.videoOptions || [];
   videoCountBadge.textContent = vOptions.length;
 
-  vOptions.forEach((opt) => {
+  vOptions.forEach((opt, idx) => {
     const card = document.createElement('div');
-    card.className = 'format-card';
+    card.className = 'format-card card-animate';
+    card.setAttribute('data-height', opt.height || '0');
+    card.style.animationDelay = `${(idx % 6) * 0.04}s`;
 
     let tagClass = 'badge-tag';
-    if (opt.height >= 2160) tagClass += ' tag-4k';
+    if (opt.height >= 2160 || opt.height === 'best') tagClass += ' tag-4k';
+    else if (opt.height >= 1440) tagClass += ' tag-2k';
     else if (opt.height >= 1080) tagClass += ' tag-hd';
 
     const fpsLabel = opt.fps ? ` • ${opt.fps}fps` : '';
@@ -2180,9 +2304,10 @@ function renderMediaResult(data) {
   // Audio Formats
   audioFormatsList.innerHTML = '';
   const aOptions = data.audioOptions || [];
-  aOptions.forEach((opt) => {
+  aOptions.forEach((opt, idx) => {
     const card = document.createElement('div');
-    card.className = 'format-card';
+    card.className = 'format-card card-animate';
+    card.style.animationDelay = `${(idx % 5) * 0.04}s`;
 
     card.innerHTML = `
       <div class="format-info">
@@ -2209,7 +2334,7 @@ function renderMediaResult(data) {
 }
 
 // Start Download
-async function startDownload(type, quality, label) {
+async function startDownload(type, quality, label, clipOptions = null) {
   if (!currentMediaData) return;
 
   // Reset Modal state
@@ -2233,13 +2358,33 @@ async function startDownload(type, quality, label) {
       url: currentMediaData.webpage_url,
       type: type,
       quality: quality,
-      customHeight: type === 'video' ? quality : null
+      customHeight: type === 'video' ? quality : null,
+      videoIndex: currentMediaData.activeVideoIndex || null
     };
 
-    const res = await fetch('/api/download/start', {
+    if (clipOptions) {
+      if (clipOptions.clipStart) payload.clipStart = clipOptions.clipStart;
+      if (clipOptions.clipEnd) payload.clipEnd = clipOptions.clipEnd;
+      if (clipOptions.colorFilter && clipOptions.colorFilter !== 'none') {
+        payload.colorFilter = clipOptions.colorFilter;
+      }
+      if (clipOptions.sprinkleEffect && clipOptions.sprinkleEffect !== 'none') {
+        payload.sprinkleEffect = clipOptions.sprinkleEffect;
+      }
+      if (clipOptions.aspectRatio && clipOptions.aspectRatio !== 'original') {
+        payload.aspectRatio = clipOptions.aspectRatio;
+      }
+      if (clipOptions.watermarkMode && clipOptions.watermarkMode !== 'none') {
+        payload.watermarkMode = clipOptions.watermarkMode;
+      }
+    }
+
+    const apiBase = await getApiBase();
+    const res = await fetch(`${apiBase}/api/download/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      mode: 'cors'
     });
 
     const initData = await res.json();
@@ -2257,12 +2402,13 @@ async function startDownload(type, quality, label) {
 }
 
 // SSE Progress Monitor
-function listenToDownloadProgress(jobId) {
+async function listenToDownloadProgress(jobId) {
   if (currentJobEventSource) {
     currentJobEventSource.close();
   }
 
-  currentJobEventSource = new EventSource(`/api/download/stream/${jobId}`);
+  const apiBase = await getApiBase();
+  currentJobEventSource = new EventSource(`${apiBase}/api/download/stream/${jobId}`);
 
   currentJobEventSource.onmessage = (event) => {
     try {
@@ -2280,24 +2426,28 @@ function listenToDownloadProgress(jobId) {
         currentJobEventSource = null;
 
         modalHeading.textContent = 'Download Complete!';
+        sprinkles.burst(window.innerWidth / 2, window.innerHeight / 2.5, 45);
         statusIndicator.className = 'spinner-dot done';
         dlStatusBanner.className = 'status-banner success';
         dlStatusMessage.textContent = `Saved: ${data.filename} (${data.fileSizeFormatted || 'Ready'})`;
 
+        const fullDownloadUrl = (data.downloadUrl && data.downloadUrl.startsWith('http')) 
+          ? data.downloadUrl 
+          : `${apiBase}${data.downloadUrl || ''}`;
+
         // Configure direct browser download button
         if (data.downloadUrl) {
-          saveFileBtn.href = data.downloadUrl;
+          saveFileBtn.href = fullDownloadUrl;
           saveFileBtn.setAttribute('download', data.filename || 'download');
         }
 
         completedActions.classList.remove('hidden');
-        loadHistory();
 
         // Auto trigger browser download
         if (data.downloadUrl) {
           setTimeout(() => {
             const tempLink = document.createElement('a');
-            tempLink.href = data.downloadUrl;
+            tempLink.href = fullDownloadUrl;
             tempLink.setAttribute('download', data.filename || 'download');
             document.body.appendChild(tempLink);
             tempLink.click();
@@ -2333,84 +2483,6 @@ function closeProgressModal() {
     currentJobEventSource = null;
   }
   progressModal.classList.add('hidden');
-}
-
-// Download History Management
-async function loadHistory() {
-  try {
-    const res = await fetch('/api/history');
-    const data = await res.json();
-
-    if (data.files && data.files.length > 0) {
-      emptyHistoryPlaceholder.classList.add('hidden');
-      historyItemsList.classList.remove('hidden');
-      historyItemsList.innerHTML = '';
-
-      data.files.forEach(file => {
-        const item = document.createElement('div');
-        item.className = 'history-card';
-        const formattedDate = new Date(file.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        item.innerHTML = `
-          <div class="history-file-details">
-            <span class="history-filename" title="${file.filename}">${file.filename}</span>
-            <div class="history-meta">
-              <span class="ext-badge">${file.ext}</span>
-              <span>${file.sizeFormatted}</span>
-              <span>•</span>
-              <span>${formattedDate}</span>
-            </div>
-          </div>
-          <div class="history-actions-row">
-            <a href="${file.downloadUrl}" class="btn-history-dl" title="Save to Browser" download>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </a>
-            <button class="btn-history-del" onclick="deleteHistoryFile('${encodeURIComponent(file.filename)}')" title="Delete file">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </div>
-        `;
-        historyItemsList.appendChild(item);
-      });
-    } else {
-      emptyHistoryPlaceholder.classList.remove('hidden');
-      historyItemsList.classList.add('hidden');
-    }
-  } catch (e) {
-    console.warn('Failed to load history:', e);
-  }
-}
-
-async function deleteHistoryFile(encodedFilename) {
-  if (!confirm('Are you sure you want to delete this downloaded file?')) return;
-  try {
-    const res = await fetch(`/api/files/${encodedFilename}`, { method: 'DELETE' });
-    if (res.ok) {
-      loadHistory();
-    }
-  } catch (e) {
-    console.error('Delete error:', e);
-  }
-}
-
-// Windows Explorer Folder Opener
-async function openDownloadsFolder() {
-  try {
-    const res = await fetch('/api/open-folder', { method: 'POST' });
-    const data = await res.json();
-    if (!data.success && data.message) {
-      alert(data.message);
-    }
-  } catch (e) {
-    console.error('Error opening folder:', e);
-  }
 }
 
 </script>
