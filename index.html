@@ -49,13 +49,12 @@
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
   <link rel="icon" type="image/png" href="logo.png">
 
-  <!-- Zero Render-Blocking Background Prefetch of Global Tools Stylesheet -->
-  <link rel="prefetch" href="zenith-tailwind.min.css" as="style">
+  <!-- Fast Asynchronous Font Loading (display=optional eliminates font-swap LCP penalty) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=optional" media="print" onload="this.media='all'">
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=optional">
   </noscript>
 
   <!-- Structured Schema -->
@@ -196,7 +195,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-8">
         <a href="/" class="flex items-center gap-2.5 group">
-          <img src="logo.png" alt="Zenith Growth Logo" width="32" height="32" class="h-8 w-8 rounded-lg object-contain shadow-xs">
+          <picture>
+            <source srcset="logo.webp" type="image/webp">
+            <img src="logo.png" alt="Zenith Growth Logo" width="32" height="32" class="h-8 w-8 rounded-lg object-contain shadow-xs" fetchpriority="high" decoding="async">
+          </picture>
           <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
             Zenith<span class="text-slate-500 font-normal">/</span>Growth
           </span>
