@@ -53,6 +53,21 @@
       transform: scale(1.02);
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.25) !important;
     }
+
+    /* Universal Dark/Night Mode Contrast Rules */
+    html.dark .text-slate-900,
+    html.dark .text-slate-950 {
+      color: #f8fafc !important;
+    }
+    html.dark .text-slate-800 {
+      color: #e2e8f0 !important;
+    }
+    html.dark .text-slate-700 {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-600 {
+      color: #94a3b8 !important;
+    }
   </style>
 
   <!-- Structured Schema: WebApplication & FAQPage -->
@@ -105,21 +120,23 @@
 <body class="bg-slate-50 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200">
 
   <!-- Top Navigation Bar -->
-  <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur-md sticky top-0 z-50">
+  <header class="border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-8">
-        <a href="index.html" class="flex items-center gap-2.5 group">
+        <a href="/" class="flex items-center gap-2.5 group">
           <img src="logo.png" alt="Zenith Growth" class="h-8 w-auto rounded-lg object-contain shadow-xs">
-          <span class="text-base font-extrabold tracking-tight text-slate-950 flex items-center gap-1">
+          <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
             Zenith<span class="text-slate-400 font-normal">/</span>Growth
           </span>
         </a>
-        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600">
-          <a href="index.html" class="hover:text-slate-950 transition">All Tools</a>
-          <a href="bg-remover.html" class="text-slate-950 font-bold">Remove Background</a>
-          <a href="compress-pdf.html" class="hover:text-slate-950 transition">Compress</a>
-          <a href="image-to-pdf.html" class="hover:text-slate-950 transition">Image to PDF</a>
-          <a href="sign-pdf.html" class="hover:text-slate-950 transition">Sign PDF</a>
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-400">
+          <a href="/video-editor" class="text-emerald-600 dark:text-emerald-400 font-bold hover:text-emerald-700 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-[10px]">NEW</span>Video Editor</a>
+          <a href="/video-downloader" class="text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-700">Downloader</a>
+          <a href="/" class="hover:text-slate-950 dark:hover:text-white transition">All Tools</a>
+          <a href="bg-remover.html" class="text-slate-950 dark:text-white font-bold">Remove Background</a>
+          <a href="compress-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Compress</a>
+          <a href="image-to-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Image to PDF</a>
+          <a href="sign-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Sign PDF</a>
         </nav>
       </div>
 
@@ -132,7 +149,7 @@
           <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
           <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
-        <a href="index.html" class="px-3 py-1 rounded-lg bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
+        <a href="/" class="px-3 py-1 rounded-lg bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
           Browse Tools
         </a>
       </div>
@@ -150,22 +167,64 @@
       <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-3">
         Remove Background in 1 Click
       </h1>
-      <p class="text-slate-600 text-base">
-        Erase image backgrounds cleanly while keeping subjects, vibrant skin tones, and typography completely sharp. 100% private.
+      <p class="text-slate-600 text-base max-w-2xl mx-auto">
+        Erase image backgrounds cleanly while keeping subjects, hair contours, and typography razor-sharp. 100% private in your browser.
       </p>
+
+      <!-- Aesthetic Interactive Before & After Showcase -->
+      <div class="mt-8 mb-4 max-w-xl mx-auto p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2 px-1">
+          <span class="flex items-center gap-1.5 text-slate-700 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live Interactive Preview
+          </span>
+          <span class="font-mono text-[11px] text-emerald-600 font-bold">Drag slider to compare ↔</span>
+        </div>
+        <div class="relative h-48 sm:h-56 rounded-xl overflow-hidden select-none cursor-ew-resize border border-slate-200" id="before_after_container" onmousemove="handleSliderMove(event)" ontouchmove="handleSliderTouch(event)">
+          <!-- After (Cutout with checkerboard) -->
+          <div class="absolute inset-0 checkerboard-bg flex items-center justify-center">
+            <div class="w-32 h-32 rounded-2xl bg-indigo-600 text-white flex flex-col items-center justify-center shadow-2xl p-4 text-center">
+              <span class="text-3xl mb-1">⚡</span>
+              <span class="font-extrabold text-xs">ZENITH</span>
+              <span class="text-[9px] text-indigo-200 font-mono">Transparent</span>
+            </div>
+            <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-emerald-600/90 text-white text-[10px] font-bold font-mono">AFTER: Cutout</span>
+          </div>
+          <!-- Before (With solid background) -->
+          <div id="before_layer" class="absolute inset-y-0 left-0 bg-slate-200 flex items-center justify-center overflow-hidden border-r-2 border-white shadow-xl" style="width: 50%;">
+            <div class="w-32 h-32 rounded-2xl bg-indigo-600 text-white flex flex-col items-center justify-center shadow-2xl p-4 text-center">
+              <span class="text-3xl mb-1">⚡</span>
+              <span class="font-extrabold text-xs">ZENITH</span>
+              <span class="text-[9px] text-indigo-200 font-mono">Original</span>
+            </div>
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-slate-800/80 text-white text-[10px] font-bold font-mono">BEFORE: Photo</span>
+          </div>
+          <!-- Slider line & thumb -->
+          <div id="slider_handle" class="absolute inset-y-0 pointer-events-none flex items-center justify-center -translate-x-1/2" style="left: 50%;">
+            <div class="w-7 h-7 rounded-full bg-white shadow-lg border border-slate-300 text-slate-700 flex items-center justify-center text-[10px] font-bold">
+              ↔
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Upload Zone -->
-    <div id="bg_upload_zone" onclick="document.getElementById('bg_file_input').click()" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 shadow-sm group mb-8">
+    <div id="bg_upload_zone" class="w-full max-w-2xl bg-white border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-3xl p-8 sm:p-12 text-center transition-all duration-200 shadow-sm group mb-8">
       <input type="file" id="bg_file_input" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageFile(this.files[0])">
-      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition cursor-pointer" onclick="document.getElementById('bg_file_input').click()">
         🪄
       </div>
-      <h3 class="text-lg font-bold text-slate-900 mb-1">Select an Image</h3>
-      <p class="text-xs text-slate-500 mb-4">Upload JPG, PNG, or WebP photo (Portraits, Avatars, Products, Cards)</p>
-      <button type="button" class="px-6 py-2.5 rounded-xl bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-500/20 transition">
-        Upload Photo
-      </button>
+      <h3 class="text-lg font-bold text-slate-900 mb-1 cursor-pointer" onclick="document.getElementById('bg_file_input').click()">Select an Image</h3>
+      <p class="text-xs text-slate-500 mb-5">Upload JPG, PNG, or WebP photo (Portraits, Avatars, Products, Cards)</p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button type="button" onclick="document.getElementById('bg_file_input').click()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-500/20 transition">
+          Upload Photo
+        </button>
+        <button type="button" onclick="loadSampleImage()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs border border-slate-200 transition flex items-center gap-1.5 shadow-2xs">
+          <span>⚡</span> Try with Sample Photo
+        </button>
+      </div>
     </div>
 
     <!-- Processing Spinner -->
@@ -402,6 +461,84 @@
     let isBrushing = false;
     const undoStack = [];
     const MAX_UNDO = 10;
+
+    function handleSliderMove(e) {
+      const container = document.getElementById('before_after_container');
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const percent = (x / rect.width) * 100;
+      document.getElementById('before_layer').style.width = percent + '%';
+      document.getElementById('slider_handle').style.left = percent + '%';
+    }
+
+    function handleSliderTouch(e) {
+      if (!e.touches || !e.touches[0]) return;
+      const container = document.getElementById('before_after_container');
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.touches[0].clientX - rect.left, rect.width));
+      const percent = (x / rect.width) * 100;
+      document.getElementById('before_layer').style.width = percent + '%';
+      document.getElementById('slider_handle').style.left = percent + '%';
+    }
+
+    function loadSampleImage() {
+      const c = document.createElement('canvas');
+      c.width = 700;
+      c.height = 700;
+      const ctx = c.getContext('2d');
+      
+      // Light background to remove
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillRect(0, 0, 700, 700);
+
+      // Draw modern badge / product
+      ctx.shadowColor = 'rgba(15, 23, 42, 0.2)';
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetY = 20;
+
+      // Outer circle
+      ctx.fillStyle = '#4f46e5';
+      ctx.beginPath();
+      ctx.arc(350, 350, 180, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowColor = 'transparent';
+
+      // Inner accent circle
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(350, 275, 75, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bolt icon
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(350, 230);
+      ctx.lineTo(330, 280);
+      ctx.lineTo(355, 280);
+      ctx.lineTo(345, 320);
+      ctx.lineTo(375, 265);
+      ctx.lineTo(350, 265);
+      ctx.closePath();
+      ctx.fill();
+
+      // Text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 30px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('ZENITH PRO', 350, 410);
+
+      ctx.font = '16px monospace';
+      ctx.fillStyle = '#a5b4fc';
+      ctx.fillText('100% In-Browser Engine', 350, 445);
+
+      c.toBlob((blob) => {
+        const sampleFile = new File([blob], 'sample-product.png', { type: 'image/png' });
+        handleImageFile(sampleFile);
+      });
+    }
 
     function handleImageFile(file) {
       if (!file || !file.type.startsWith('image/')) {

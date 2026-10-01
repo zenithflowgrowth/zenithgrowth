@@ -23,6 +23,15 @@ process.on('unhandledRejection', (reason) => {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// High-speed Gzip / Brotli response compression (Dramatically cuts load times)
+try {
+  const compression = require('compression');
+  app.use(compression());
+} catch (e) {
+  console.warn('[GATEWAY]: compression module not found, continuing without gzip:', e.message);
+}
+
 // Permissive CORS for cross-port, Live Server, and file:// access
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -94,8 +103,17 @@ if (fs.existsSync(zipPath)) {
   }
 }
 
-// Route for video-editor.html in root
-app.get(['/video-editor', '/video-editor/', '/editor', '/editor/', '/clip-editor', '/video-editor.html'], (req, res, next) => {
+// Route for video-editor.html in root and sub-paths
+app.get([
+  '/video-editor', 
+  '/video-editor/', 
+  '/editor', 
+  '/editor/', 
+  '/clip-editor', 
+  '/video-editor.html',
+  '/video-downloader/video-editor.html',
+  '/video-downloader/video-editor'
+], (req, res, next) => {
   const directHtml = path.join(ROOT_DIR, 'video-editor.html');
   if (fs.existsSync(directHtml)) {
     return res.sendFile(directHtml);
@@ -103,13 +121,25 @@ app.get(['/video-editor', '/video-editor/', '/editor', '/editor/', '/clip-editor
   next();
 });
 
-// Route for video-downloader.html in root
-app.get(['/video-downloader', '/video-downloader/', '/video', '/video-downloader.html'], (req, res, next) => {
+// Route for video-downloader.html in root and sub-paths
+app.get([
+  '/video-downloader', 
+  '/video-downloader/', 
+  '/video', 
+  '/video-downloader.html',
+  '/video-editor/video-downloader.html',
+  '/video-editor/video-downloader'
+], (req, res, next) => {
   const directHtml = path.join(ROOT_DIR, 'video-downloader.html');
   if (fs.existsSync(directHtml)) {
     return res.sendFile(directHtml);
   }
   next();
+});
+
+// Handle relative index.html navigation from sub-paths
+app.get(['/video-downloader/index.html', '/video-editor/index.html'], (req, res) => {
+  res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
 // Serve assets under /video-downloader/ prefix as well
@@ -228,9 +258,17 @@ app.get('/api/tools', (req, res) => {
   });
 });
 
-// 4. Serve Root Static Files (PDF Suite, Background Remover, Invoices, etc.)
+// 4. Serve Root Static Files with Gzip & Efficient Browser Caching
 app.use(express.static(ROOT_DIR, {
-  extensions: ['html', 'htm']
+  extensions: ['html', 'htm'],
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    } else if (filePath.endsWith('.css') || filePath.endsWith('.js') || filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.svg') || filePath.endsWith('.wasm')) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    }
+  }
 }));
 
 // Fallback to index.html for root navigation

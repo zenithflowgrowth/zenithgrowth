@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('omni_theme') || localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zenith Video Editor & Clip Studio - Free Online Clipper, Color FX, Sprinkles & Watermark Remover</title>
@@ -16,7 +27,7 @@
   <script>tailwind.config = { darkMode: "class" };</script>
 
   <style>
-    :root {
+    :root, [data-theme="dark"] {
       --bg-primary: #070a12;
       --bg-secondary: #0e1424;
       --bg-surface: #141c30;
@@ -31,11 +42,200 @@
       --text-dim: #64748b;
     }
 
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-surface-hover: #f1f5f9;
+      --border: rgba(15, 23, 42, 0.12);
+      --border-focus: rgba(99, 102, 241, 0.6);
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --accent: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-primary);
       color: var(--text-main);
       overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Light Theme Styling Overrides */
+    [data-theme="light"] .glass-panel {
+      background: rgba(255, 255, 255, 0.94) !important;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 232, 240, 0.95) !important;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+    }
+
+    [data-theme="light"] .glass-card {
+      background: #ffffff !important;
+      border: 1px solid rgba(226, 232, 240, 0.95) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    [data-theme="light"] .glass-card:hover {
+      background: #f8fafc !important;
+      border-color: rgba(99, 102, 241, 0.4) !important;
+    }
+
+    [data-theme="light"] .glow-bg {
+      opacity: 0.10 !important;
+    }
+
+    /* Light Theme Crisp Typography */
+    [data-theme="light"] h1,
+    [data-theme="light"] h2,
+    [data-theme="light"] h3,
+    [data-theme="light"] h4,
+    [data-theme="light"] .text-white:not(.preserve-white) {
+      color: #0f172a !important;
+    }
+    [data-theme="light"] .text-slate-200,
+    [data-theme="light"] .text-slate-300 {
+      color: #334155 !important;
+    }
+    [data-theme="light"] .text-slate-400 {
+      color: #64748b !important;
+    }
+    [data-theme="light"] .text-slate-500 {
+      color: #94a3b8 !important;
+    }
+
+    /* Preserve Crisp White Text on Saturated Buttons and Selected Badges */
+    .preserve-white,
+    [data-theme="light"] .preserve-white,
+    [data-theme="light"] #btn-header-upload,
+    [data-theme="light"] #btn-header-upload *,
+    [data-theme="light"] #btn-hero-choose-file,
+    [data-theme="light"] #btn-hero-choose-file *,
+    [data-theme="light"] #btn-export-quick,
+    [data-theme="light"] #btn-export-quick *,
+    [data-theme="light"] #btn-export-browser,
+    [data-theme="light"] #btn-export-browser *,
+    [data-theme="light"] #btn-play-pause,
+    [data-theme="light"] #btn-hero-import-url,
+    [data-theme="light"] #btn-confirm-import-url,
+    [data-theme="light"] #btn-confirm-import-url *,
+    [data-theme="light"] #btn-empty-sample,
+    [data-theme="light"] .bg-indigo-600,
+    [data-theme="light"] .bg-indigo-600 *,
+    [data-theme="light"] .bg-emerald-600,
+    [data-theme="light"] .bg-emerald-600 *,
+    [data-theme="light"] .tab-btn.bg-indigo-600,
+    [data-theme="light"] .aspect-pill.bg-indigo-600,
+    [data-theme="light"] .backdrop-pill.bg-indigo-600,
+    [data-theme="light"] .caption-pos-btn.bg-indigo-600,
+    [data-theme="light"] .ai-tab-mode-chip.bg-indigo-600,
+    [data-theme="light"] .zoom-preset-btn.bg-indigo-600 {
+      color: #ffffff !important;
+    }
+
+    /* Light Theme Container and Card Surfaces */
+    [data-theme="light"] .bg-slate-900,
+    [data-theme="light"] .bg-slate-900\/90,
+    [data-theme="light"] .bg-slate-900\/80,
+    [data-theme="light"] .bg-slate-900\/60,
+    [data-theme="light"] .bg-slate-950,
+    [data-theme="light"] .bg-slate-950\/90,
+    [data-theme="light"] .bg-slate-950\/80,
+    [data-theme="light"] .bg-slate-950\/70,
+    [data-theme="light"] .bg-slate-950\/60 {
+      background-color: #ffffff !important;
+      border-color: rgba(226, 232, 240, 0.95) !important;
+    }
+    [data-theme="light"] .border-white\/10,
+    [data-theme="light"] .border-white\/15,
+    [data-theme="light"] .border-white\/5 {
+      border-color: rgba(226, 232, 240, 0.95) !important;
+    }
+    [data-theme="light"] .bg-white\/5,
+    [data-theme="light"] .bg-white\/10 {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+    }
+    [data-theme="light"] .hover\:bg-white\/10:hover,
+    [data-theme="light"] .hover\:bg-white\/15:hover,
+    [data-theme="light"] .hover\:bg-slate-800:hover,
+    [data-theme="light"] .hover\:bg-slate-900:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    /* Light Theme Inputs, Selects & Textareas */
+    [data-theme="light"] input[type="text"],
+    [data-theme="light"] textarea,
+    [data-theme="light"] select {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    [data-theme="light"] input[type="text"]:focus,
+    [data-theme="light"] textarea:focus,
+    [data-theme="light"] select:focus {
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+    }
+
+    /* Light Theme Dropzone */
+    [data-theme="light"] #hero-dropzone {
+      background-color: #f8fafc !important;
+      border-color: #818cf8 !important;
+    }
+    [data-theme="light"] #hero-dropzone:hover {
+      background-color: #ffffff !important;
+      border-color: #4f46e5 !important;
+    }
+
+    /* Light Theme Timeline */
+    [data-theme="light"] #timeline-container {
+      background-color: #e2e8f0 !important;
+      border-color: #cbd5e1 !important;
+    }
+    [data-theme="light"] #timeline-container .h-6.w-0.5,
+    [data-theme="light"] #timeline-container .h-4.w-0.5 {
+      background-color: #94a3b8 !important;
+    }
+
+    /* Light Theme Modals */
+    [data-theme="light"] #url-modal > div {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Range slider tracks in light mode */
+    [data-theme="light"] input[type=range] {
+      background: rgba(15, 23, 42, 0.12);
+    }
+
+    /* Light Theme Scrollbars */
+    [data-theme="light"] ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    [data-theme="light"] ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* AI Clipper Panel in light mode */
+    [data-theme="light"] #ai-clipper-panel {
+      background: linear-gradient(to right, #f8fafc, #eef2ff, #f8fafc) !important;
+      border-color: rgba(99, 102, 241, 0.3) !important;
+    }
+    [data-theme="light"] .ai-clip-card {
+      background: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+    [data-theme="light"] .ai-clip-card.active-ai-clip {
+      border-color: #6366f1 !important;
+      background: #eef2ff !important;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25) !important;
     }
 
     .font-mono {
@@ -224,7 +424,7 @@
   <!-- Top Navigation Bar -->
   <header class="sticky top-0 z-50 glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-4">
-      <a href="index.html" class="flex items-center gap-3 group text-decoration-none">
+      <a href="/" class="flex items-center gap-3 group text-decoration-none">
         <img src="logo.png" alt="Zenith" class="w-9 h-9 rounded-xl object-contain shadow-md shadow-indigo-500/20 group-hover:scale-105 transition">
         <div>
           <div class="flex items-center gap-2">
@@ -235,15 +435,21 @@
         </div>
       </a>
 
-      <div class="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10 text-xs text-slate-400 font-medium">
-        <a href="index.html" class="hover:text-white transition">All Tools</a>
+      <div class="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <a href="/" class="hover:text-indigo-600 dark:hover:text-white transition">All Tools</a>
         <span>/</span>
-        <a href="video-downloader.html" class="hover:text-white transition flex items-center gap-1">Downloader <span class="text-[10px] text-indigo-400">📥</span></a>
+        <a href="/video-downloader" class="hover:text-indigo-600 dark:hover:text-white transition flex items-center gap-1">Downloader <span class="text-[10px] text-indigo-400">📥</span></a>
       </div>
     </div>
 
     <!-- Quick Action Bar -->
     <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Day/Night Mode Toggle Button -->
+      <button id="theme-toggle" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 dark:bg-slate-800/80 border border-white/10 dark:border-slate-700 text-slate-300 dark:text-slate-300 hover:text-white transition active:scale-95 flex items-center justify-center cursor-pointer select-none" title="Toggle Dark/Light Mode">
+        <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+
       <!-- Prominent Upload Video Button -->
       <label id="btn-header-upload" for="file-picker" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-600 hover:to-indigo-700 text-white shadow-lg shadow-emerald-500/25 flex items-center gap-2 transition active:scale-95 cursor-pointer select-none">
         <span>📤</span> <span>Upload Video</span>
@@ -3174,8 +3380,47 @@
       };
     });
 
+    // Day / Night Theme Management
+    function initTheme() {
+      const saved = localStorage.getItem('omni_theme') || localStorage.getItem('theme') || 'dark';
+      applyTheme(saved);
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.onclick = toggleTheme;
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const target = current === 'dark' ? 'light' : 'dark';
+      applyTheme(target);
+      localStorage.setItem('theme', target);
+      localStorage.setItem('omni_theme', target);
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      const sun = document.getElementById('theme-icon-sun');
+      const moon = document.getElementById('theme-icon-moon');
+      if (sun && moon) {
+        if (theme === 'light') {
+          sun.classList.add('hidden');
+          moon.classList.remove('hidden');
+        } else {
+          sun.classList.remove('hidden');
+          moon.classList.add('hidden');
+        }
+      }
+    }
+
     // On first load, present the upload screen directly so user can upload their own video first
     function initEditorOnLoad() {
+      initTheme();
       showUploadScreen();
       syncWmBoxStyles();
     }

@@ -20,3 +20,19 @@ READY-FOR-GITHUB/
 .DS_Store
 Thumbs.db
 
+# Secrets & Credentials Protection (Prevents accidental leak)
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa
+id_ed25519
+credentials.json
+client_secret*.json
+*.token
+*.p12
+*.pfx
+
