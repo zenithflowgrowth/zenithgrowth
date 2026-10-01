@@ -54,7 +54,6 @@
   <link rel="stylesheet" href="zenith-tailwind.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -244,7 +243,7 @@
       <h1 class="text-3xl sm:text-5xl font-black tracking-[-0.04em] text-slate-950 dark:text-white leading-[1.15] mb-4">
         Every tool you need.<br class="hidden sm:inline"> <span class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-emerald-200 bg-clip-text text-transparent">Processed privately on your device.</span>
       </h1>
-      <p class="text-slate-500 dark:text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+      <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
         Compress, remove photo backgrounds, unlock, sign, merge, and protect documents with zero latency. Confidential files never leave your computer.
       </p>
     </div>
@@ -306,19 +305,19 @@
       <!-- Secondary Filter Options Sub-bar -->
       <div class="max-w-4xl mx-auto mt-4 px-4 py-2.5 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center gap-2">
-          <span class="text-slate-500 dark:text-slate-400 font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1">
+          <span class="text-slate-700 dark:text-slate-300 font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1">
             <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
             Filter Options:
           </span>
           <div class="flex items-center gap-1" id="subtag_filters">
             <button onclick="filterSubTag('all', event)" id="subtag_all" aria-label="Filter all types" class="subtag-btn px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-[11px] shadow-2xs border border-slate-200/80 dark:border-slate-700 transition">All Types</button>
-            <button onclick="filterSubTag('wasm', event)" id="subtag_wasm" aria-label="Filter client-side WASM tools" class="subtag-btn px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium text-[11px] transition">⚡ 100% Client-Side</button>
-            <button onclick="filterSubTag('new', event)" id="subtag_new" aria-label="Filter new and updated tools" class="subtag-btn px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium text-[11px] transition">🆕 New &amp; Updated</button>
+            <button onclick="filterSubTag('wasm', event)" id="subtag_wasm" aria-label="Filter client-side WASM tools" class="subtag-btn px-2.5 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium text-[11px] transition">⚡ 100% Client-Side</button>
+            <button onclick="filterSubTag('new', event)" id="subtag_new" aria-label="Filter new and updated tools" class="subtag-btn px-2.5 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium text-[11px] transition">🆕 New &amp; Updated</button>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
-          <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+          <span class="text-[11px] font-mono text-slate-700 dark:text-slate-300">
             Showing <strong class="text-slate-900 dark:text-white font-bold" id="visible_tools_count">16</strong> of 16 tools
           </span>
           <button id="reset_filter_btn" onclick="resetAllFilters(event)" aria-label="Reset all search and category filters" class="hidden text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline items-center gap-1 transition">
@@ -339,7 +338,7 @@
             <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800">
               ⚡ Flagship Graphic Tool
             </span>
-            <span class="text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition font-mono text-xs">1-Click Instant</span>
+            <span class="text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-mono text-xs">1-Click Instant</span>
           </div>
           <div class="flex items-start gap-4">
             <div class="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-800 dark:text-slate-200 flex-shrink-0 group-hover:bg-slate-900 dark:group-hover:bg-indigo-600 group-hover:text-white transition">
@@ -347,14 +346,14 @@
             </div>
             <div>
               <h3 class="text-lg font-bold text-slate-950 dark:text-white tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">Remove Background</h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+              <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                 Precision subject contour lock with auto letter-loop clearing (O, P, B, A). Instant transparent PNG with zero upload delays.
               </p>
             </div>
           </div>
         </div>
         <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-          <span class="text-slate-500 dark:text-slate-400 font-mono text-[11px]">Free Transparent PNG + JPG</span>
+          <span class="text-slate-600 dark:text-slate-300 font-mono text-[11px]">Free Transparent PNG + JPG</span>
           <span class="font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-0.5 transition">Open Tool →</span>
         </div>
       </a>
@@ -366,7 +365,7 @@
             <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800">
               High-DPI Super-Sampling
             </span>
-            <span class="text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition font-mono text-xs">Up to 80% Reduction</span>
+            <span class="text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-mono text-xs">Up to 80% Reduction</span>
           </div>
           <div class="flex items-start gap-4">
             <div class="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-800 dark:text-slate-200 flex-shrink-0 group-hover:bg-slate-900 dark:group-hover:bg-indigo-600 group-hover:text-white transition">
@@ -374,21 +373,21 @@
             </div>
             <div>
               <h3 class="text-lg font-bold text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">Compress PDF</h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+              <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                 Ultra-crisp 150–195 DPI canvas rendering. Shrink heavy government and corporate PDFs without blurry text.
               </p>
             </div>
           </div>
         </div>
         <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-          <span class="text-slate-500 dark:text-slate-400 font-mono text-[11px]">Lossless DPI Engine</span>
+          <span class="text-slate-600 dark:text-slate-300 font-mono text-[11px]">Lossless DPI Engine</span>
           <span class="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition">Open Tool →</span>
         </div>
       </a>
     </div>
 
     <!-- Main Grid of Tools (14 Tools - Vector Icons, No AI Emojis) -->
-    <h2 class="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 font-semibold">All Document &amp; Graphic Utilities</h2>
+    <h2 class="text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-4 font-semibold">All Document &amp; Graphic Utilities</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-16" id="tools_container">
 
       <!-- Tool: Zenith Video Editor & Studio -->
@@ -409,7 +408,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Trim clips, apply real-time color filters, animated sprinkles &amp; sparkles, remove watermarks, and reframe for TikTok, Reels &amp; Shorts.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Canvas &amp; FFmpeg</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Canvas &amp; FFmpeg</span>
           <span>Open Video Editor →</span>
         </div>
       </a>
@@ -432,7 +431,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Save HD/4K videos &amp; MP3s from YouTube, Instagram Reels, TikTok (no watermark), Twitter &amp; Reddit.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">1000+ Sites</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">1000+ Sites</span>
           <span>Launch Downloader →</span>
         </div>
       </a>
@@ -447,7 +446,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Instant transparent PNG with subject lock &amp; letter loop cleaner.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Graphic</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Graphic</span>
           <span>Cutout →</span>
         </div>
       </a>
@@ -462,7 +461,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">High-DPI super-sampling. Shrink file size while preserving razor text.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Optimize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Optimize</span>
           <span>Compress →</span>
         </div>
       </a>
@@ -477,7 +476,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Remove passwords and restrictions locally via native QPDF WASM.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Security</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Security</span>
           <span>Unlock →</span>
         </div>
       </a>
@@ -492,7 +491,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Stamp, draw, or type digital legal signatures with 0 registration.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Security</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Security</span>
           <span>Sign →</span>
         </div>
       </a>
@@ -507,7 +506,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Combine multiple documents into one seamless PDF with page drag.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Organize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Organize</span>
           <span>Merge →</span>
         </div>
       </a>
@@ -522,7 +521,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Extract custom ranges (1-2, 3-6) into distinct PDF files in a ZIP bundle.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Organize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Organize</span>
           <span>Split →</span>
         </div>
       </a>
@@ -537,7 +536,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Rotate pages clockwise or counter-clockwise with live visual preview.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Organize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Organize</span>
           <span>Rotate →</span>
         </div>
       </a>
@@ -552,7 +551,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Export every page into high-definition JPG pictures in a ZIP archive.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Convert</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Convert</span>
           <span>Export →</span>
         </div>
       </a>
@@ -567,7 +566,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Convert JPG, PNG, and WebP images into a standardized PDF file.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Convert</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Convert</span>
           <span>Convert →</span>
         </div>
       </a>
@@ -582,7 +581,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Stamp logos or custom text with live drag, opacity, and angle controls.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Optimize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Optimize</span>
           <span>Watermark →</span>
         </div>
       </a>
@@ -597,7 +596,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Visual redaction tool to erase unwanted stamps or sensitive lines.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Optimize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Optimize</span>
           <span>Erase →</span>
         </div>
       </a>
@@ -612,7 +611,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Add sequential page numbers (Page X of Y) with custom positions.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Organize</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Organize</span>
           <span>Paginate →</span>
         </div>
       </a>
@@ -627,7 +626,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Encrypt your document with AES encryption to prevent viewing.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Security</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Security</span>
           <span>Encrypt →</span>
         </div>
       </a>
@@ -642,7 +641,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Create tax-ready invoices with 7 themes, currencies, and 1-page auto-fit.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Business</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Business</span>
           <span>Create →</span>
         </div>
       </a>
@@ -657,7 +656,7 @@
           <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">Validate, beautify, and inspect structured JSON data in real time.</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-          <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400">Developer</span>
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Developer</span>
           <span>Format →</span>
         </div>
       </a>
@@ -666,11 +665,11 @@
 
     <!-- Empty Search / Filter State -->
     <div id="no_results_box" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
-      <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 mb-4 shadow-xs">
+      <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 mb-4 shadow-xs">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
       <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1">No matching utilities found</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-5">
+      <p class="text-xs text-slate-600 dark:text-slate-300 max-w-sm mb-5">
         Try adjusting your filter options or search query to find the tool you need.
       </p>
       <button onclick="resetAllFilters(event)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs hover:shadow-indigo-500/25 transition active:scale-95 flex items-center gap-2">
@@ -679,20 +678,20 @@
     </div>
 
     <!-- AdSense High-CTR Banner Placement (Clean minimal container) -->
-    <div class="w-full my-8 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 flex items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-mono tracking-wider min-h-[90px]">
+    <div class="w-full my-8 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 flex items-center justify-center text-xs text-slate-600 dark:text-slate-300 font-mono tracking-wider min-h-[90px]">
       <span>Google AdSense Responsive Unit</span>
     </div>
   </main>
 
   <!-- Clean Minimal Footer -->
-  <footer class="border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#070b14] py-10 text-xs text-slate-500 dark:text-slate-400 transition-colors duration-200">
+  <footer class="border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#070b14] py-10 text-xs text-slate-600 dark:text-slate-300 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <span class="font-bold text-slate-900 dark:text-white">Zenith Growth</span>
         <span>•</span>
         <span>© 2026 zenithgrowth.tech</span>
         <span>•</span>
-        <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">100% In-Browser Computation</span>
+        <span class="font-mono text-[11px] text-slate-600 dark:text-slate-300">100% In-Browser Computation</span>
       </div>
       <div class="flex items-center gap-6 font-medium">
         <a href="privacy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
