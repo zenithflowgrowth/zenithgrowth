@@ -882,7 +882,8 @@
 
     // SMART OBJECT & DOCUMENT CUTOUT ENGINE
     // Perimeter-seeded exterior flood fill + high-contrast edge barrier
-    // (Never destroys white paper, receipts, or documents!)
+    // Multi-pass: (1) Exterior flood fill + despeckle, (2) Interior limb void detection,
+    // (3) Typography counter loop cleaner, (4) Anti-aliasing edge feathering
     function executeSmartCutout() {
       const canvas = document.getElementById('cutout_canvas');
       const ctx = canvas.getContext('2d');
@@ -898,52 +899,89 @@
       const imgData = ctx.getImageData(0, 0, width, height);
       const data = imgData.data;
 
-      const tolerance = parseInt(document.getElementById('tolerance_slider').value) || 45;
+      const tolerance = parseInt(document.getElementById('tolerance_slider')?.value) || 45;
       const feather = parseInt(document.getElementById('feather_slider')?.value || 1);
 
-      const targetR = sampledBgColor ? sampledBgColor.r : 160;
-      const targetG = sampledBgColor ? sampledBgColor.g : 120;
-      const targetB = sampledBgColor ? sampledBgColor.b : 80;
+      // 1. Profile Background Palette from Perimeter
+      let targetR = 216, targetG = 192, targetB = 167;
+      let baseRG = 24, baseGB = 25;
 
-      function colorDist(r, g, b, tr, tg, tb) {
+      if (sampledBgColor) {
+        targetR = sampledBgColor.r;
+        targetG = sampledBgColor.g;
+        targetB = sampledBgColor.b;
+        baseRG = targetR - targetG;
+        baseGB = targetG - targetB;
+      } else {
+        const bSamples = [];
+        for (let x = 0; x < width; x += 2) {
+          const iT = x * 4;
+          const iB = ((height - 1) * width + x) * 4;
+          bSamples.push([data[iT], data[iT + 1], data[iT + 2]]);
+          bSamples.push([data[iB], data[iB + 1], data[iB + 2]]);
+        }
+        for (let y = 0; y < height; y += 2) {
+          const iL = (y * width) * 4;
+          const iR = (y * width + width - 1) * 4;
+          bSamples.push([data[iL], data[iL + 1], data[iL + 2]]);
+          bSamples.push([data[iR], data[iR + 1], data[iR + 2]]);
+        }
+        targetR = bSamples.reduce((s, c) => s + c[0], 0) / bSamples.length;
+        targetG = bSamples.reduce((s, c) => s + c[1], 0) / bSamples.length;
+        targetB = bSamples.reduce((s, c) => s + c[2], 0) / bSamples.length;
+        baseRG = targetR - targetG;
+        baseGB = targetG - targetB;
+      }
+
+      function colorDist(r, g, b, tr = targetR, tg = targetG, tb = targetB) {
         return Math.hypot(r - tr, g - tg, b - tb);
       }
 
-      // mask: 0 = unvisited, 1 = background (erased), 2 = subject boundary / foreground
+      function getLum(r, g, b) {
+        return 0.299 * r + 0.587 * g + 0.114 * b;
+      }
+
+      function isBackgroundMatch(r, g, b, tol = tolerance + 15) {
+        const d = colorDist(r, g, b);
+        if (d > tol) return false;
+        const diffRG = Math.abs((r - g) - baseRG);
+        const diffGB = Math.abs((g - b) - baseGB);
+        return (diffRG <= 16 && diffGB <= 16);
+      }
+
+      function isDefiniteForeground(r, g, b) {
+        const lum = getLum(r, g, b);
+        if (lum < 105) return true; // dark text ink or dark contour outline
+        if (r > 160 && (r - b > 55) && g < 175) return true; // vibrant halo/fire
+        if (colorDist(r, g, b) > 65) return true; // distinct clothing, flower, jewelry
+        return false;
+      }
+
+      // mask: 0 = unvisited, 1 = background (erased), 2 = foreground barrier
       const mask = new Uint8Array(width * height);
       const queue = new Int32Array(width * height);
       let qHead = 0, qTail = 0;
 
       if (currentMode === 'wand' && lastClickCoord) {
-        // Magic Wand: Seed from clicked point outward
         const seedPos = lastClickCoord.y * width + lastClickCoord.x;
         mask[seedPos] = 1;
         queue[qTail++] = seedPos;
       } else {
         // Smart Mode: Seed from all 4 image borders (exterior background)
-        const borderAllowance = tolerance + 25;
-
         for (let x = 0; x < width; x++) {
-          const pTop = x;
-          const pBot = (height - 1) * width + x;
-          [pTop, pBot].forEach(pos => {
-            if (mask[pos] === 0) {
-              const i = pos * 4;
-              if (colorDist(data[i], data[i + 1], data[i + 2], targetR, targetG, targetB) <= borderAllowance) {
-                mask[pos] = 1;
-                queue[qTail++] = pos;
-              }
+          [x, (height - 1) * width + x].forEach(pos => {
+            const idx = pos * 4;
+            if (isBackgroundMatch(data[idx], data[idx + 1], data[idx + 2], tolerance + 15)) {
+              mask[pos] = 1;
+              queue[qTail++] = pos;
             }
           });
         }
-
         for (let y = 0; y < height; y++) {
-          const pLeft = y * width;
-          const pRight = y * width + width - 1;
-          [pLeft, pRight].forEach(pos => {
+          [y * width, y * width + (width - 1)].forEach(pos => {
             if (mask[pos] === 0) {
-              const i = pos * 4;
-              if (colorDist(data[i], data[i + 1], data[i + 2], targetR, targetG, targetB) <= borderAllowance) {
+              const idx = pos * 4;
+              if (isBackgroundMatch(data[idx], data[idx + 1], data[idx + 2], tolerance + 15)) {
                 mask[pos] = 1;
                 queue[qTail++] = pos;
               }
@@ -952,7 +990,7 @@
         }
       }
 
-      // Breadth-First Flood Fill across contiguous background
+      // Pass 1: Breadth-First Flood Fill across contiguous background
       while (qHead < qTail) {
         const pos = queue[qHead++];
         const px = pos % width;
@@ -969,19 +1007,234 @@
           const npos = neighbors[k];
           if (npos !== -1 && mask[npos] === 0) {
             const ni = npos * 4;
-            const d = colorDist(data[ni], data[ni + 1], data[ni + 2], targetR, targetG, targetB);
+            const nr = data[ni], ng = data[ni + 1], nb = data[ni + 2];
 
-            if (d <= tolerance + 20) {
-              mask[npos] = 1; // background
+            if (!isDefiniteForeground(nr, ng, nb) && isBackgroundMatch(nr, ng, nb, tolerance + 13)) {
+              mask[npos] = 1;
               queue[qTail++] = npos;
             } else {
-              mask[npos] = 2; // Hit foreground subject boundary
+              mask[npos] = 2; // Hit foreground subject boundary barrier
             }
           }
         }
       }
 
-      // Apply Erasure
+      // Clean up isolated sand grain speckles in exterior background
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const pos = y * width + x;
+          if (mask[pos] !== 1) {
+            const idx = pos * 4;
+            const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+            let bgNbrs = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dx = -1; dx <= 1; dx++) {
+                if (dx === 0 && dy === 0) continue;
+                if (mask[(y + dy) * width + (x + dx)] === 1) bgNbrs++;
+              }
+            }
+            if (bgNbrs >= 5 && getLum(r, g, b) >= 105 && colorDist(r, g, b) <= 80) {
+              mask[pos] = 1;
+            }
+          }
+        }
+      }
+
+      // Proximity distance transform from exterior background (mask === 1)
+      const distToExt = new Int16Array(width * height).fill(999);
+      const distQ = new Int32Array(width * height);
+      let dHead = 0, dTail = 0;
+
+      for (let i = 0; i < width * height; i++) {
+        if (mask[i] === 1) {
+          distToExt[i] = 0;
+          distQ[dTail++] = i;
+        }
+      }
+
+      while (dHead < dTail) {
+        const pos = distQ[dHead++];
+        const d = distToExt[pos];
+        if (d >= 35) continue;
+
+        const px = pos % width;
+        const py = Math.floor(pos / width);
+        const nbrs = [
+          px > 0 ? pos - 1 : -1,
+          px < width - 1 ? pos + 1 : -1,
+          py > 0 ? pos - width : -1,
+          py < height - 1 ? pos + width : -1
+        ];
+
+        for (let k = 0; k < 4; k++) {
+          const np = nbrs[k];
+          if (np !== -1 && distToExt[np] > d + 1) {
+            distToExt[np] = d + 1;
+            distQ[dTail++] = np;
+          }
+        }
+      }
+
+      // Pass 2: Interior Limb / Void Detection (gaps between arms and torso/lap)
+      const armVisited = new Uint8Array(width * height);
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const pos = y * width + x;
+          if (mask[pos] === 1 || armVisited[pos] === 1) continue;
+
+          const idx = pos * 4;
+          const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+
+          if (colorDist(r, g, b) <= 32 && isBackgroundMatch(r, g, b, 32) && getLum(r, g, b) >= 140 && distToExt[pos] <= 32) {
+            const comp = [];
+            const compQ = [pos];
+            armVisited[pos] = 1;
+            let head = 0;
+
+            while (head < compQ.length) {
+              const p = compQ[head++];
+              comp.push(p);
+              const cpx = p % width;
+              const cpy = Math.floor(p / width);
+              const nbrs = [
+                cpx > 0 ? p - 1 : -1,
+                cpx < width - 1 ? p + 1 : -1,
+                cpy > 0 ? p - width : -1,
+                cpy < height - 1 ? p + width : -1
+              ];
+
+              for (let nb of nbrs) {
+                if (nb !== -1 && mask[nb] !== 1 && !armVisited[nb]) {
+                  const nidx = nb * 4;
+                  const nr = data[nidx], ng = data[nidx + 1], nbColor = data[nidx + 2];
+                  if (colorDist(nr, ng, nbColor) <= 32 && isBackgroundMatch(nr, ng, nbColor, 32) && distToExt[nb] <= 32) {
+                    armVisited[nb] = 1;
+                    compQ.push(nb);
+                  }
+                }
+              }
+            }
+
+            if (comp.length >= 60 && comp.length <= 2000) {
+              let bodyEdgeCount = 0;
+              let totalPerim = 0;
+              for (let p of comp) {
+                const cpx = p % width;
+                const cpy = Math.floor(p / width);
+                const nbrs = [
+                  cpx > 0 ? p - 1 : -1,
+                  cpx < width - 1 ? p + 1 : -1,
+                  cpy > 0 ? p - width : -1,
+                  cpy < height - 1 ? p + width : -1
+                ];
+                for (let nb of nbrs) {
+                  if (nb !== -1 && !armVisited[nb] && mask[nb] !== 1) {
+                    totalPerim++;
+                    const bi = nb * 4;
+                    const br = data[bi], bg = data[bi + 1], bb = data[bi + 2];
+                    if ((br > 150 && br - bb > 45) || colorDist(br, bg, bb) > 40) bodyEdgeCount++;
+                  }
+                }
+              }
+
+              if (totalPerim > 0 && bodyEdgeCount / totalPerim >= 0.5) {
+                for (let p of comp) mask[p] = 1;
+              }
+            }
+          }
+        }
+      }
+
+      // Pass 3: Typography Counter Loop Cleaner (detects trapped background inside letters 'O', 'P', 'B', 'A', 'R', 'D', 'e', 'g', 'ॐ')
+      const isInk = new Uint8Array(width * height);
+      for (let i = 0; i < width * height; i++) {
+        const idx = i * 4;
+        if (getLum(data[idx], data[idx + 1], data[idx + 2]) < 110) {
+          isInk[i] = 1;
+        }
+      }
+
+      const loopVisited = new Uint8Array(width * height);
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const pos = y * width + x;
+          if (mask[pos] === 1 || loopVisited[pos] || isInk[pos] || distToExt[pos] > 18) continue;
+
+          const idx = pos * 4;
+          const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+          if (colorDist(r, g, b) > 52) continue;
+
+          const comp = [];
+          const compQ = [pos];
+          loopVisited[pos] = 1;
+          let head = 0;
+
+          while (head < compQ.length) {
+            const p = compQ[head++];
+            comp.push(p);
+            const cpx = p % width;
+            const cpy = Math.floor(p / width);
+
+            const nbrs = [
+              cpx > 0 ? p - 1 : -1,
+              cpx < width - 1 ? p + 1 : -1,
+              cpy > 0 ? p - width : -1,
+              cpy < height - 1 ? p + width : -1
+            ];
+            for (let nb of nbrs) {
+              if (nb !== -1 && !loopVisited[nb] && !isInk[nb] && mask[nb] !== 1 && distToExt[nb] <= 18) {
+                const nidx = nb * 4;
+                if (colorDist(data[nidx], data[nidx + 1], data[nidx + 2]) <= 52) {
+                  loopVisited[nb] = 1;
+                  compQ.push(nb);
+                }
+              }
+            }
+          }
+
+          if (comp.length >= 8 && comp.length <= 1500) {
+            let perimeterCount = 0;
+            let inkNearbyCount = 0;
+
+            for (let p of comp) {
+              const cpx = p % width;
+              const cpy = Math.floor(p / width);
+              let isPerimeter = false;
+              const nbrs = [
+                cpx > 0 ? p - 1 : -1,
+                cpx < width - 1 ? p + 1 : -1,
+                cpy > 0 ? p - width : -1,
+                cpy < height - 1 ? p + width : -1
+              ];
+              for (let nb of nbrs) {
+                if (nb !== -1 && isInk[nb]) isPerimeter = true;
+              }
+
+              if (isPerimeter) {
+                perimeterCount++;
+                let hasInk = false;
+                for (let dy = -3; dy <= 3; dy++) {
+                  for (let dx = -3; dx <= 3; dx++) {
+                    const sx = cpx + dx, sy = cpy + dy;
+                    if (sx >= 0 && sx < width && sy >= 0 && sy < height) {
+                      if (isInk[sy * width + sx]) { hasInk = true; break; }
+                    }
+                  }
+                  if (hasInk) break;
+                }
+                if (hasInk) inkNearbyCount++;
+              }
+            }
+
+            const ratio = perimeterCount > 0 ? inkNearbyCount / perimeterCount : 0;
+            if (perimeterCount >= 6 && ratio >= 0.82) {
+              for (let p of comp) mask[p] = 1;
+            }
+          }
+        }
+      }
+
+      // Pass 4: Apply Erasure
       for (let i = 0; i < width * height; i++) {
         const idx = i * 4;
         const isBg = (mask[i] === 1);
@@ -990,25 +1243,51 @@
         }
       }
 
-      // Soft Anti-Aliasing Edge Feathering (Eliminates harsh staircase pixel steps)
-      if (feather > 0) {
-        const edgePixels = [];
-        for (let y = 1; y < height - 1; y++) {
-          for (let x = 1; x < width - 1; x++) {
-            const pos = y * width + x;
-            if (data[pos * 4 + 3] > 0) {
-              if (data[(pos - 1) * 4 + 3] === 0 ||
-                  data[(pos + 1) * 4 + 3] === 0 ||
-                  data[(pos - width) * 4 + 3] === 0 ||
-                  data[(pos + width) * 4 + 3] === 0) {
-                edgePixels.push(pos);
+      // Pass 5: Remove isolated single-pixel speckles
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const pos = y * width + x;
+          const idx = pos * 4;
+          if (data[idx + 3] > 0) {
+            let visibleNbrs = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dx = -1; dx <= 1; dx++) {
+                if (dx === 0 && dy === 0) continue;
+                if (data[((y + dy) * width + (x + dx)) * 4 + 3] > 0) visibleNbrs++;
               }
+            }
+            if (visibleNbrs <= 1) {
+              data[idx + 3] = 0;
             }
           }
         }
-        for (let k = 0; k < edgePixels.length; k++) {
-          const pos = edgePixels[k];
-          data[pos * 4 + 3] = Math.round(165 - (feather * 25));
+      }
+
+      // Pass 6: Anti-Aliasing Edge Feathering (crisp text ink, silky subject edges)
+      if (feather > 0) {
+        for (let y = 1; y < height - 1; y++) {
+          for (let x = 1; x < width - 1; x++) {
+            const pos = y * width + x;
+            const idx = pos * 4;
+            if (data[idx + 3] > 0) {
+              const hasTransparentNbr = (
+                data[(pos - 1) * 4 + 3] === 0 ||
+                data[(pos + 1) * 4 + 3] === 0 ||
+                data[(pos - width) * 4 + 3] === 0 ||
+                data[(pos + width) * 4 + 3] === 0
+              );
+              if (hasTransparentNbr) {
+                const lum = getLum(data[idx], data[idx + 1], data[idx + 2]);
+                if (lum < 100) {
+                  data[idx + 3] = 225; // preserve crisp black text ink
+                } else {
+                  const d = colorDist(data[idx], data[idx + 1], data[idx + 2]);
+                  const alpha = Math.min(255, Math.max(90, Math.round((d / 55) * 255)));
+                  data[idx + 3] = alpha;
+                }
+              }
+            }
+          }
         }
       }
 
