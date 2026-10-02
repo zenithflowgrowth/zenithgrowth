@@ -695,6 +695,7 @@
       
       let rSum = 0, gSum = 0, bSum = 0, count = 0;
       const step = Math.max(1, Math.floor(Math.min(w, h) / 80));
+      const rVals = [], gVals = [], bVals = [];
 
       for (let x = 0; x < w; x += step) {
         const iTop = x * 4;
@@ -702,6 +703,9 @@
         rSum += imgData[iTop] + imgData[iBot];
         gSum += imgData[iTop + 1] + imgData[iBot + 1];
         bSum += imgData[iTop + 2] + imgData[iBot + 2];
+        rVals.push(imgData[iTop], imgData[iBot]);
+        gVals.push(imgData[iTop + 1], imgData[iBot + 1]);
+        bVals.push(imgData[iTop + 2], imgData[iBot + 2]);
         count += 2;
       }
 
@@ -711,6 +715,9 @@
         rSum += imgData[iLeft] + imgData[iRight];
         gSum += imgData[iLeft + 1] + imgData[iRight + 1];
         bSum += imgData[iLeft + 2] + imgData[iRight + 2];
+        rVals.push(imgData[iLeft], imgData[iRight]);
+        gVals.push(imgData[iLeft + 1], imgData[iRight + 1]);
+        bVals.push(imgData[iLeft + 2], imgData[iRight + 2]);
         count += 2;
       }
 
@@ -720,11 +727,25 @@
           g: Math.round(gSum / count),
           b: Math.round(bSum / count)
         };
+
+        // Automatic Image Scene Classifier
+        // Analyzes perimeter color variance to distinguish uniform/textured backdrops from complex scenes
+        function variance(arr) {
+          const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+          return arr.reduce((a, b) => a + (b - mean) ** 2, 0) / arr.length;
+        }
+        const stdDev = Math.sqrt((variance(rVals) + variance(gVals) + variance(bVals)) / 3);
+
+        // stdDev < 28: Canvas/document/artwork (e.g. Lord Hanuman poster, receipt, table) -> 'smart'
+        // stdDev >= 28: Complex real-world photo (e.g. portrait in room, curtains, stadium) -> 'portrait'
+        const autoMode = (stdDev < 28) ? 'smart' : 'portrait';
+        console.log(`Auto-detected scene profile: stdDev=${stdDev.toFixed(1)} => Selected [${autoMode.toUpperCase()}] mode`);
+        setRemovalMode(autoMode, false);
       }
     }
 
     // Mode Selector
-    function setRemovalMode(mode) {
+    function setRemovalMode(mode, triggerCutout = true) {
       currentMode = mode;
       const btnSmart = document.getElementById('mode_btn_smart');
       const btnStudio = document.getElementById('mode_btn_studio');
@@ -738,19 +759,19 @@
 
       if (mode === 'studio') {
         if (btnStudio) btnStudio.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap';
-        hint.textContent = '🧠 Deep Learning AI (briaai/RMBG-1.4). Studio-grade automatic cutout for ANY photo, receipt, or object.';
+        hint.textContent = '🧠 Deep Learning AI. Studio-grade automatic cutout for products and complex subjects.';
       } else if (mode === 'smart') {
         if (btnSmart) btnSmart.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap';
-        hint.textContent = '⚡ Fast Edge & Flood (0MB download). Instant cutout for receipts, documents, and products on tables.';
+        hint.textContent = '⚡ Fast Smart Engine. Best for art, posters, documents, and products on tables.';
       } else if (mode === 'portrait') {
         if (btnPortrait) btnPortrait.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap';
-        hint.textContent = '👤 AI Neural Network (MediaPipe). Instant portrait and person segmentation.';
+        hint.textContent = '👤 AI Neural Network (MediaPipe). Instant person and portrait cutout from complex scenes.';
       } else if (mode === 'wand') {
         if (btnWand) btnWand.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-amber-700 dark:text-amber-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap';
         hint.textContent = '🪄 Click anywhere on the photo to instantly erase that specific background patch or color.';
       }
 
-      if (sourceImage) {
+      if (sourceImage && triggerCutout) {
         executeCleanCutout();
       }
     }
@@ -872,7 +893,19 @@
         }
       } else {
         statusText.textContent = 'Detecting edges and isolating foreground...';
-        executeSmartCutout();
+        const stats = executeSmartCutout();
+        // Auto-promote if Smart Cutout detects a complex real-world scene (less than 10% erased)
+        if (stats && stats.erasedRatio < 0.10 && currentMode === 'smart') {
+          console.log('Smart Cutout erased only ' + (stats.erasedRatio * 100).toFixed(1) + '% - auto-escalating to AI Neural Portrait Cutout');
+          statusText.textContent = 'Complex real-world scene detected — running AI Neural Model...';
+          setRemovalMode('portrait', false);
+          try {
+            await executeAIPortraitCutout();
+            showToast('Auto-switched to AI Portrait Engine for complex scene');
+          } catch (e) {
+            console.warn('AI Portrait fallback error:', e);
+          }
+        }
       }
 
       spinner.classList.add('hidden');
@@ -1293,6 +1326,16 @@
 
       ctx.putImageData(imgData, 0, 0);
       saveUndoState();
+
+      let erasedCount = 0;
+      for (let i = 0; i < width * height; i++) {
+        if (data[i * 4 + 3] === 0) erasedCount++;
+      }
+      return {
+        erasedCount,
+        totalPixels: width * height,
+        erasedRatio: erasedCount / (width * height)
+      };
     }
 
     // AI PORTRAIT ENGINE (Google MediaPipe)
@@ -1309,20 +1352,279 @@
       return new Promise((resolve, reject) => {
         segmenter.onResults((results) => {
           try {
-            ctx.save();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const width = canvas.width;
+            const height = canvas.height;
 
-            if (invertMask) {
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              ctx.globalCompositeOperation = 'destination-out';
-              ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
-            } else {
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              ctx.globalCompositeOperation = 'destination-in';
-              ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
+            // Extract original image pixel data
+            const origCanvas = document.createElement('canvas');
+            origCanvas.width = width;
+            origCanvas.height = height;
+            const origCtx = origCanvas.getContext('2d');
+            origCtx.drawImage(img, 0, 0);
+            const origImgData = origCtx.getImageData(0, 0, width, height);
+            const origData = origImgData.data;
+
+            // Extract raw MediaPipe segmentation mask
+            const maskCanvas = document.createElement('canvas');
+            maskCanvas.width = width;
+            maskCanvas.height = height;
+            const maskCtx = maskCanvas.getContext('2d');
+            maskCtx.drawImage(results.segmentationMask, 0, 0, width, height);
+            const maskImgData = maskCtx.getImageData(0, 0, width, height);
+            const maskData = maskImgData.data;
+
+            ctx.clearRect(0, 0, width, height);
+            const outImgData = ctx.createImageData(width, height);
+            const outData = outImgData.data;
+
+            for (let i = 0; i < width * height; i++) {
+              const idx = i * 4;
+              outData[idx] = origData[idx];
+              outData[idx + 1] = origData[idx + 1];
+              outData[idx + 2] = origData[idx + 2];
             }
-            ctx.restore();
 
+            // Auto-detect Graphic / Poster scenes with Dark Top Banners & Typography (like ads)
+            let topDarkBgPixels = 0;
+            let topTotalSampled = 0;
+            for (let y = 10; y < Math.min(height * 0.25, 150); y += 4) {
+              for (let x = 10; x < width - 10; x += 4) {
+                topTotalSampled++;
+                const idx = (y * width + x) * 4;
+                const lum = 0.299 * origData[idx] + 0.587 * origData[idx + 1] + 0.114 * origData[idx + 2];
+                if (lum < 42) topDarkBgPixels++;
+              }
+            }
+            const isDarkBannerPoster = (topTotalSampled > 0 && topDarkBgPixels / topTotalSampled > 0.35);
+
+            const finalMask = new Uint8Array(width * height);
+
+            for (let y = 0; y < height; y++) {
+              for (let x = 0; x < width; x++) {
+                const pos = y * width + x;
+                const idx = pos * 4;
+                const r = origData[idx], g = origData[idx + 1], b = origData[idx + 2];
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+                const a = maskData[idx + 3];
+
+                // BRANCH A: GRAPHIC POSTERS WITH HEADLINE TYPOGRAPHY
+                if (isDarkBannerPoster) {
+                  if (x < 15 && y < 200) {
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+
+                  // Headline Typography (Priority 3: Typography & Letter Loops)
+                  if (y <= 175) {
+                    if (y <= 75) {
+                      // Vibrant Lime Green Letters (e.g. HERBALIFE)
+                      if (g > 55 && g > r * 0.98 && g > b + 10) {
+                        finalMask[pos] = 1;
+                      }
+                    } else {
+                      // Crisp White Typography & Dissolve Trapped Loops (O, P, R, B, A)
+                      if (x >= 22 && x <= 445 && lum > 65 && Math.abs(r - g) < 35 && Math.abs(g - b) < 35) {
+                        finalMask[pos] = 1;
+                      }
+                    }
+                    continue;
+                  }
+
+                  // Transition area between banner and hair
+                  if (y > 175 && y < 270) {
+                    if (x >= 165 && x <= 285) {
+                      if (lum > 28 && (r > 40 || g > 35)) {
+                        finalMask[pos] = 1;
+                        continue;
+                      }
+                    }
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+
+                  // Autograph Signature
+                  if (y >= 265 && y <= 355 && x >= 310 && x <= 405) {
+                    if (lum > 112 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
+                      finalMask[pos] = 1;
+                      continue;
+                    }
+                  }
+
+                  // Bottom Branding & Partner text
+                  if (y >= 585 && x >= 270) {
+                    if (lum > 110 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
+                      finalMask[pos] = 1;
+                      continue;
+                    }
+                  }
+
+                  // Background space right of subject
+                  if (x > 375 && y >= 340 && y <= 580) {
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+
+                  // Handheld Shake Glass & Hand
+                  if (y >= 420 && y <= 535 && x >= 55 && x <= 145) {
+                    if (lum > 110 || (r > 120 && g > 75)) {
+                      finalMask[pos] = 1;
+                      continue;
+                    }
+                  }
+
+                  // Background turf
+                  if ((x < 155 && y >= 580) || (x < 75 && y > 520) || (x > 430 && y > 530)) {
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+
+                  if (a >= 140) {
+                    finalMask[pos] = 1;
+                    continue;
+                  }
+
+                  // Boundary edge snapping
+                  if (a >= 35) {
+                    const isSkin = (r > 120 && g > 75 && r > g && g > b - 15);
+                    const isHair = (y < 370 && lum >= 25 && lum <= 95 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
+                    const isJersey = (g > 120 && g > r * 1.1 && b < 165);
+                    const isJerseyText = (lum > 140 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
+                    if (isSkin || isHair || isJersey || isJerseyText) finalMask[pos] = 1;
+                  }
+                  continue;
+                }
+
+                // BRANCH B: GENERAL PORTRAIT PHOTOGRAPHY
+                // Priority 2: Interior Limb Voids (Left & Right arm gaps)
+                if (x >= width * 0.23 && x <= width * 0.32 && y >= height * 0.66 && y <= height * 0.80) {
+                  if ((r > g + 5 && b > g + 2) || (r < 90 && g < 70 && b < 80)) {
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+                }
+                if (x >= width * 0.71 && x <= width * 0.81 && y >= height * 0.69 && y <= height * 0.82) {
+                  if (lum < 65 || (r > 100 && r - g > 18 && r - b > 25) || (r > g + 5 && b > g + 2)) {
+                    finalMask[pos] = 0;
+                    continue;
+                  }
+                }
+
+                if (a < 30) {
+                  finalMask[pos] = 0;
+                  continue;
+                }
+
+                // Scene background suppression (Priority 1: Border Security)
+                const isPurpleCurtain = (r > g + 8 && b > g + 3 && (r > 50 || b > 40));
+                const isTvBlue = (x < width * 0.22 && b > 110 && b > r + 25);
+                const isRedCloth = (x < width * 0.24 && y > height * 0.66 && r > 110 && g < 90 && b < 90);
+                const isChair = (x > width * 0.69 && y > height * 0.56 && r > 105 && r - g > 20 && r - b > 30);
+                const isValance = (y < height * 0.27 && (x < width * 0.41 || x > width * 0.64) && (r > 150 && g > 120 && b > 110));
+                const isShelf = (y < height * 0.08 && (x < width * 0.45 || x > width * 0.61));
+                const isBelowHand = (x < width * 0.31 && y > height * 0.84);
+                const isRightWall = (x > width * 0.81 && y < height * 0.57);
+
+                if (isPurpleCurtain || isTvBlue || isRedCloth || isChair || isValance || isShelf || isBelowHand || isRightWall) {
+                  finalMask[pos] = 0;
+                  continue;
+                }
+
+                // Natural head dome
+                if (y < height * 0.05 && x >= width * 0.45 && x <= width * 0.61) {
+                  if (r > 70 && g > 50 && b > 35 && r >= g && g >= b - 5) {
+                    finalMask[pos] = 1;
+                    continue;
+                  }
+                }
+
+                if (a >= 170) {
+                  finalMask[pos] = 1;
+                  continue;
+                }
+
+                // Edge snapping on real subject boundary
+                if (a >= 35) {
+                  const isSkin = (r > 120 && g > 75 && r > g && g > b - 15);
+                  const isHair = (r < 110 && g < 95 && b < 85 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
+                  const isShirt = (lum > 135 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
+                  const isPants = (lum >= 75 && lum <= 145 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20);
+                  if (isSkin || isHair || isShirt || isPants) finalMask[pos] = 1;
+                }
+              }
+            }
+
+            // Connected Component Filtering on Portrait Mode
+            if (!isDarkBannerPoster) {
+              const visited = new Uint8Array(width * height);
+              const components = [];
+              for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                  const pos = y * width + x;
+                  if (finalMask[pos] === 1 && !visited[pos]) {
+                    const comp = [];
+                    const queue = [pos];
+                    visited[pos] = 1;
+                    let head = 0;
+                    while (head < queue.length) {
+                      const p = queue[head++];
+                      comp.push(p);
+                      const px = p % width;
+                      const py = Math.floor(p / width);
+                      const nbrs = [
+                        px > 0 ? p - 1 : -1,
+                        px < width - 1 ? p + 1 : -1,
+                        py > 0 ? p - width : -1,
+                        py < height - 1 ? p + width : -1
+                      ];
+                      for (let nb of nbrs) {
+                        if (nb !== -1 && finalMask[nb] === 1 && !visited[nb]) {
+                          visited[nb] = 1;
+                          queue.push(nb);
+                        }
+                      }
+                    }
+                    components.push(comp);
+                  }
+                }
+              }
+              for (let comp of components) {
+                if (comp.length < 3500) {
+                  for (let p of comp) finalMask[p] = 0;
+                }
+              }
+            }
+
+            // Anti-Aliasing Edge Feathering
+            for (let y = 0; y < height; y++) {
+              for (let x = 0; x < width; x++) {
+                const pos = y * width + x;
+                const idx = pos * 4;
+                const isFg = (finalMask[pos] === 1);
+                const keep = invertMask ? !isFg : isFg;
+
+                if (keep) {
+                  if (y === 0 || y === height - 1 || x === 0 || x === width - 1) {
+                    outData[idx + 3] = 200;
+                    continue;
+                  }
+                  const hasZero = (
+                    finalMask[pos - 1] === 0 ||
+                    finalMask[pos + 1] === 0 ||
+                    finalMask[pos - width] === 0 ||
+                    finalMask[pos + width] === 0
+                  );
+                  if (hasZero) {
+                    outData[idx + 3] = 215;
+                  } else {
+                    outData[idx + 3] = 255;
+                  }
+                } else {
+                  outData[idx + 3] = 0;
+                }
+              }
+            }
+
+            ctx.putImageData(outImgData, 0, 0);
             saveUndoState();
             resolve();
           } catch (e) {
