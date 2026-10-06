@@ -247,55 +247,285 @@
       pointer-events: none;
       z-index: 999999;
     }
+  
+    /* ========================================================= */
+    /* Premium Section-Type Navigation & Dropdown Popovers       */
+    /* ========================================================= */
+    .nav-dropdown-wrapper {
+      position: relative;
+    }
+    .nav-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .dark .nav-dropdown-trigger {
+      color: #cbd5e1;
+    }
+    .nav-dropdown-trigger:hover,
+    .nav-dropdown-wrapper:hover .nav-dropdown-trigger {
+      background-color: rgba(241, 245, 249, 0.9);
+      color: #0f172a;
+    }
+    .dark .nav-dropdown-trigger:hover,
+    .dark .nav-dropdown-wrapper:hover .nav-dropdown-trigger {
+      background-color: rgba(30, 41, 59, 0.9);
+      color: #ffffff;
+    }
+    .nav-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      width: 19rem;
+      padding-top: 0.5rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s;
+      z-index: 100;
+    }
+    .nav-dropdown-wrapper:hover .nav-dropdown-menu,
+    .nav-dropdown-wrapper:focus-within .nav-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-chevron {
+      width: 0.75rem;
+      height: 0.75rem;
+      color: #94a3b8;
+      transition: transform 0.25s ease;
+    }
+    .nav-dropdown-wrapper:hover .nav-chevron {
+      transform: rotate(180deg);
+      color: #0f172a;
+    }
+    .dark .nav-dropdown-wrapper:hover .nav-chevron {
+      color: #ffffff;
+    }
+    .nav-dropdown-panel {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 1.25rem;
+      padding: 0.625rem;
+      box-shadow: 0 20px 35px -8px rgba(15, 23, 42, 0.12), 0 10px 15px -5px rgba(15, 23, 42, 0.06);
+    }
+    .dark .nav-dropdown-panel {
+      background: #0f172a;
+      border-color: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.65), 0 10px 15px -5px rgba(0, 0, 0, 0.5);
+    }
+    .nav-dropdown-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.625rem;
+      border-radius: 0.625rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #1e293b;
+      text-decoration: none;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    }
+    .dark .nav-dropdown-item {
+      color: #f1f5f9;
+    }
+    .nav-dropdown-item:hover {
+      background-color: #f8fafc;
+      color: #0f172a;
+      transform: translateX(2px);
+    }
+    .dark .nav-dropdown-item:hover {
+      background-color: #1e293b;
+      color: #ffffff;
+      transform: translateX(2px);
+    }
+    .scroll-mt-header {
+      scroll-margin-top: 6.5rem;
+    }
+
   </style>
 </head>
 <body class="bg-[#fafbfc] dark:bg-[#070b14] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-slate-900 selection:text-white transition-colors duration-200">
 
   <!-- Top Navigation Bar -->
-  <header class="border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-8">
-        <a href="/" class="flex items-center gap-2.5 group">
-          <picture>
-            <source srcset="logo.webp" type="image/webp">
-            <img src="logo.png" alt="Zenith Growth Logo" width="32" height="32" class="h-8 w-8 rounded-lg object-contain shadow-xs" fetchpriority="high" decoding="async">
-          </picture>
-          <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
-            Zenith<span class="text-slate-500 font-normal">/</span>Growth
-          </span>
-        </a>
-        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-400">
-          <a href="video-editor.html" class="text-emerald-700 dark:text-emerald-400 font-bold hover:text-emerald-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">NEW</span>Video Editor</a>
-          <a href="video-downloader.html" class="text-indigo-700 dark:text-indigo-400 font-bold hover:text-indigo-800 flex items-center gap-1.5">Video Downloader</a>
-          <a href="ocr.html" class="text-indigo-700 dark:text-indigo-400 font-bold hover:text-indigo-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-[10px] font-bold">NEW</span>OCR Text</a>
-          <a href="metadata-remover.html" class="text-purple-700 dark:text-purple-400 font-bold hover:text-purple-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-[10px] font-bold">NEW</span>AI Metadata</a>
-          <a href="bg-remover.html" class="hover:text-slate-950 dark:hover:text-white transition">Background Remover</a>
-          <a href="compress-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Compress</a>
-          <a href="unlock-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Unlock</a>
-          <a href="sign-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Sign</a>
-          <a href="merge-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Merge</a>
-          <a href="split-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Split</a>
-        </nav>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          100% Client-Side WASM
+    <!-- Premium Section-Type Navigation Bar -->
+  <header class="border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#070b14]/95 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Left: Brand Logo & Identity -->
+      <a href="/" class="flex items-center gap-3 group">
+        <picture>
+          <source srcset="logo.webp" type="image/webp">
+          <img src="logo.png" alt="Zenith Growth Logo" width="38" height="38" class="h-9 w-9 rounded-xl object-contain shadow-xs group-hover:scale-105 transition transform duration-200" fetchpriority="high" decoding="async">
+        </picture>
+        <span class="text-lg font-black tracking-tight text-slate-950 dark:text-white flex items-center gap-1.5">
+          Zenith<span class="text-emerald-600 font-extrabold">Growth</span>
         </span>
-        <button onclick="toggleDarkMode()" id="theme_toggle_btn" aria-label="Toggle dark or light theme" title="Toggle Dark/Light Mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
+      </a>
+
+      <!-- Center: Clean Section-Type Navigation Bar -->
+      <nav class="hidden lg:flex items-center gap-2 font-medium" aria-label="Tool suite categories">
+        
+        <!-- SECTION 1: PDF Suite -->
+        <div class="nav-dropdown-wrapper">
+          <a href="#section_pdf" class="nav-dropdown-trigger">
+            <span class="text-base">📄</span>
+            <span class="font-bold text-slate-900 dark:text-white">PDF Suite</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono font-bold">11</span>
+            <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-panel space-y-1">
+              <a href="compress-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Compress PDF</span>
+                <span class="text-[10px] font-mono text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">-80% Size</span>
+              </a>
+              <a href="merge-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Merge PDF</span>
+                <span class="text-[10px] text-slate-400">Combine Docs</span>
+              </a>
+              <a href="split-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Split PDF</span>
+                <span class="text-[10px] text-slate-400">Extract Pages</span>
+              </a>
+              <a href="sign-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Sign PDF</span>
+                <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded">E-Sign</span>
+              </a>
+              <a href="unlock-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Unlock &amp; Protect</span>
+                <span class="text-[10px] text-slate-400">Security</span>
+              </a>
+              <a href="rotate-pdf.html" class="nav-dropdown-item">
+                <span class="font-bold">Rotate PDF</span>
+                <span class="text-[10px] text-slate-400">Orientation</span>
+              </a>
+              <div class="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800 text-center">
+                <a href="#section_pdf" class="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline">View All 11 PDF Utilities ↓</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Video & Media -->
+        <div class="nav-dropdown-wrapper">
+          <a href="#section_video" class="nav-dropdown-trigger">
+            <span class="text-base">🎬</span>
+            <span class="font-bold text-slate-900 dark:text-white">Video &amp; Media</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-mono font-bold">3</span>
+            <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-panel space-y-1">
+              <a href="video-editor.html" class="nav-dropdown-item">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span class="font-bold">Video Editor &amp; Studio</span>
+                </div>
+                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded">60 FPS</span>
+              </a>
+              <a href="video-downloader.html" class="nav-dropdown-item">
+                <span class="font-bold">Video Downloader</span>
+                <span class="text-[10px] text-indigo-600 font-bold bg-indigo-50 dark:bg-indigo-900/40 px-1.5 py-0.5 rounded">4K / MP3</span>
+              </a>
+              <a href="remove-watermark.html" class="nav-dropdown-item">
+                <span class="font-bold">Remove Watermark</span>
+                <span class="text-[10px] text-slate-400">Eraser</span>
+              </a>
+              <div class="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800 text-center">
+                <a href="#section_video" class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline">Explore Video Studio ↓</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: AI Utilities -->
+        <div class="nav-dropdown-wrapper">
+          <a href="#section_ai" class="nav-dropdown-trigger">
+            <span class="text-base">⚡</span>
+            <span class="font-bold text-slate-900 dark:text-white">AI Utilities</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 font-mono font-bold">3</span>
+            <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-panel space-y-1">
+              <a href="bg-remover.html" class="nav-dropdown-item">
+                <span class="font-bold">Background Remover</span>
+                <span class="text-[10px] font-bold text-purple-600 bg-purple-50 dark:bg-purple-900/40 px-1.5 py-0.5 rounded">1-Click AI</span>
+              </a>
+              <a href="ocr.html" class="nav-dropdown-item">
+                <span class="font-bold">OCR Text Extractor</span>
+                <span class="text-[10px] text-slate-400">Scans/PDF</span>
+              </a>
+              <a href="metadata-remover.html" class="nav-dropdown-item">
+                <span class="font-bold">AI Metadata Sanitizer</span>
+                <span class="text-[10px] text-slate-400">Exif/Prompts</span>
+              </a>
+              <div class="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800 text-center">
+                <a href="#section_ai" class="text-[11px] font-bold text-purple-600 dark:text-purple-400 hover:underline">Explore AI Tools ↓</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Business & Dev -->
+        <div class="nav-dropdown-wrapper">
+          <a href="#section_business" class="nav-dropdown-trigger">
+            <span class="text-base">💼</span>
+            <span class="font-bold text-slate-900 dark:text-white">Business &amp; Dev</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-mono font-bold">2</span>
+            <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-panel space-y-1">
+              <a href="invoice.html" class="nav-dropdown-item">
+                <span class="font-bold">Invoice Maker</span>
+                <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded">7 Designs</span>
+              </a>
+              <a href="json-formatter.html" class="nav-dropdown-item">
+                <span class="font-bold">JSON Formatter</span>
+                <span class="text-[10px] text-slate-400">Validator</span>
+              </a>
+              <div class="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800 text-center">
+                <a href="#section_business" class="text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline">Explore Business Tools ↓</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </nav>
+
+      <!-- Right: Privacy Badge & Action Controls -->
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          100% In-Browser Privacy
+        </span>
+        <button onclick="toggleDarkMode()" id="theme_toggle_btn" aria-label="Toggle dark or light theme" title="Toggle Dark/Light Mode" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
           <svg id="theme_icon_sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
           <svg id="theme_icon_moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
-        <a href="bg-remover.html" class="px-3.5 py-1.5 rounded-lg bg-slate-900 dark:bg-indigo-600 dark:hover:bg-indigo-500 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
-          Open Tools
+        <a href="#section_pdf" class="hidden sm:inline-flex px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-xs font-bold transition shadow-xs">
+          Browse All Tools
         </a>
       </div>
+
     </div>
   </header>
 
   <!-- Hero Section with Ambient Glow -->
-  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 w-full relative">
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 sm:pt-20 sm:pb-28 w-full relative">
     <!-- Ambient Radial Mesh Glow -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-80 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/15 via-emerald-500/8 to-transparent pointer-events-none -z-10 blur-2xl"></div>
 
@@ -333,7 +563,7 @@
     <canvas id="sprinkles_canvas"></canvas>
 
     <!-- Enhanced Category Filter Pills with Sprinkles & Live Badges -->
-    <div class="mb-8">
+    <div class="mb-12">
       <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold" id="filter_pills">
         <button onclick="filterCategory('all', event)" id="pill_all" aria-label="Show all 19 utilities" class="filter-btn active px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white shadow-xs border border-transparent flex items-center gap-1.5">
           <span>✨ All Utilities</span>
@@ -390,7 +620,7 @@
     <!-- ========================================== -->
     <!-- CATEGORY 1: PDF & DOCUMENT UTILITIES       -->
     <!-- ========================================== -->
-    <section id="section_pdf" class="category-section mb-14" data-category="pdf">
+    <section id="section_pdf" class="category-section mb-24 scroll-mt-header" data-category="pdf">
       <div class="category-header flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-5 border-b border-slate-200/80 dark:border-slate-800">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/80 border border-blue-200/80 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-sm">
@@ -409,7 +639,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="grid_pdf">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="grid_pdf">
         
         <!-- PDF Tool 1: Compress PDF -->
         <a href="compress-pdf.html" data-category="pdf optimize popular client wasm" data-keywords="compress pdf shrink size reduce mb kb dpi lossless" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
@@ -640,7 +870,7 @@
     <!-- ========================================== -->
     <!-- CATEGORY 2: VIDEO & MEDIA TOOLS            -->
     <!-- ========================================== -->
-    <section id="section_video" class="category-section mb-14" data-category="video">
+    <section id="section_video" class="category-section mb-24 scroll-mt-header" data-category="video">
       <div class="category-header flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-5 border-b border-slate-200/80 dark:border-slate-800">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm">
@@ -659,7 +889,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4" id="grid_video">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="grid_video">
 
         <!-- Video Tool 1: Zenith Video Editor & Studio -->
         <a href="video-editor.html" data-category="video media popular client wasm" data-keywords="video editor trim cut clip color filters sprinkles sparkles particles watermark remover tiktok reels shorts studio" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-emerald-200/80 dark:border-emerald-900/60 shadow-emerald-500/5">
@@ -733,7 +963,7 @@
     <!-- ========================================== -->
     <!-- CATEGORY 3: AI & CREATIVE UTILITIES        -->
     <!-- ========================================== -->
-    <section id="section_ai" class="category-section mb-14" data-category="ai">
+    <section id="section_ai" class="category-section mb-24 scroll-mt-header" data-category="ai">
       <div class="category-header flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-5 border-b border-slate-200/80 dark:border-slate-800">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/80 border border-purple-200/80 dark:border-purple-800 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-sm">
@@ -752,7 +982,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4" id="grid_ai">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="grid_ai">
 
         <!-- AI Tool 1: Smart Background Remover -->
         <a href="bg-remover.html" data-category="ai graphics popular client wasm" data-keywords="remove background transparent png erase cutout ai subject contour" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-emerald-200/80 dark:border-emerald-900/60 shadow-emerald-500/5">
@@ -829,7 +1059,7 @@
     <!-- ========================================== -->
     <!-- CATEGORY 4: BUSINESS & DEVELOPER UTILITIES -->
     <!-- ========================================== -->
-    <section id="section_business" class="category-section mb-14" data-category="business">
+    <section id="section_business" class="category-section mb-24 scroll-mt-header" data-category="business">
       <div class="category-header flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-5 border-b border-slate-200/80 dark:border-slate-800">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200/80 dark:border-cyan-800 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-bold text-sm">
@@ -848,7 +1078,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4" id="grid_business">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6" id="grid_business">
 
         <!-- Business Tool 1: Invoice Maker -->
         <a href="invoice.html" data-category="business client wasm" data-keywords="invoice maker billing receipt generator tax calculate business freelance accounting" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group">
@@ -1073,10 +1303,7 @@
         </details>
       </div>
     </section>
-    <!-- AdSense High-CTR Banner Placement (Clean minimal container) -->
-    <div class="w-full my-8 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 flex items-center justify-center text-xs text-slate-600 dark:text-slate-300 font-mono tracking-wider min-h-[90px]">
-      <span>Google AdSense Responsive Unit</span>
-    </div>
+    
   </main>
 
   <!-- Clean Minimal Footer -->
