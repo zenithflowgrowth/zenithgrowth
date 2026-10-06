@@ -211,8 +211,10 @@
           </span>
         </a>
         <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-400">
-          <a href="/video-editor" class="text-emerald-700 dark:text-emerald-400 font-bold hover:text-emerald-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">NEW</span>Video Editor</a>
-          <a href="/video-downloader" class="text-indigo-700 dark:text-indigo-400 font-bold hover:text-indigo-800 flex items-center gap-1.5">Video Downloader</a>
+          <a href="video-editor.html" class="text-emerald-700 dark:text-emerald-400 font-bold hover:text-emerald-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">NEW</span>Video Editor</a>
+          <a href="video-downloader.html" class="text-indigo-700 dark:text-indigo-400 font-bold hover:text-indigo-800 flex items-center gap-1.5">Video Downloader</a>
+          <a href="ocr.html" class="text-indigo-700 dark:text-indigo-400 font-bold hover:text-indigo-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-[10px] font-bold">NEW</span>OCR Text</a>
+          <a href="metadata-remover.html" class="text-purple-700 dark:text-purple-400 font-bold hover:text-purple-800 flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-[10px] font-bold">NEW</span>AI Metadata</a>
           <a href="bg-remover.html" class="hover:text-slate-950 dark:hover:text-white transition">Background Remover</a>
           <a href="compress-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Compress</a>
           <a href="unlock-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Unlock</a>
@@ -279,9 +281,9 @@
     <!-- Enhanced Category Filter Pills with Sprinkles & Live Badges -->
     <div class="mb-8">
       <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold" id="filter_pills">
-        <button onclick="filterCategory('all', event)" id="pill_all" aria-label="Show all 16 utilities" class="filter-btn active px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white shadow-xs border border-transparent flex items-center gap-1.5">
+        <button onclick="filterCategory('all', event)" id="pill_all" aria-label="Show all 18 utilities" class="filter-btn active px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white shadow-xs border border-transparent flex items-center gap-1.5">
           <span>✨ All Utilities</span>
-          <span class="pill-badge text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 font-mono">16</span>
+          <span class="pill-badge text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 font-mono">18</span>
         </button>
         <button onclick="filterCategory('popular', event)" id="pill_popular" aria-label="Show popular utilities" class="filter-btn px-3.5 py-2 rounded-xl bg-white dark:bg-[#0f172a] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-slate-800 shadow-2xs flex items-center gap-1.5">
           <span>🔥 Popular</span>
@@ -293,7 +295,7 @@
         </button>
         <button onclick="filterCategory('graphics', event)" id="pill_graphics" aria-label="Show graphics and AI utilities" class="filter-btn px-3.5 py-2 rounded-xl bg-white dark:bg-[#0f172a] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-slate-800 shadow-2xs flex items-center gap-1.5">
           <span>🖼️ Graphics &amp; AI</span>
-          <span class="pill-badge text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-mono font-bold">3</span>
+          <span class="pill-badge text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-mono font-bold">4</span>
         </button>
         <button onclick="filterCategory('optimize', event)" id="pill_optimize" aria-label="Show compress and convert utilities" class="filter-btn px-3.5 py-2 rounded-xl bg-white dark:bg-[#0f172a] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-slate-800 shadow-2xs flex items-center gap-1.5">
           <span>⚡ Compress &amp; Convert</span>
@@ -329,7 +331,7 @@
 
         <div class="flex items-center gap-3">
           <span class="text-[11px] font-mono text-slate-700 dark:text-slate-300">
-            Showing <strong class="text-slate-900 dark:text-white font-bold" id="visible_tools_count">16</strong> of 16 tools
+            Showing <strong class="text-slate-900 dark:text-white font-bold" id="visible_tools_count">17</strong> of 17 tools
           </span>
           <button id="reset_filter_btn" onclick="resetAllFilters(event)" aria-label="Reset all search and category filters" class="hidden text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline items-center gap-1 transition">
             ↺ Reset
@@ -402,7 +404,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-16" id="tools_container">
 
       <!-- Tool: Zenith Video Editor & Studio -->
-      <a href="/video-editor" data-category="media" data-keywords="video editor trim cut clip color filters sprinkles sparkles particles watermark remover tiktok reels shorts studio" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-emerald-200/80 dark:border-emerald-900/60 shadow-emerald-500/5">
+      <a href="video-editor.html" data-category="media" data-keywords="video editor trim cut clip color filters sprinkles sparkles particles watermark remover tiktok reels shorts studio" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-emerald-200/80 dark:border-emerald-900/60 shadow-emerald-500/5">
         <div>
           <div class="flex items-center justify-between mb-3">
             <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition">
@@ -425,7 +427,7 @@
       </a>
 
       <!-- Tool: Universal Video Downloader -->
-      <a href="/video-downloader" data-category="media" data-keywords="video downloader youtube instagram tiktok reels shorts download mp3 mp4 twitter reddit facebook pinterest audio" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-indigo-200/80 dark:border-indigo-900/60 shadow-indigo-500/5">
+      <a href="video-downloader.html" data-category="media" data-keywords="video downloader youtube instagram tiktok reels shorts download mp3 mp4 twitter reddit facebook pinterest audio" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-indigo-200/80 dark:border-indigo-900/60 shadow-indigo-500/5">
         <div>
           <div class="flex items-center justify-between mb-3">
             <div class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800 flex items-center justify-center text-indigo-700 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition">
@@ -444,6 +446,52 @@
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-indigo-800 dark:text-indigo-300 group-hover:text-indigo-900">
           <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">1000+ Sites</span>
           <span>Launch Downloader →</span>
+        </div>
+      </a>
+
+      <!-- Tool: Image to Text (OCR) -->
+      <a href="ocr.html" data-category="graphics organize client wasm new" data-keywords="ocr image to text photo extract text receipt screenshot scanned pdf word converter" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-indigo-200/80 dark:border-indigo-900/60 shadow-indigo-500/5">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800 flex items-center justify-center text-indigo-700 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <span class="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 font-bold border border-indigo-200/60 dark:border-indigo-700/60">
+              ⚡ Neural WASM
+            </span>
+          </div>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition flex items-center gap-1.5">
+            Image to Text (OCR)
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </h3>
+          <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">Extract text from images, receipts, and scanned documents locally. 100% private with zero server uploads.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-indigo-800 dark:text-indigo-300 group-hover:text-indigo-900">
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Tesseract WASM</span>
+          <span>Extract Text →</span>
+        </div>
+      </a>
+
+      <!-- Tool: AI Metadata & EXIF Remover -->
+      <a href="metadata-remover.html" data-category="graphics organize client wasm new" data-keywords="ai metadata remover strip prompts stable diffusion comfyui midjourney exif gps c2pa privacy cleaner clean png jpg" class="tool-card card-surface p-5 rounded-xl flex flex-col justify-between group border-purple-200/80 dark:border-purple-900/60 shadow-purple-500/5">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-lg bg-purple-50 dark:bg-purple-950/80 border border-purple-200/80 dark:border-purple-800 flex items-center justify-center text-purple-700 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <span class="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 font-bold border border-purple-200/60 dark:border-purple-700/60">
+              🛡️ AI &amp; EXIF Purge
+            </span>
+          </div>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition flex items-center gap-1.5">
+            AI Metadata Remover
+            <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+          </h3>
+          <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">Strip Stable Diffusion/ComfyUI prompts, C2PA Content Credentials, and camera GPS geotags. 100% in-browser.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-purple-800 dark:text-purple-300 group-hover:text-purple-900">
+          <span class="font-mono text-[10px] text-slate-600 dark:text-slate-300">Binary Purge</span>
+          <span>Clean Metadata →</span>
         </div>
       </a>
 
@@ -705,6 +753,8 @@
         <span class="font-mono text-[11px] text-slate-600 dark:text-slate-300">100% In-Browser Computation</span>
       </div>
       <div class="flex items-center gap-6 font-medium">
+        <a href="about.html" class="hover:text-slate-900 dark:hover:text-white transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 dark:hover:text-white transition">Contact</a>
         <a href="privacy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
         <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</a>
         <a href="sitemap.xml" class="hover:text-slate-900 dark:hover:text-white transition">Sitemap</a>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Theme Initialization (Prevents flash of wrong theme) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6GCW9T0X');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free AI Metadata & EXIF Remover - Strip Prompts, GPS & C2PA In-Browser - Zenith Growth</title>
+  <meta name="description" content="100% private in-browser AI metadata and EXIF stripper. Remove Midjourney, Stable Diffusion, ComfyUI prompts, C2PA Content Credentials, and camera GPS coordinates with zero server uploads.">
+  <meta name="keywords" content="ai metadata remover, remove stable diffusion prompt, strip exif data online, remove c2pa content credentials, clean image metadata, remove gps from photo, privacy image cleaner, zenith growth">
+  <link rel="canonical" href="https://zenithgrowth.tech/metadata-remover.html">
+
+  <!-- OpenGraph Meta Tags -->
+  <meta property="og:title" content="Free AI Metadata & EXIF Remover - Zenith Growth">
+  <meta property="og:description" content="Remove AI generation prompts (Stable Diffusion, Midjourney, ComfyUI), C2PA credentials, and camera GPS geotags. 100% private in-browser cleaner.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/metadata-remover.html">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- JSZip for 1-Click Batch Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .drag-active {
+      border-color: #8b5cf6 !important;
+      background-color: rgba(139, 92, 246, 0.08) !important;
+      transform: scale(1.01);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.2) !important;
+    }
+    .dark .card-surface {
+      background: #0f172a;
+      border: 1px solid rgba(30, 41, 59, 0.9);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    }
+    .card-surface {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+    pre {
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body class="bg-[#fafbfc] dark:bg-[#070b14] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-purple-600 selection:text-white transition-colors duration-200">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <img src="logo.png" alt="Zenith Growth" class="h-8 w-auto rounded-lg object-contain shadow-xs">
+          <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
+            Zenith<span class="text-slate-400 font-normal">/</span>Growth
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-400">
+          <a href="metadata-remover.html" class="text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1">
+            <span class="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[10px]">NEW</span>
+            AI Metadata Remover
+          </a>
+          <a href="ocr.html" class="hover:text-slate-950 dark:hover:text-white transition">Image to Text (OCR)</a>
+          <a href="video-editor.html" class="hover:text-slate-950 dark:hover:text-white transition">Video Studio</a>
+          <a href="video-downloader.html" class="hover:text-slate-950 dark:hover:text-white transition">Video Downloader</a>
+          <a href="bg-remover.html" class="hover:text-slate-950 dark:hover:text-white transition">Background Remover</a>
+          <a href="compress-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Compress PDF</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          100% In-Browser Privacy
+        </span>
+        <button onclick="toggleDarkMode()" id="theme_toggle_btn" title="Toggle Dark/Light Mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
+          <svg id="theme_icon_sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme_icon_moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <a href="/" class="px-3.5 py-1.5 rounded-lg bg-slate-900 dark:bg-purple-600 dark:hover:bg-purple-500 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
+          All Tools
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full relative">
+    
+    <!-- Ambient Radial Mesh Glow -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/15 via-indigo-500/10 to-transparent pointer-events-none -z-10 blur-3xl"></div>
+
+    <div class="text-center max-w-2xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-[11px] font-mono text-slate-600 dark:text-slate-300 mb-4 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+        Zero Server Uploads • In-Browser Sanitizer • $0 Cloud Cost
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white leading-tight mb-3">
+        Remove AI Metadata, EXIF & GPS From Images
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+        Strip Stable Diffusion & ComfyUI generation prompts, Midjourney tags, C2PA Content Credentials, and camera GPS geotags. 100% private in-browser sanitation—your images never leave your computer.
+      </p>
+    </div>
+
+    <!-- Options & Quick Actions Bar -->
+    <div class="card-surface rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⚙️</span> Cleaning Mode:
+        </span>
+        <label class="inline-flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300">
+          <input type="radio" name="clean_mode" value="deep" checked class="text-purple-600 focus:ring-purple-500">
+          <span>Canvas Deep Clean <span class="text-[10px] text-purple-600 dark:text-purple-400 font-mono">(Recommended: 100% Guaranteed Strip)</span></span>
+        </label>
+        <label class="inline-flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300">
+          <input type="radio" name="clean_mode" value="lossless" class="text-purple-600 focus:ring-purple-500">
+          <span>Lossless Chunk Purge <span class="text-[10px] text-slate-400 font-mono">(Bit-Exact Pixels)</span></span>
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn_sample_test" onclick="loadSampleAiImage()" class="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-bold text-xs hover:bg-purple-100 dark:hover:bg-purple-900 transition flex items-center gap-1.5">
+          <span>⚡</span> Try with Sample AI Image
+        </button>
+      </div>
+    </div>
+
+    <!-- Drag & Drop Upload Zone -->
+    <div id="drop_zone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl p-8 sm:p-12 text-center transition-all bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm cursor-pointer hover:border-purple-500 dark:hover:border-purple-400 group relative mb-8">
+      <input type="file" id="file_input" accept="image/png,image/jpeg,image/webp,image/avif" multiple class="hidden" onchange="handleFileSelect(this.files)">
+      
+      <div class="flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-16 h-16 rounded-2xl bg-purple-50 dark:bg-purple-950/80 border border-purple-200/80 dark:border-purple-800/80 flex items-center justify-center text-purple-600 dark:text-purple-400 text-3xl mb-4 group-hover:scale-105 group-hover:bg-purple-600 group-hover:text-white transition duration-200 shadow-sm">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1">
+          Drop your AI or camera images here, or <span class="text-purple-600 dark:text-purple-400 underline decoration-purple-400/50">browse files</span>
+        </h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-3">
+          Supports PNG, JPG, JPEG, and WEBP. Multi-file batch upload supported.
+        </p>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-[10px] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+          Tip: You can select multiple images at once for instant batch cleaning
+        </span>
+      </div>
+    </div>
+
+    <!-- Batch Overview Bar (Shown when multiple files are uploaded) -->
+    <div id="batch_actions_bar" class="hidden card-surface rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-3 border-purple-500/30">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">📦</span>
+        <div>
+          <span id="batch_count_text" class="font-bold text-xs text-slate-900 dark:text-white">0 Images Loaded</span>
+          <span class="text-[11px] text-slate-500 block">All metadata will be stripped upon export</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="downloadAllCleanedZip()" id="btn_download_zip" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95">
+          <span>⚡</span> Download All Cleaned (ZIP)
+        </button>
+        <button onclick="resetAllFiles()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs transition">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- Processed Items Container -->
+    <div id="items_container" class="space-y-6 mb-12"></div>
+
+    <!-- Monetization Partner Card: Enterprise Invoicing & Documents -->
+    <div class="card-surface rounded-2xl p-5 mb-12 border-purple-500/20 bg-gradient-to-r from-purple-500/5 via-indigo-500/5 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-lg flex-shrink-0">
+          🛡️
+        </div>
+        <div>
+          <h4 class="font-bold text-sm text-slate-950 dark:text-white">Need Secure Document & PDF Tools for Work?</h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Compress, sign, and merge sensitive business documents completely client-side with zero cloud risk.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="compress-pdf.html" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition">
+          Compress PDF
+        </a>
+        <a href="invoice.html" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-xs transition">
+          Create Invoices →
+        </a>
+      </div>
+    </div>
+
+    <!-- FAQ & Privacy Explainer -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">🤖</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">What AI Metadata Is Removed?</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Strips prompts, negative prompts, model hashes, seeds, steps, sampler configs (Stable Diffusion, ComfyUI, Automatic1111, NovelAI) and Adobe C2PA Content Credentials.</p>
+      </div>
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">📍</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">Camera GPS & EXIF Privacy</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Removes GPS latitude/longitude, camera serial numbers, iPhone/Android device models, timestamps, and Photoshop/Lightroom editing history tags.</p>
+      </div>
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">🔒</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">100% In-Browser Privacy</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Images are parsed and cleaned directly in your computer's RAM using JavaScript binary decoders and HTML5 canvas. Zero server uploads forever.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img src="logo.png" alt="Zenith Growth" class="h-6 w-auto rounded object-contain">
+        <span>&copy; 2026 Zenith Growth. All rights reserved. 100% Private In-Browser Suite.</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs font-semibold">
+        <a href="privacy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</a>
+        <a href="/" class="hover:text-slate-900 dark:hover:text-white transition">All Tools</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // State
+    let fileEntries = [];
+
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Drag and Drop Handling
+    const dropZone = document.getElementById('drop_zone');
+    const fileInput = document.getElementById('file_input');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('drag-active');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('drag-active');
+      }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      if (dt.files && dt.files.length > 0) {
+        handleFileSelect(dt.files);
+      }
+    });
+
+    // Paste from Clipboard
+    window.addEventListener('paste', (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      const files = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const blob = items[i].getAsFile();
+          if (blob) files.push(blob);
+        }
+      }
+      if (files.length > 0) {
+        handleFileSelect(files);
+      }
+    });
+
+    // Handle File Selection
+    async function handleFileSelect(files) {
+      if (!files || files.length === 0) return;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        await processSingleFile(file);
+      }
+      updateBatchUI();
+    }
+
+    // Binary Metadata Parser for PNG, JPEG, WEBP
+    async function inspectMetadata(file) {
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      const metadata = {
+        hasAiPrompt: false,
+        aiPrompts: [],
+        hasGps: false,
+        gpsData: null,
+        hasExif: false,
+        exifData: [],
+        hasC2pa: false,
+        chunksDetected: [],
+        rawText: []
+      };
+
+      // 1. PNG Parser
+      if (bytes.length > 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) {
+        let offset = 8;
+        const decoder = new TextDecoder('utf-8');
+        const latinDecoder = new TextDecoder('iso-8859-1');
+
+        while (offset < bytes.length - 8) {
+          const length = (bytes[offset] << 24) | (bytes[offset + 1] << 16) | (bytes[offset + 2] << 8) | bytes[offset + 3];
+          const type = String.fromCharCode(bytes[offset + 4], bytes[offset + 5], bytes[offset + 6], bytes[offset + 7]);
+          const dataStart = offset + 8;
+          const dataEnd = dataStart + length;
+
+          if (dataEnd > bytes.length) break;
+
+          metadata.chunksDetected.push(type);
+
+          if (type === 'tEXt' || type === 'iTXt' || type === 'zTXt') {
+            try {
+              const chunkBytes = bytes.slice(dataStart, dataEnd);
+              let text = '';
+              if (type === 'tEXt') {
+                text = latinDecoder.decode(chunkBytes);
+              } else {
+                text = decoder.decode(chunkBytes);
+              }
+
+              metadata.rawText.push(text);
+
+              const lower = text.toLowerCase();
+              if (
+                lower.includes('parameters') ||
+                lower.includes('negative prompt') ||
+                lower.includes('steps:') ||
+                lower.includes('sampler:') ||
+                lower.includes('cfg scale:') ||
+                lower.includes('seed:') ||
+                lower.includes('comfyui') ||
+                lower.includes('workflow') ||
+                lower.includes('model_name') ||
+                lower.includes('novelai') ||
+                lower.includes('midjourney') ||
+                lower.includes('prompt')
+              ) {
+                metadata.hasAiPrompt = true;
+                metadata.aiPrompts.push(text);
+              }
+            } catch (e) {
+              console.warn("Chunk decode error:", e);
+            }
+          } else if (type === 'eXIf') {
+            metadata.hasExif = true;
+            metadata.exifData.push("Raw PNG eXIf chunk present");
+          } else if (type === 'jumb') {
+            metadata.hasC2pa = true;
+            metadata.aiPrompts.push("Adobe / C2PA Content Credentials (JUMBF Manifest)");
+          }
+
+          offset += 12 + length; // 4 length + 4 type + length data + 4 crc
+        }
+      }
+
+      // 2. JPEG Parser
+      else if (bytes.length > 2 && bytes[0] === 0xFF && bytes[1] === 0xD8) {
+        let offset = 2;
+        const decoder = new TextDecoder('iso-8859-1');
+
+        while (offset < bytes.length - 4) {
+          if (bytes[offset] !== 0xFF) {
+            offset++;
+            continue;
+          }
+
+          const marker = bytes[offset + 1];
+          if (marker === 0xDA || marker === 0xD9) break; // SOS or EOI
+
+          const length = (bytes[offset + 2] << 8) | bytes[offset + 3];
+          const segmentData = bytes.slice(offset + 4, offset + 2 + length);
+
+          if (marker === 0xE1) { // APP1 (EXIF or XMP)
+            const header = decoder.decode(segmentData.slice(0, 30));
+            if (header.startsWith('Exif')) {
+              metadata.hasExif = true;
+              metadata.exifData.push("Camera EXIF standard block present");
+
+              // Check for GPS IFD marker in EXIF
+              for (let j = 0; j < segmentData.length - 4; j++) {
+                if (segmentData[j] === 0x88 && segmentData[j + 1] === 0x25) { // 0x8825 = GPSInfo IFD tag
+                  metadata.hasGps = true;
+                  metadata.gpsData = "GPS Geotag coordinates embedded in EXIF";
+                  break;
+                }
+              }
+            } else if (header.includes('http://ns.adobe.com/xap/1.0/')) {
+              metadata.hasExif = true;
+              const xmpString = new TextDecoder('utf-8').decode(segmentData);
+              const xmpLower = xmpString.toLowerCase();
+              if (
+                xmpLower.includes('dall-e') ||
+                xmpLower.includes('prompt') ||
+                xmpLower.includes('generative') ||
+                xmpLower.includes('firefly') ||
+                xmpLower.includes('c2pa')
+              ) {
+                metadata.hasAiPrompt = true;
+                metadata.aiPrompts.push("XMP Generative AI / Prompt Metadata");
+              }
+            }
+          } else if (marker === 0xFE) { // Comment
+            const comment = decoder.decode(segmentData);
+            metadata.rawText.push(comment);
+            if (comment.toLowerCase().includes('prompt') || comment.toLowerCase().includes('seed')) {
+              metadata.hasAiPrompt = true;
+              metadata.aiPrompts.push(comment);
+            }
+          }
+
+          offset += 2 + length;
+        }
+      }
+
+      return metadata;
+    }
+
+    // Process a single file
+    async function processSingleFile(file) {
+      const id = 'item_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+      const metadata = await inspectMetadata(file);
+
+      const entry = {
+        id,
+        file,
+        name: file.name || 'image.png',
+        size: file.size,
+        metadata,
+        cleanedBlob: null,
+        cleanedUrl: null,
+        previewUrl: URL.createObjectURL(file)
+      };
+
+      fileEntries.push(entry);
+      renderFileCard(entry);
+      sanitizeFile(entry);
+    }
+
+    // Strip Metadata & Generate Clean Image
+    async function sanitizeFile(entry) {
+      const mode = document.querySelector('input[name="clean_mode"]:checked')?.value || 'deep';
+      const file = entry.file;
+
+      if (mode === 'lossless' && file.type === 'image/png') {
+        // Direct PNG Chunk Purge: Filter out non-essential chunks
+        try {
+          const buffer = await file.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          const cleanBytes = stripPngChunksLossless(bytes);
+          const blob = new Blob([cleanBytes], { type: 'image/png' });
+          finishSanitize(entry, blob);
+          return;
+        } catch (e) {
+          console.warn("Lossless PNG purge failed, falling back to canvas:", e);
+        }
+      }
+
+      // Universal Canvas Deep Clean (Re-renders raw pixel raster, discarding 100% of EXIF/AI chunks)
+      const img = new Image();
+      img.src = entry.previewUrl;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        const outType = file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+        canvas.toBlob((blob) => {
+          finishSanitize(entry, blob);
+        }, outType, 0.95);
+      };
+    }
+
+    function stripPngChunksLossless(bytes) {
+      const safeChunks = new Set(['IHDR', 'PLTE', 'IDAT', 'IEND', 'tRNS', 'cHRM', 'gAMA', 'sRGB', 'pHYs']);
+      const chunks = [];
+      let offset = 8;
+
+      while (offset < bytes.length - 8) {
+        const length = (bytes[offset] << 24) | (bytes[offset + 1] << 16) | (bytes[offset + 2] << 8) | bytes[offset + 3];
+        const type = String.fromCharCode(bytes[offset + 4], bytes[offset + 5], bytes[offset + 6], bytes[offset + 7]);
+        const chunkTotalLen = 12 + length;
+
+        if (safeChunks.has(type)) {
+          chunks.push(bytes.slice(offset, offset + chunkTotalLen));
+        }
+        offset += chunkTotalLen;
+      }
+
+      let totalLen = 8;
+      for (const ch of chunks) totalLen += ch.length;
+      const result = new Uint8Array(totalLen);
+      result.set(bytes.slice(0, 8), 0);
+      let cur = 8;
+      for (const ch of chunks) {
+        result.set(ch, cur);
+        cur += ch.length;
+      }
+      return result;
+    }
+
+    function finishSanitize(entry, blob) {
+      entry.cleanedBlob = blob;
+      entry.cleanedUrl = URL.createObjectURL(blob);
+
+      const statusEl = document.getElementById(`status_${entry.id}`);
+      const btnDownload = document.getElementById(`btn_dl_${entry.id}`);
+      const sizeCleanEl = document.getElementById(`size_clean_${entry.id}`);
+
+      if (statusEl) {
+        statusEl.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 100% Sanitized &amp; Ready
+          </span>
+        `;
+      }
+
+      if (sizeCleanEl) {
+        const diff = entry.size - blob.size;
+        const diffStr = diff > 0 ? `(-${formatBytes(diff)} stripped)` : '';
+        sizeCleanEl.innerText = `Clean: ${formatBytes(blob.size)} ${diffStr}`;
+      }
+
+      if (btnDownload) {
+        btnDownload.disabled = false;
+        btnDownload.classList.remove('opacity-50', 'pointer-events-none');
+      }
+    }
+
+    // Render File Card in UI
+    function renderFileCard(entry) {
+      const container = document.getElementById('items_container');
+      const meta = entry.metadata;
+
+      let badgesHtml = '';
+      if (meta.hasAiPrompt) {
+        badgesHtml += `<span class="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 font-bold text-[11px] border border-rose-300 dark:border-rose-800 flex items-center gap-1">🤖 AI Prompt Detected</span>`;
+      }
+      if (meta.hasGps) {
+        badgesHtml += `<span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-bold text-[11px] border border-amber-300 dark:border-amber-800 flex items-center gap-1">📍 GPS Coordinates</span>`;
+      }
+      if (meta.hasExif) {
+        badgesHtml += `<span class="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-bold text-[11px] border border-blue-300 dark:border-blue-800 flex items-center gap-1">📷 Camera EXIF</span>`;
+      }
+      if (meta.hasC2pa) {
+        badgesHtml += `<span class="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-bold text-[11px] border border-indigo-300 dark:border-indigo-800 flex items-center gap-1">🛡️ C2PA Credentials</span>`;
+      }
+      if (!badgesHtml) {
+        badgesHtml = `<span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium text-[11px] border border-slate-200 dark:border-slate-700">🔍 Standard Image Header</span>`;
+      }
+
+      let detailsContent = '';
+      if (meta.aiPrompts.length > 0) {
+        detailsContent = `
+          <div class="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono">
+            <span class="text-rose-500 font-bold block mb-1">Detected Embedded AI Prompt / Workflow:</span>
+            <div class="max-h-28 overflow-y-auto text-slate-700 dark:text-slate-300 text-[11px] whitespace-pre-wrap">${escapeHtml(meta.aiPrompts.join('\n\n'))}</div>
+          </div>
+        `;
+      }
+
+      const card = document.createElement('div');
+      card.id = `card_${entry.id}`;
+      card.className = "card-surface rounded-2xl p-5 border transition";
+      card.innerHTML = `
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-4">
+            <img src="${entry.previewUrl}" alt="Preview" class="w-16 h-16 rounded-xl object-cover bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div>
+              <h4 class="font-bold text-sm text-slate-950 dark:text-white truncate max-w-xs sm:max-w-md">${escapeHtml(entry.name)}</h4>
+              <div class="flex items-center gap-3 text-xs text-slate-500 font-mono mt-0.5">
+                <span>Original: ${formatBytes(entry.size)}</span>
+                <span id="size_clean_${entry.id}" class="text-emerald-600 dark:text-emerald-400 font-bold">Cleaning...</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                ${badgesHtml}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <div id="status_${entry.id}">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">
+                <span class="w-2 h-2 rounded-full bg-purple-500 animate-ping"></span> Stripping...
+              </span>
+            </div>
+            <button id="btn_dl_${entry.id}" disabled onclick="downloadSingleCleaned('${entry.id}')" class="opacity-50 pointer-events-none px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95">
+              <span>💾</span> Download Clean
+            </button>
+            <button onclick="removeEntry('${entry.id}')" class="p-2 text-slate-400 hover:text-rose-500 transition" title="Remove">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        ${detailsContent}
+      `;
+
+      container.prepend(card);
+    }
+
+    // Update Batch UI bar
+    function updateBatchUI() {
+      const bar = document.getElementById('batch_actions_bar');
+      const countText = document.getElementById('batch_count_text');
+      if (fileEntries.length > 1) {
+        bar.classList.remove('hidden');
+        countText.innerText = `${fileEntries.length} Images Loaded`;
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    // Download Single File
+    function downloadSingleCleaned(id) {
+      const entry = fileEntries.find(e => e.id === id);
+      if (!entry || !entry.cleanedBlob) return;
+
+      const a = document.createElement('a');
+      const ext = entry.file.type === 'image/jpeg' ? '.jpg' : '.png';
+      const base = entry.name.replace(/\.[^/.]+$/, "");
+      a.download = `${base}_clean${ext}`;
+      a.href = entry.cleanedUrl;
+      a.click();
+    }
+
+    // Download All Cleaned as ZIP
+    async function downloadAllCleanedZip() {
+      const ready = fileEntries.filter(e => e.cleanedBlob);
+      if (ready.length === 0) return;
+
+      const btn = document.getElementById('btn_download_zip');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span>⏳</span> Compressing ZIP...`;
+      btn.disabled = true;
+
+      try {
+        const zip = new JSZip();
+        for (const entry of ready) {
+          const ext = entry.file.type === 'image/jpeg' ? '.jpg' : '.png';
+          const base = entry.name.replace(/\.[^/.]+$/, "");
+          zip.file(`${base}_clean${ext}`, entry.cleanedBlob);
+        }
+
+        const content = await zip.generateAsync({ type: 'blob' });
+        const a = document.createElement('a');
+        a.download = `zenith_cleaned_images_${Date.now()}.zip`;
+        a.href = URL.createObjectURL(content);
+        a.click();
+      } catch (err) {
+        alert("Error creating ZIP: " + err.message);
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // Remove single entry
+    function removeEntry(id) {
+      const idx = fileEntries.findIndex(e => e.id === id);
+      if (idx !== -1) {
+        if (fileEntries[idx].cleanedUrl) URL.revokeObjectURL(fileEntries[idx].cleanedUrl);
+        if (fileEntries[idx].previewUrl) URL.revokeObjectURL(fileEntries[idx].previewUrl);
+        fileEntries.splice(idx, 1);
+      }
+      const el = document.getElementById(`card_${id}`);
+      if (el) el.remove();
+      updateBatchUI();
+    }
+
+    // Reset All Files
+    function resetAllFiles() {
+      for (const e of fileEntries) {
+        if (e.cleanedUrl) URL.revokeObjectURL(e.cleanedUrl);
+        if (e.previewUrl) URL.revokeObjectURL(e.previewUrl);
+      }
+      fileEntries = [];
+      document.getElementById('items_container').innerHTML = '';
+      updateBatchUI();
+    }
+
+    // Load Sample AI Image
+    function loadSampleAiImage() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+
+      // Create a nice gradient image
+      const grad = ctx.createLinearGradient(0, 0, 600, 400);
+      grad.addColorStop(0, '#4f46e5');
+      grad.addColorStop(0.5, '#7c3aed');
+      grad.addColorStop(1, '#db2777');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 600, 400);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🤖 Simulated AI Generation', 300, 180);
+
+      ctx.font = '14px sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.fillText('Stable Diffusion XL • Embedded Prompt & Parameters', 300, 220);
+
+      canvas.toBlob(async (blob) => {
+        // Embed artificial Stable Diffusion parameters chunk into the PNG binary
+        const buffer = await blob.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+
+        const promptText = "parameters\0photorealistic portrait of a cybernetic tiger, neon volumetric fog, 8k resolution, octane render, seed: 94820194, sampler: Euler a, steps: 35, cfg scale: 7.5";
+        const textEncoder = new TextEncoder();
+        const textBytes = textEncoder.encode(promptText);
+
+        // Build tEXt chunk
+        const chunkLen = textBytes.length;
+        const chunk = new Uint8Array(12 + chunkLen);
+        chunk[0] = (chunkLen >> 24) & 0xFF;
+        chunk[1] = (chunkLen >> 16) & 0xFF;
+        chunk[2] = (chunkLen >> 8) & 0xFF;
+        chunk[3] = chunkLen & 0xFF;
+        chunk[4] = 0x74; chunk[5] = 0x45; chunk[6] = 0x58; chunk[7] = 0x74; // 'tEXt'
+        chunk.set(textBytes, 8);
+
+        // Dummy CRC
+        chunk[8 + chunkLen] = 0x12;
+        chunk[8 + chunkLen + 1] = 0x34;
+        chunk[8 + chunkLen + 2] = 0x56;
+        chunk[8 + chunkLen + 3] = 0x78;
+
+        // Insert chunk before IEND
+        const iendPos = bytes.length - 12;
+        const finalPng = new Uint8Array(bytes.length + chunk.length);
+        finalPng.set(bytes.slice(0, iendPos), 0);
+        finalPng.set(chunk, iendPos);
+        finalPng.set(bytes.slice(iendPos), iendPos + chunk.length);
+
+        const sampleFile = new File([finalPng], 'sample_ai_portrait.png', { type: 'image/png' });
+        processSingleFile(sampleFile);
+      }, 'image/png');
+    }
+
+    // Helpers
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

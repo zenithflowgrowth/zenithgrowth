@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Theme Initialization (Prevents flash of wrong theme) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6GCW9T0X');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free In-Browser OCR: Image to Text Extractor - Zenith Growth</title>
+  <meta name="description" content="Extract text from images, receipts, screenshots, and photos instantly for free. 100% private in-browser OCR with zero server uploads using client-side WebAssembly.">
+  <meta name="keywords" content="image to text, ocr online free, extract text from image, photo to text converter, client side ocr, tesseract wasm, zenith growth">
+  <link rel="canonical" href="https://zenithgrowth.tech/ocr.html">
+
+  <!-- OpenGraph Meta Tags -->
+  <meta property="og:title" content="Free In-Browser OCR: Image to Text - Zenith Growth">
+  <meta property="og:description" content="Extract text from photos and documents instantly with zero server uploads. 100% private in-browser WebAssembly OCR.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/ocr.html">
+  <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Tesseract.js (Client-Side WASM OCR Engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    .drag-active {
+      border-color: #10b981 !important;
+      background-color: rgba(16, 185, 129, 0.08) !important;
+      transform: scale(1.01);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.2) !important;
+    }
+    .dark .card-surface {
+      background: #0f172a;
+      border: 1px solid rgba(30, 41, 59, 0.9);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    }
+    .card-surface {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body class="bg-[#fafbfc] dark:bg-[#070b14] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white transition-colors duration-200">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <img src="logo.png" alt="Zenith Growth" class="h-8 w-auto rounded-lg object-contain shadow-xs">
+          <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
+            Zenith<span class="text-slate-400 font-normal">/</span>Growth
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-400">
+          <a href="video-editor.html" class="hover:text-slate-950 dark:hover:text-white transition">Video Studio</a>
+          <a href="video-downloader.html" class="hover:text-slate-950 dark:hover:text-white transition">Video Downloader</a>
+          <a href="ocr.html" class="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1">
+            <span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-[10px]">NEW</span>
+            Image to Text (OCR)
+          </a>
+          <a href="bg-remover.html" class="hover:text-slate-950 dark:hover:text-white transition">Background Remover</a>
+          <a href="compress-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Compress PDF</a>
+          <a href="sign-pdf.html" class="hover:text-slate-950 dark:hover:text-white transition">Sign PDF</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          100% In-Browser WASM
+        </span>
+        <button onclick="toggleDarkMode()" id="theme_toggle_btn" title="Toggle Dark/Light Mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
+          <svg id="theme_icon_sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme_icon_moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <a href="/" class="px-3.5 py-1.5 rounded-lg bg-slate-900 dark:bg-indigo-600 dark:hover:bg-indigo-500 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
+          All 17 Tools
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full relative">
+    
+    <!-- Ambient Radial Mesh Glow -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/15 via-emerald-500/10 to-transparent pointer-events-none -z-10 blur-3xl"></div>
+
+    <div class="text-center max-w-2xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-[11px] font-mono text-slate-600 dark:text-slate-300 mb-4 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        Zero Server Uploads • 100% In-Browser Privacy • Free Forever
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white leading-tight mb-3">
+        Extract Text from Any Image or Document
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+        Drop receipts, screenshots, invoices, or scanned documents. Our client-side neural WebAssembly engine extracts copyable text directly inside your browser. Confidential files never touch a server.
+      </p>
+    </div>
+
+    <!-- OCR Engine Controls Bar -->
+    <div class="card-surface rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-3">
+        <label for="ocr_language" class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>🌐</span> OCR Language:
+        </label>
+        <select id="ocr_language" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <option value="eng" selected>English (Latin & Numbers)</option>
+          <option value="spa">Spanish (Español)</option>
+          <option value="fra">French (Français)</option>
+          <option value="deu">German (Deutsch)</option>
+          <option value="hin">Hindi (हिंदी)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn_sample_test" onclick="loadSampleReceipt()" class="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 font-bold text-xs hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center gap-1.5">
+          <span>⚡</span> Try with Sample Receipt
+        </button>
+      </div>
+    </div>
+
+    <!-- Drag & Drop Upload Zone -->
+    <div id="drop_zone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl p-8 sm:p-12 text-center transition-all bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 group relative mb-8">
+      <input type="file" id="file_input" accept="image/*" class="hidden" onchange="handleFileSelect(this.files)">
+      
+      <div class="flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-3xl mb-4 group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition duration-200 shadow-sm">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1">
+          Drop an image here, or <span class="text-indigo-600 dark:text-indigo-400 underline decoration-indigo-400/50">browse files</span>
+        </h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-3">
+          Supports PNG, JPG, WEBP, BMP, and screenshot pastes. Instant client-side text extraction.
+        </p>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-[10px] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+          Tip: You can press <kbd class="font-bold text-slate-700 dark:text-slate-200">Ctrl + V</kbd> anywhere to paste a screenshot directly
+        </span>
+      </div>
+    </div>
+
+    <!-- Processing Progress Bar Box (Hidden by default) -->
+    <div id="progress_box" class="hidden card-surface rounded-2xl p-5 mb-8 border-indigo-500/30">
+      <div class="flex items-center justify-between text-xs font-semibold mb-2">
+        <span id="progress_status_text" class="text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
+          Initializing in-browser WebAssembly OCR worker...
+        </span>
+        <span id="progress_percent_text" class="font-mono text-slate-800 dark:text-slate-200 font-bold">0%</span>
+      </div>
+      <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div id="progress_bar" class="bg-gradient-to-r from-indigo-500 via-indigo-600 to-emerald-500 h-full w-0 transition-all duration-150"></div>
+      </div>
+    </div>
+
+    <!-- Result Stage: Split Layout (Image Preview on Left, Extracted Text on Right) -->
+    <div id="result_stage" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+      
+      <!-- Left Column: Source Image Preview -->
+      <div class="card-surface rounded-2xl p-5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <span class="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold flex items-center gap-1.5">
+              <span>🖼️</span> Source Image
+            </span>
+            <span id="image_meta_info" class="font-mono text-[11px] text-slate-500">Preview</span>
+          </div>
+          <div class="w-full h-80 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950 flex items-center justify-center p-2 border border-slate-200 dark:border-slate-800">
+            <img id="preview_img" src="" alt="OCR Source" class="max-w-full max-h-full object-contain rounded-lg shadow-xs">
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <button onclick="resetOcr()" class="text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition flex items-center gap-1">
+            <span>↺</span> Upload Another File
+          </button>
+          <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono font-bold flex items-center gap-1">
+            <span>✓</span> Processed 100% In-Browser
+          </span>
+        </div>
+      </div>
+
+      <!-- Right Column: Extracted Text Box with Action Controls -->
+      <div class="card-surface rounded-2xl p-5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <span class="font-mono text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1.5">
+              <span>📝</span> Extracted Text
+            </span>
+            <div class="flex items-center gap-2 font-mono text-[11px] text-slate-400">
+              <span id="word_count">0 words</span>
+              <span>•</span>
+              <span id="char_count">0 chars</span>
+            </div>
+          </div>
+          <textarea id="output_textarea" placeholder="Recognized text will appear here. You can edit it directly..." class="w-full h-80 p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-mono text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none leading-relaxed"></textarea>
+        </div>
+
+        <!-- Action Export Buttons -->
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+          <button id="btn_copy" onclick="copyExtractedText()" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 dark:hover:bg-indigo-500 text-white font-bold text-xs shadow-xs transition active:scale-95 flex items-center justify-center gap-1.5">
+            <span id="copy_icon">📋</span>
+            <span id="copy_label">Copy Text</span>
+          </button>
+          <button onclick="downloadTextFile()" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs border border-slate-200 dark:border-slate-700 transition flex items-center gap-1">
+            <span>💾</span> Download .TXT
+          </button>
+          <button onclick="downloadDocFile()" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs border border-slate-200 dark:border-slate-700 transition flex items-center gap-1">
+            <span>📄</span> Download .DOC
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Monetization Partner Card: Enterprise Document Automation -->
+    <div class="card-surface rounded-2xl p-5 mb-12 border-emerald-500/20 bg-gradient-to-r from-emerald-500/5 via-cyan-500/5 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-lg flex-shrink-0">
+          💼
+        </div>
+        <div>
+          <h4 class="font-bold text-sm text-slate-950 dark:text-white">Need Automated Invoicing & Accounting for Your Business?</h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Generate compliant freelance and business invoices in seconds with automated calculations.</p>
+        </div>
+      </div>
+      <a href="/invoice.html" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xs transition flex-shrink-0">
+        Open Invoice Maker →
+      </a>
+    </div>
+
+    <!-- Privacy & FAQ Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">🔒</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">100% Privacy Guarantee</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Unlike cloud converters, Zenith Growth does not upload your files to remote servers. All OCR computation executes directly inside your browser memory.</p>
+      </div>
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">⚡</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">WebAssembly Engine</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Powered by Tesseract OCR compiled to WebAssembly (WASM). Supports high-accuracy recognition of Latin, Spanish, French, German, and Hindi scripts.</p>
+      </div>
+      <div class="card-surface rounded-2xl p-5">
+        <div class="text-xl mb-2">🆓</div>
+        <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1">Zero Paywalls Forever</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">No subscriptions, no hidden watermarks, and no file quantity caps. Completely free forever with $0 cloud bills.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img src="logo.png" alt="Zenith Growth" class="h-6 w-auto rounded object-contain">
+        <span>&copy; 2026 Zenith Growth. All rights reserved. 100% Private In-Browser Suite.</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs font-semibold">
+        <a href="privacy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</a>
+        <a href="/" class="hover:text-slate-900 dark:hover:text-white transition">All Tools</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Day / Night Theme Toggle
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Drag and Drop & Paste Setup
+    const dropZone = document.getElementById('drop_zone');
+    const fileInput = document.getElementById('file_input');
+    const progressBox = document.getElementById('progress_box');
+    const progressBar = document.getElementById('progress_bar');
+    const progressStatusText = document.getElementById('progress_status_text');
+    const progressPercentText = document.getElementById('progress_percent_text');
+    const resultStage = document.getElementById('result_stage');
+    const previewImg = document.getElementById('preview_img');
+    const outputTextarea = document.getElementById('output_textarea');
+    const wordCount = document.getElementById('word_count');
+    const charCount = document.getElementById('char_count');
+    const imageMetaInfo = document.getElementById('image_meta_info');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-active');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-active');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-active');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        processOcrFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Window-wide Ctrl + V Screenshot Paste Handler
+    window.addEventListener('paste', (e) => {
+      if (e.clipboardData && e.clipboardData.items) {
+        for (const item of e.clipboardData.items) {
+          if (item.type.startsWith('image/')) {
+            const blob = item.getAsFile();
+            processOcrFile(blob);
+            break;
+          }
+        }
+      }
+    });
+
+    function handleFileSelect(files) {
+      if (files && files[0]) {
+        processOcrFile(files[0]);
+      }
+    }
+
+    // Core OCR Execution using Tesseract.js (100% In-Browser)
+    let currentWorker = null;
+
+    async function processOcrFile(file) {
+      if (!file) return;
+
+      const objUrl = URL.createObjectURL(file);
+      previewImg.src = objUrl;
+      imageMetaInfo.textContent = `${(file.size / 1024).toFixed(1)} KB • ${file.type || 'image'}`;
+
+      dropZone.classList.add('hidden');
+      progressBox.classList.remove('hidden');
+      resultStage.classList.add('hidden');
+
+      progressBar.style.width = '10%';
+      progressPercentText.textContent = '10%';
+      progressStatusText.textContent = 'Initializing in-browser neural OCR engine...';
+
+      const lang = document.getElementById('ocr_language').value || 'eng';
+
+      try {
+        if (!currentWorker) {
+          currentWorker = await Tesseract.createWorker(lang, 1, {
+            logger: m => {
+              if (m.status === 'recognizing text') {
+                const pct = Math.round(m.progress * 100);
+                progressBar.style.width = `${Math.max(15, pct)}%`;
+                progressPercentText.textContent = `${pct}%`;
+                progressStatusText.textContent = `Recognizing text contours... ${pct}%`;
+              } else if (m.status) {
+                progressStatusText.textContent = `${m.status}...`;
+              }
+            }
+          });
+        } else {
+          await currentWorker.reinitialize(lang);
+        }
+
+        progressStatusText.textContent = 'Analyzing image & extracting characters...';
+        const ret = await currentWorker.recognize(file);
+        
+        progressBar.style.width = '100%';
+        progressPercentText.textContent = '100%';
+        progressStatusText.textContent = '✅ Extraction complete!';
+
+        const text = ret.data.text.trim();
+        outputTextarea.value = text;
+        updateCounts(text);
+
+        setTimeout(() => {
+          progressBox.classList.add('hidden');
+          resultStage.classList.remove('hidden');
+        }, 300);
+
+      } catch (err) {
+        console.error('OCR Error:', err);
+        progressStatusText.textContent = '⚠️ OCR error: ' + (err.message || 'Could not recognize text');
+        progressBar.style.width = '0%';
+        alert('An error occurred during OCR recognition: ' + err.message);
+        dropZone.classList.remove('hidden');
+        progressBox.classList.add('hidden');
+      }
+    }
+
+    // Update Word & Character Counts
+    function updateCounts(text) {
+      const words = text ? text.trim().split(/\s+/).filter(Boolean).length : 0;
+      const chars = text ? text.length : 0;
+      wordCount.textContent = `${words} words`;
+      charCount.textContent = `${chars} chars`;
+    }
+
+    outputTextarea.addEventListener('input', (e) => {
+      updateCounts(e.target.value);
+    });
+
+    // 1-Click Copy
+    function copyExtractedText() {
+      const text = outputTextarea.value;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const copyLabel = document.getElementById('copy_label');
+        const copyIcon = document.getElementById('copy_icon');
+        copyLabel.textContent = 'Copied!';
+        copyIcon.textContent = '✓';
+        setTimeout(() => {
+          copyLabel.textContent = 'Copy Text';
+          copyIcon.textContent = '📋';
+        }, 2000);
+      });
+    }
+
+    // Download TXT
+    function downloadTextFile() {
+      const text = outputTextarea.value;
+      if (!text) return;
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Zenith_Extracted_Text_${Date.now()}.txt`;
+      a.click();
+    }
+
+    // Download DOC
+    function downloadDocFile() {
+      const text = outputTextarea.value;
+      if (!text) return;
+      const content = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Zenith OCR Document</title></head><body><pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${text}</pre></body></html>`;
+      const blob = new Blob([content], { type: 'application/msword;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Zenith_Extracted_Document_${Date.now()}.doc`;
+      a.click();
+    }
+
+    // Reset OCR
+    function resetOcr() {
+      fileInput.value = '';
+      outputTextarea.value = '';
+      resultStage.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      progressBox.classList.add('hidden');
+    }
+
+    // Instant Sample Receipt Demo Generator
+    function loadSampleReceipt() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 700;
+      const ctx = canvas.getContext('2d');
+
+      // White paper card
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, 600, 700);
+
+      // Receipt Header
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 24px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ZENITH COFFEE & TECH LAB', 300, 50);
+
+      ctx.font = '14px monospace';
+      ctx.fillText('104 Innovation Blvd, San Francisco, CA', 300, 80);
+      ctx.fillText('Date: 2026-10-01  14:32:09', 300, 105);
+      ctx.fillText('----------------------------------------', 300, 125);
+
+      // Receipt Items
+      ctx.textAlign = 'left';
+      ctx.font = '16px monospace';
+      const items = [
+        ['1x Cold Brew Nitro', '$5.50'],
+        ['1x Avocado Toast', '$8.75'],
+        ['1x Client-Side WASM License', '$0.00'],
+        ['1x WebAssembly Optimization', '$0.00'],
+        ['1x Matcha Latte (Oat Milk)', '$6.25'],
+      ];
+
+      let y = 160;
+      for (const [name, price] of items) {
+        ctx.fillText(name, 50, y);
+        ctx.textAlign = 'right';
+        ctx.fillText(price, 550, y);
+        ctx.textAlign = 'left';
+        y += 35;
+      }
+
+      ctx.textAlign = 'center';
+      ctx.fillText('----------------------------------------', 300, y + 10);
+      y += 45;
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 18px monospace';
+      ctx.fillText('SUBTOTAL:', 50, y);
+      ctx.textAlign = 'right';
+      ctx.fillText('$20.50', 550, y);
+
+      y += 30;
+      ctx.textAlign = 'left';
+      ctx.fillText('TAX (8.5%):', 50, y);
+      ctx.textAlign = 'right';
+      ctx.fillText('$1.74', 550, y);
+
+      y += 35;
+      ctx.font = 'bold 22px monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('TOTAL PAID:', 50, y);
+      ctx.textAlign = 'right';
+      ctx.fillText('$22.24', 550, y);
+
+      y += 50;
+      ctx.textAlign = 'center';
+      ctx.font = 'italic 14px monospace';
+      ctx.fillText('Thank you for supporting 100% private web!', 300, y);
+      ctx.fillText('zenithgrowth.tech', 300, y + 25);
+
+      canvas.toBlob((blob) => {
+        const file = new File([blob], 'sample_receipt.png', { type: 'image/png' });
+        processOcrFile(file);
+      }, 'image/png');
+    }
+  </script>
+</body>
+</html>
