@@ -27,6 +27,74 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <link rel="icon" type="image/png" href="logo.png">
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/merge-pdf.html#webapp",
+      "name": "Zenith Merge PDF Studio",
+      "url": "https://zenithgrowth.tech/merge-pdf.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Combine multiple PDF files into one single document online for free. 100% private in-browser WebAssembly processing with zero server uploads."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/merge-pdf.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Are my confidential PDF documents uploaded to an external server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. Zenith Merge PDF runs 100% in your browser using client-side WebAssembly and PDF-Lib. Your files never travel across the internet or touch any external server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a file size limit or page cap when merging PDFs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No artificial limits or paywalls. You can merge large documents and multiple files up to your device memory capacity with completely free, unlimited usage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will merging PDFs degrade image quality or vector text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The merger performs lossless concatenation, preserving exact font definitions, vector lines, hyperlinks, and high-resolution image compression."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I reorder or remove individual files before combining them?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! The file queue lets you preview filenames, file sizes, remove unwanted documents, and organize the exact page flow before creating the final PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this PDF merger compliant with HIPAA and GDPR data privacy standards?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Because your files are never transmitted to any third party or stored on cloud disks, it naturally complies with stringent confidential data protection requirements."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -132,19 +200,149 @@
         </div>
       </div>
     </div>
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Client-Side PDF Merger
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            How to Combine Multiple PDF Files in Seconds
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Merge contracts, reports, and receipts into one seamless document. Files are processed locally on your device with complete privacy.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">📁</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Select & Reorder</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Drag and drop multiple PDF files into the upload box. Reorder them into your preferred reading sequence.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Combine Locally</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Click "Merge PDF Documents". Our client-side engine stitches all pages together in browser memory.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">💾</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">3. Instant Download</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Download your combined PDF instantly with zero watermark stamps and 100% vector clarity.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                Are my confidential PDF documents uploaded to an external server?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Never. Zenith Merge PDF runs 100% in your browser using client-side WebAssembly and PDF-Lib. Your files never travel across the internet or touch any external server.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Is there a file size limit or page cap when merging PDFs?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No artificial limits or paywalls. You can merge large documents and multiple files up to your device memory capacity with completely free, unlimited usage.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Will merging PDFs degrade image quality or vector text?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. The merger performs lossless concatenation, preserving exact font definitions, vector lines, hyperlinks, and high-resolution image compression.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Can I reorder or remove individual files before combining them?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes! The file queue lets you preview filenames, file sizes, remove unwanted documents, and organize the exact page flow before creating the final PDF.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Is this PDF merger compliant with HIPAA and GDPR data privacy standards?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes. Because your files are never transmitted to any third party or stored on cloud disks, it naturally complies with stringent confidential data protection requirements.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
   <!-- Footer -->
+  
+  <!-- Comprehensive Global Footer -->
   <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div>© 2026 Zenith Growth (zenithgrowth.tech). All rights reserved.</div>
-      <div class="flex gap-6">
-        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
-        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 transition">Contact</a>
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <!-- Client-Side Merge Logic -->
   <script>

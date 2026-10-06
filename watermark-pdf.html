@@ -44,6 +44,74 @@
   </style>
   <link rel="icon" type="image/png" href="logo.png">
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/watermark-pdf.html#webapp",
+      "name": "Zenith Watermark PDF Studio",
+      "url": "https://zenithgrowth.tech/watermark-pdf.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Add custom text watermarks to PDF files online for free. Customize font, opacity, and rotation with 100% in-browser privacy."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/watermark-pdf.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I customize the opacity and rotation of the watermark?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can adjust transparency from subtle 15% opacity to solid 100%, and choose between 45° diagonal or horizontal placement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does watermarking increase the file size significantly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Because vector text stamps are inserted into the PDF document tree, the file size increase is virtually negligible."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my confidential documents uploaded to any server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The watermarking engine runs 100% locally in your browser with zero network transmission."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the watermark be applied to all pages automatically?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the engine stamps every page of your document uniformly with consistent position and formatting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this watermark tool free to use without limitations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, 100% free with unlimited document processing and no account required."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -228,18 +296,148 @@
         <div id="wm_status" class="hidden w-full p-4 rounded-xl text-center text-xs font-semibold"></div>
       </div>
     </div>
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Document Copyright Protection
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            How to Add Custom Watermarks to PDF Pages
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Protect your intellectual property by applying customizable text stamps like CONFIDENTIAL, DRAFT, or your company brand across all pages.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">📄</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Select PDF File</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Open the PDF document you want to stamp with custom copyright or security marks.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">✏️</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Customize Stamp</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Type your watermark text, choose font size, adjust color, opacity, and angle (diagonal 45° or horizontal).</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">🛡️</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">3. Apply & Download</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Stamp the watermark across every page and download your secured document instantly.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                Can I customize the opacity and rotation of the watermark?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes! You can adjust transparency from subtle 15% opacity to solid 100%, and choose between 45° diagonal or horizontal placement.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Does watermarking increase the file size significantly?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. Because vector text stamps are inserted into the PDF document tree, the file size increase is virtually negligible.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Are my confidential documents uploaded to any server?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. The watermarking engine runs 100% locally in your browser with zero network transmission.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Can the watermark be applied to all pages automatically?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, the engine stamps every page of your document uniformly with consistent position and formatting.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Is this watermark tool free to use without limitations?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, 100% free with unlimited document processing and no account required.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
+  
+  <!-- Comprehensive Global Footer -->
   <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
-      <div class="flex gap-6">
-        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
-        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 transition">Contact</a>
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     let wmPdfFile = null;

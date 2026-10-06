@@ -76,6 +76,74 @@
       scrollbar-width: thin;
     }
   </style>
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/metadata-remover.html#webapp",
+      "name": "Zenith Metadata Sanitizer",
+      "url": "https://zenithgrowth.tech/metadata-remover.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Strip GPS locations, camera serials, and AI generation prompts from photos online for free. 100% private in-browser metadata sanitizer."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/metadata-remover.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What AI generation metadata does Zenith remove?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zenith strips prompts, negative prompts, model hashes, seeds, steps, and sampler configurations from Stable Diffusion, ComfyUI, Automatic1111, Midjourney, and Adobe C2PA Content Credentials."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it remove camera GPS latitude and longitude?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! It strips GPS coordinates, camera serial numbers, iPhone/Android device models, creation timestamps, and software editing history."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does scrubbing metadata degrade image visual quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Visual pixel data is preserved at full native resolution and fidelity. Only the hidden metadata header chunks are removed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my private photos uploaded to any external server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. Images are parsed and sanitized directly in your browser RAM using JavaScript binary decoders. Zero server uploads."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I clean multiple photos at the same time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, batch drop dozens of photos and sanitize them all simultaneously with instant individual or batch downloads."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-[#fafbfc] dark:bg-[#070b14] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-purple-600 selection:text-white transition-colors duration-200">
 
@@ -242,22 +310,149 @@
       </div>
     </div>
 
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-slate-900/50 dark:bg-slate-900/60 border border-slate-800 dark:border-slate-800 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Privacy & Metadata Sanitizer
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+            How to Strip EXIF, GPS & AI Metadata from Images
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Remove sensitive geotags, camera serial numbers, and proprietary AI generation prompts before sharing photos publicly.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-100/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+            <div class="text-2xl mb-2">📷</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1.5">1. Drop Photos</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Drag and drop JPG, PNG, or WebP images to inspect detected metadata tags locally.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-100/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+            <div class="text-2xl mb-2">🔍</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1.5">2. Review Detected Tags</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Inspect discovered camera EXIF, GPS coordinates, device models, and AI prompt configs.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-100/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+            <div class="text-2xl mb-2">🛡️</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1.5">3. Sanitize & Download</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Strip all metadata headers with one click and download sanitized images with zero privacy leakage.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-slate-900/50 dark:bg-slate-900/60 border border-slate-800 dark:border-slate-800 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 dark:text-white cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                What AI generation metadata does Zenith remove?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Zenith strips prompts, negative prompts, model hashes, seeds, steps, and sampler configurations from Stable Diffusion, ComfyUI, Automatic1111, Midjourney, and Adobe C2PA Content Credentials.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 dark:text-white cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Does it remove camera GPS latitude and longitude?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes! It strips GPS coordinates, camera serial numbers, iPhone/Android device models, creation timestamps, and software editing history.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 dark:text-white cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Does scrubbing metadata degrade image visual quality?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. Visual pixel data is preserved at full native resolution and fidelity. Only the hidden metadata header chunks are removed.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 dark:text-white cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Are my private photos uploaded to any external server?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Never. Images are parsed and sanitized directly in your browser RAM using JavaScript binary decoders. Zero server uploads.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 dark:text-white cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Can I clean multiple photos at the same time?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, batch drop dozens of photos and sanitize them all simultaneously with instant individual or batch downloads.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] py-8 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <img src="logo.png" alt="Zenith Growth" class="h-6 w-auto rounded object-contain">
-        <span>&copy; 2026 Zenith Growth. All rights reserved. 100% Private In-Browser Suite.</span>
-      </div>
-      <div class="flex items-center gap-4 text-xs font-semibold">
+  
+  <!-- Comprehensive Global Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] py-8 text-xs text-slate-500 dark:text-slate-400 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 dark:hover:text-white transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 dark:hover:text-white transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 dark:hover:text-white transition">Contact</a>
         <a href="privacy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
         <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</a>
-        <a href="/" class="hover:text-slate-900 dark:hover:text-white transition">All Tools</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 dark:hover:text-white transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     // State

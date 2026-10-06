@@ -40,6 +40,74 @@
       cursor: move;
     }
   </style>
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/remove-watermark.html#webapp",
+      "name": "Zenith PDF Watermark Eraser",
+      "url": "https://zenithgrowth.tech/remove-watermark.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Erase unwanted watermarks, stamps, and headers from PDF files online for free. 100% private in-browser document cleaner."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/remove-watermark.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does the in-browser watermark removal work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zenith renders your PDF pages to an interactive canvas where you draw precision bounding boxes. The engine applies clean visual mask patches to scrub watermarks while preserving all document geometry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I choose between whiteout and custom background matching?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can select clean whiteout for standard document paper or sample the exact background tone of colored documents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my proprietary business documents kept confidential?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. All canvas manipulation and PDF regeneration occurs strictly within your browser. No files are uploaded to any server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I clean multi-page documents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, simply navigate page by page with the viewer controls and apply eraser selections where needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there any cost or subscription required?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, this tool is 100% free with unlimited document cleanups."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -200,19 +268,149 @@
       <p class="text-xs text-slate-400">All selected watermark areas have been scrubbed from your file.</p>
     </div>
 
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Interactive PDF Scrubber
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            How to Erase Watermarks & Stamps from PDF Files
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Remove distracting background watermarks, draft stamps, and old headers using our interactive visual canvas editor.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">📄</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Load Watermarked PDF</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Upload your document to open it in the interactive visual page canvas.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">🧹</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Draw Eraser Box</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Use your cursor to drag a precision bounding box over the unwanted watermark or logo.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">✨</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">3. Export Clean Document</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Apply the whiteout patch and download your pristine, clean PDF without any server upload.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                How does the in-browser watermark removal work?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Zenith renders your PDF pages to an interactive canvas where you draw precision bounding boxes. The engine applies clean visual mask patches to scrub watermarks while preserving all document geometry.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Can I choose between whiteout and custom background matching?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes. You can select clean whiteout for standard document paper or sample the exact background tone of colored documents.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Are my proprietary business documents kept confidential?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes. All canvas manipulation and PDF regeneration occurs strictly within your browser. No files are uploaded to any server.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Can I clean multi-page documents?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, simply navigate page by page with the viewer controls and apply eraser selections where needed.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Is there any cost or subscription required?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No, this tool is 100% free with unlimited document cleanups.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
   <!-- Footer -->
+  
+  <!-- Comprehensive Global Footer -->
   <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
-      <div class="flex gap-6">
-        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
-        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 transition">Contact</a>
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';

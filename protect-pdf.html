@@ -27,6 +27,74 @@
   <script src="https://unpkg.com/pdf-lib-plus-encrypt/dist/pdf-lib-plus-encrypt.min.js"></script>
   <link rel="icon" type="image/png" href="logo.png">
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/protect-pdf.html#webapp",
+      "name": "Zenith Protect PDF Studio",
+      "url": "https://zenithgrowth.tech/protect-pdf.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Secure and encrypt PDF files with strong password protection online for free. 100% private client-side encryption."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/protect-pdf.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What encryption standard is applied to the PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zenith uses industry-standard AES encryption compatible with Adobe Acrobat, Apple Preview, Google Chrome, and all standard PDF readers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can Zenith or any third party view my password?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The encryption key derivation happens entirely within your web browser. Zenith has zero access to your files or passwords."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a protected PDF be opened without the password?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Standard PDF encryption enforces strong cryptographic protection, ensuring only authorized password holders can view the contents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I protect multiple sensitive files in a row?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can encrypt as many documents as needed with no usage caps or subscriptions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this tool safe for medical (HIPAA) or legal documents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, because files never leave your browser, your documents remain fully isolated from external network eavesdropping."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -135,18 +203,148 @@
       </div>
       <p class="text-xs text-slate-400">Remember your password! Without it, encrypted documents cannot be opened.</p>
     </div>
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Bank-Grade PDF Security
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            How to Password Protect & Encrypt Your PDF Files
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Safeguard tax forms, financial statements, and confidential client data with standard AES encryption directly in your browser.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">📄</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Select PDF File</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Choose the confidential PDF document you want to secure from unauthorized access.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">🔒</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Set Password</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Enter a strong password. Our client-side engine generates standard cryptographic encryption keys.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">🛡️</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">3. Download Encrypted PDF</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Save your password-protected PDF. Recipients will be required to enter the password to view or print.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                What encryption standard is applied to the PDF?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Zenith uses industry-standard AES encryption compatible with Adobe Acrobat, Apple Preview, Google Chrome, and all standard PDF readers.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Can Zenith or any third party view my password?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. The encryption key derivation happens entirely within your web browser. Zenith has zero access to your files or passwords.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Can a protected PDF be opened without the password?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. Standard PDF encryption enforces strong cryptographic protection, ensuring only authorized password holders can view the contents.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Can I protect multiple sensitive files in a row?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, you can encrypt as many documents as needed with no usage caps or subscriptions.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Is this tool safe for medical (HIPAA) or legal documents?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes, because files never leave your browser, your documents remain fully isolated from external network eavesdropping.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
+  
+  <!-- Comprehensive Global Footer -->
   <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Tools.</div>
-      <div class="flex gap-6">
-        <a href="privacy.html" class="hover:text-slate-900">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-900">Terms of Service</a>
-        <a href="sitemap.xml" class="hover:text-slate-900">Sitemap</a>
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 transition">Contact</a>
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     let protFile = null;

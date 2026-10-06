@@ -23,6 +23,74 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/png" href="logo.png">
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
+  <!-- Structured Schema: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://zenithgrowth.tech/json-formatter.html#webapp",
+      "name": "Zenith JSON Studio",
+      "url": "https://zenithgrowth.tech/json-formatter.html",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Format, beautify, minify, and validate JSON online for free. 100% private in-browser developer utility with zero external network transmission."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://zenithgrowth.tech/json-formatter.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why should I format JSON on Zenith instead of other web formatters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most online JSON formatters send your payload over HTTP to their servers, exposing database records, private API tokens, and customer PII. Zenith formats 100% client-side with zero network transmission."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it detect syntax errors and malformed brackets?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! If your JSON is invalid, the validator highlights the exact parse error and character offset to help you debug quickly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it handle massive JSON files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Powered by the native V8 JavaScript engine inside your browser, it handles large multi-megabyte payloads in milliseconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I minify JSON for production configurations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. With 1 click, the minifier strips all indentations and line breaks, producing ultra-compact JSON."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is any payload data stored in cookies or local storage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your data exists only in temporary memory during your browser session and disappears when you close or reload the page."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -75,17 +143,148 @@
       </div>
       <textarea id="json_input" oninput="updateCharCount()" placeholder="Paste raw JSON here..." class="flex-1 p-4 bg-transparent text-slate-800 font-mono text-sm leading-relaxed outline-none resize-none placeholder-slate-400"></textarea>
     </div>
+  
+    <!-- Editorial Step-by-Step Guide Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mt-16 mb-12">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Zero-Leakage Developer Utility
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            How to Format, Beautify & Validate JSON Online
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Format complex JSON payloads, detect syntax errors with line numbers, and minify payloads for production builds without risking confidential API keys.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">📋</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Paste JSON Payload</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Paste raw JSON into the editor. Sensitive database dumps, customer records, and API responses never leave your machine.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Beautify or Minify</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Click "Beautify (2 Spaces)" or "4 Spaces" for clean hierarchical formatting, or "Minify" to strip whitespace.</p>
+          </div>
+  
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="text-2xl mb-2">✅</div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5">3. Validate & Copy</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Instant syntax validation alerts you to invalid tokens or missing brackets. Copy cleanly formatted JSON with 1 click.</p>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Section -->
+    <section class="w-full max-w-4xl mx-auto px-4 mb-16">
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xs">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Everything you need to know about security, formatting standards, and zero server upload privacy.
+          </p>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" open>
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">01.</span>
+                Why should I format JSON on Zenith instead of other web formatters?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Most online JSON formatters send your payload over HTTP to their servers, exposing database records, private API tokens, and customer PII. Zenith formats 100% client-side with zero network transmission.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">02.</span>
+                Does it detect syntax errors and malformed brackets?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes! If your JSON is invalid, the validator highlights the exact parse error and character offset to help you debug quickly.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">03.</span>
+                Can it handle massive JSON files?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes. Powered by the native V8 JavaScript engine inside your browser, it handles large multi-megabyte payloads in milliseconds.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">04.</span>
+                Can I minify JSON for production configurations?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              Yes. With 1 click, the minifier strips all indentations and line breaks, producing ultra-compact JSON.
+            </p>
+          </details>
+  
+          <details class="group border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all" >
+            <summary class="font-bold text-slate-900 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-600 font-mono">05.</span>
+                Is any payload data stored in cookies or local storage?
+              </span>
+              <span class="text-slate-400 group-open:rotate-180 transition transform text-xs">▼</span>
+            </summary>
+            <p class="text-slate-600 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 leading-relaxed text-xs sm:text-sm">
+              No. Your data exists only in temporary memory during your browser session and disappears when you close or reload the page.
+            </p>
+          </details>
+  
+        </div>
+      </div>
+    </section>
+  
   </main>
 
-  <footer class="border-t border-slate-200 bg-white py-6 text-xs text-slate-500 text-center">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-      <span>© 2026 Zenith Growth (zenithgrowth.tech)</span>
-      <div class="flex gap-4">
-        <a href="privacy.html" class="hover:text-slate-800">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-800">Terms</a>
+  
+  <!-- Comprehensive Global Footer -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-xs text-slate-500 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>© 2026 Zenith Growth (zenithgrowth.tech). 100% Free Client-Side Utilities.</div>
+      <div class="flex flex-wrap justify-center gap-6 font-medium">
+        <a href="index.html" class="hover:text-slate-900 transition">All Tools</a>
+        <a href="about.html" class="hover:text-slate-900 transition">About Us</a>
+        <a href="contact.html" class="hover:text-slate-900 transition">Contact</a>
+        <a href="privacy.html" class="hover:text-slate-900 transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 transition">Terms of Service</a>
+        <a href="sitemap.xml" class="hover:text-slate-900 transition">Sitemap</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     function updateCharCount() {
