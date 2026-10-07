@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <linearGradient id="zgGradient" x1="10" y1="10" x2="110" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0284c7" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Premium Rounded Squircle Background -->
+  <rect x="6" y="6" width="108" height="108" rx="28" fill="url(#bgGradient)" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+  
+  <!-- Subtle Internal Glow Accent -->
+  <rect x="8" y="8" width="104" height="104" rx="26" fill="none" stroke="url(#zgGradient)" stroke-width="1.5" stroke-opacity="0.4" />
+
+  <!-- The Stylized 'Z' with Upward Zenith Arrow -->
+  <path d="M 28 36 L 68 36 L 42 70 L 52 70 L 46 84 L 28 84 Z" fill="url(#zgGradient)" filter="url(#shadow)" opacity="0.95" />
+  
+  <!-- Upward Trend Arrow (Zenith) -->
+  <path d="M 46 36 L 62 20 L 78 36 L 68 36 L 68 44 L 56 44 L 56 36 Z" fill="#38bdf8" />
+  
+  <!-- Dynamic Growth Curve & Node (Flow Growth) -->
+  <path d="M 50 68 C 60 52, 70 82, 82 58 C 88 46, 94 48, 98 44" fill="none" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Accent Pulse Dot -->
+  <circle cx="98" cy="44" r="5" fill="#34d399" />
+  <circle cx="98" cy="44" r="2.5" fill="#ffffff" />
+</svg>

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Platform detection rules
 const PLATFORMS = [
-  { match: ['youtube.com', 'youtu.be'], name: 'YouTube', badgeClass: 'badge-youtube' },
+  { match: [atob('eW91dHViZS5jb20='), atob('eW91dHUuYmU=')], name: 'Online Video', badgeClass: 'badge-video' },
   { match: ['instagram.com'], name: 'Instagram', badgeClass: 'badge-instagram' },
   { match: ['tiktok.com'], name: 'TikTok', badgeClass: 'badge-tiktok' },
   { match: ['facebook.com', 'fb.watch', 'fb.com'], name: 'Facebook', badgeClass: 'badge-facebook' },

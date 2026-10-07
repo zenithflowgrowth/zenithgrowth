@@ -1,0 +1,64 @@
+﻿<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#070b14"/>
+    </linearGradient>
+    <radialGradient id="meshIndigo" cx="20%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="meshEmerald" cx="80%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#c7d2fe"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <rect width="1200" height="630" fill="url(#meshIndigo)"/>
+  <rect width="1200" height="630" fill="url(#meshEmerald)"/>
+
+  <!-- Border Frame -->
+  <rect x="24" y="24" width="1152" height="582" rx="28" fill="none" stroke="#334155" stroke-width="2" stroke-opacity="0.5"/>
+
+  <!-- Top Pill -->
+  <rect x="80" y="80" width="380" height="42" rx="21" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <circle cx="106" cy="101" r="5" fill="#10b981"/>
+  <text x="124" y="107" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#e2e8f0" letter-spacing="1">100% PRIVATE CLIENT-SIDE SUITE</text>
+
+  <!-- Title -->
+  <text x="80" y="210" font-family="Arial, sans-serif" font-size="64" font-weight="900" fill="#ffffff" letter-spacing="-1">Zenith Growth</text>
+  <text x="80" y="275" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="url(#textGrad)">16 High-Performance Tools. Zero Server Uploads.</text>
+
+  <!-- Description -->
+  <text x="80" y="340" font-family="Arial, sans-serif" font-size="22" fill="#94a3b8">
+    60 FPS Video Studio • Video Downloader • BG Remover • Lossless PDF Compress • Sign &amp; Unlock
+  </text>
+
+  <!-- Feature Pills -->
+  <g transform="translate(80, 400)">
+    <!-- Pill 1 -->
+    <rect x="0" y="0" width="220" height="54" rx="14" fill="#0f172a" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="24" y="33" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c7d2fe">⚡ 99 PageSpeed</text>
+
+    <!-- Pill 2 -->
+    <rect x="240" y="0" width="250" height="54" rx="14" fill="#0f172a" stroke="#10b981" stroke-width="1.5"/>
+    <text x="264" y="33" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#a7f3d0">🔒 100% Confidential</text>
+
+    <!-- Pill 3 -->
+    <rect x="510" y="0" width="220" height="54" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="534" y="33" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#bae6fd">✨ Free Forever</text>
+  </g>
+
+  <!-- Bottom Bar -->
+  <line x1="80" y1="500" x2="1120" y2="500" stroke="#334155" stroke-opacity="0.6" stroke-width="1"/>
+  <text x="80" y="545" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#ffffff">zenithgrowth.tech</text>
+  <text x="1120" y="545" font-family="Arial, sans-serif" font-size="18" fill="#64748b" text-anchor="end">In-Browser WebAssembly Computation</text>
+</svg>
