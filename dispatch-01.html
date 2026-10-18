@@ -236,7 +236,7 @@
       cursor: grab;
     }
 
-    /* Alpha Checkerboard Pattern for PhotoRoom Transparent Backdrop */
+    /* Alpha Checkerboard Pattern for Zenith Cutout Studio Backdrop */
     .bg-checkerboard {
       background-color: #1e293b;
       background-image: 
@@ -328,7 +328,7 @@
         <a href="#tool-compressor" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">01. Compressor</a>
         <a href="#tool-binder" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">02. Binder</a>
         <a href="#wasm-benchmark" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">03. Benchmark</a>
-        <a href="#tool-photoroom" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">04. PhotoRoom</a>
+        <a href="#tool-cutout" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">04. Cutout Studio</a>
       </nav>
 
       <!-- Actions: 3-Way Segmented System Theme Controller & Live Platform Link -->
@@ -990,18 +990,18 @@
     </section>
 
     <!-- ============================================================
-         SECTION 4: INTERACTIVE FEATURE OF THE WEEK — PHOTOROOM PRO STUDIO
+         SECTION 4: INTERACTIVE FEATURE OF THE WEEK — ZENITH AI CUTOUT STUDIO
          ============================================================ -->
-    <section id="tool-photoroom" aria-labelledby="photoroom-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
+    <section id="tool-cutout" aria-labelledby="cutout-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
       <!-- Section Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-slate-200/80 dark:border-white/10">
         <div>
           <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-500 font-semibold mb-2">
             <span>FEATURE OF THE WEEK</span>
             <span>•</span>
-            <span>PHOTOROOM PRO STUDIO + EXIF SANITIZER</span>
+            <span>ZENITH AI CUTOUT STUDIO + EXIF SANITIZER</span>
           </div>
-          <h2 id="photoroom-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          <h2 id="cutout-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
             In-Browser Neural Background Cutout &amp; Studio Relighting
           </h2>
         </div>
@@ -1026,9 +1026,9 @@
             aria-label="Before and After Background Removal Split Slider"
           >
             <!-- LAYER 1 (BOTTOM / FULL WIDTH): "AFTER" STUDIO CUTOUT WITH DYNAMIC BACKDROP -->
-            <div id="photoroom-after-bg" class="absolute inset-0 bg-checkerboard transition-colors duration-300 flex items-center justify-center">
+            <div id="cutout-after-bg" class="absolute inset-0 bg-checkerboard transition-colors duration-300 flex items-center justify-center">
               <!-- Ambient Studio Rim Glow -->
-              <div id="photoroom-studio-glow" class="pointer-events-none absolute w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl transition-all duration-300"></div>
+              <div id="cutout-studio-glow" class="pointer-events-none absolute w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl transition-all duration-300"></div>
 
               <!-- Crisp Cutout Subject Illustration (Flagship Studio Headphones + Creator Badge) -->
               <div class="relative z-10 flex flex-col items-center">
@@ -1073,7 +1073,7 @@
 
             <!-- LAYER 2 (CLIPPED BY SLIDER): "BEFORE" CLUTTERED DESK / STREET SCENE -->
             <div
-              id="photoroom-before-clip"
+              id="cutout-before-clip"
               class="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-slate-800 to-stone-900 flex items-center justify-center overflow-hidden"
               style="clip-path: inset(0 50% 0 0);"
             >
@@ -1341,7 +1341,7 @@
               </span>
               <div>
                 <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
-                  PhotoRoom Pro Studio Cutout + B2B Product Line-Sheet Generator
+                  Zenith AI Cutout Studio + B2B Product Line-Sheet Generator
                 </h3>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Strip noisy product backgrounds, sanitize EXIF GPS tags, and generate high-converting spec copy for a bound PDF catalog.
@@ -1356,7 +1356,7 @@
           <div class="accordion-content">
             <div class="accordion-inner px-5 sm:px-6 pb-6 pt-2 border-t border-slate-200/60 dark:border-white/5 space-y-4">
               <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                <strong>Step 1:</strong> Clean your product shots with Zenith's <em>PhotoRoom Pro Studio</em> &amp; <em>AI EXIF Sanitizer</em>. <br />
+                <strong>Step 1:</strong> Clean your product shots with Zenith's <em>AI Cutout Studio</em> &amp; <em>AI EXIF Sanitizer</em>. <br />
                 <strong>Step 2:</strong> Generate punchy catalog specs with this prompt, then bind everything using the <em>Image to PDF</em> utility:
               </p>
               <div class="rounded-xl bg-slate-900 text-slate-200 p-4 font-mono text-xs leading-relaxed">
@@ -2394,13 +2394,13 @@
       }
 
       /* ----------------------------------------------------------
-         4. FEATURE OF THE WEEK: PHOTOROOM PRO STUDIO SPLIT SLIDER & CHIPS
+         4. FEATURE OF THE WEEK: ZENITH AI CUTOUT STUDIO SPLIT SLIDER & CHIPS
       ---------------------------------------------------------- */
       const comparisonStage = document.getElementById('comparison-stage');
-      const beforeClip = document.getElementById('photoroom-before-clip');
+      const beforeClip = document.getElementById('cutout-before-clip');
       const comparisonHandle = document.getElementById('comparison-handle');
-      const afterBg = document.getElementById('photoroom-after-bg');
-      const studioGlow = document.getElementById('photoroom-studio-glow');
+      const afterBg = document.getElementById('cutout-after-bg');
+      const studioGlow = document.getElementById('cutout-studio-glow');
       const backdropChips = document.querySelectorAll('.backdrop-chip-btn');
       const exifToggleBtn = document.getElementById('exif-toggle-btn');
       const exifStatusLabel = document.getElementById('exif-status-label');

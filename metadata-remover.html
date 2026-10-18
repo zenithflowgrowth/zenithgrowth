@@ -35,6 +35,9 @@
   <meta property="og:image" content="https://zenithgrowth.tech/logo.png">
   <link rel="icon" type="image/png" href="logo.png">
 
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
+
   <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1006,6 +1009,20 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file) {
+            console.log('ZenithHandoff loaded pending file for metadata sanitizing:', file.name);
+            handleFileSelect([file]);
+          }
+        }
+      } catch (err) {
+        console.warn('ZenithHandoff check:', err);
+      }
+    });
   </script>
 </body>
 </html>

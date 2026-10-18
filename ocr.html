@@ -57,6 +57,8 @@
 
   <!-- Tesseract.js (Client-Side WASM OCR Engine) -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
 
   <style>
     .drag-active {
@@ -759,6 +761,20 @@
         processOcrFile(file);
       }, 'image/png');
     }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && file.type && (file.type.startsWith('image/') || file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+            console.log('ZenithHandoff auto-loading into OCR:', file.name);
+            processOcrFile(file);
+          }
+        }
+      } catch (e) {
+        console.warn('ZenithHandoff OCR error:', e);
+      }
+    });
   </script>
 </body>
 </html>

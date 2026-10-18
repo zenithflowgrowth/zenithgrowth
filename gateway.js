@@ -258,6 +258,22 @@ app.get('/api/tools', (req, res) => {
   });
 });
 
+// Dedicated routes for Google Search Console crawlers
+app.get('/sitemap.xml', (req, res) => {
+  res.header('Content-Type', 'application/xml; charset=utf-8');
+  res.sendFile(path.join(ROOT_DIR, 'sitemap.xml'));
+});
+
+app.get('/robots.txt', (req, res) => {
+  res.header('Content-Type', 'text/plain; charset=utf-8');
+  res.sendFile(path.join(ROOT_DIR, 'robots.txt'));
+});
+
+// Permanent 301 Canonical Redirect for /index.html -> /
+app.get('/index.html', (req, res) => {
+  res.redirect(301, '/');
+});
+
 // 4. Serve Root Static Files with Gzip & Efficient Browser Caching
 app.use(express.static(ROOT_DIR, {
   extensions: ['html', 'htm'],

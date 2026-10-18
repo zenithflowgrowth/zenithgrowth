@@ -23,6 +23,9 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://zenithgrowth.tech/unlock-pdf.html">
 
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -599,6 +602,20 @@
       fileBytes = null;
       isUserPassProtected = false;
     }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name))) {
+            console.log('ZenithHandoff loaded pending PDF for unlocking:', file.name);
+            handleUnlockFile(file);
+          }
+        }
+      } catch (err) {
+        console.warn('ZenithHandoff check:', err);
+      }
+    });
   </script>
 </body>
 </html>

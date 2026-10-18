@@ -86,6 +86,8 @@
   <script>tailwind.config = { darkMode: "class" };</script>
   <!-- Google MediaPipe for Client-Side AI Portrait Segmentation -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/selfie_segmentation.js" crossorigin="anonymous"></script>
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
 
   <style>
     .checkerboard-bg {
@@ -286,6 +288,9 @@
       <div class="inline-block w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-4"></div>
       <h3 class="text-base font-extrabold text-slate-900 dark:text-white mb-1">Removing Background...</h3>
       <p id="bg_processing_status" class="text-xs text-slate-500 dark:text-slate-400">Isolating foreground subject and cleaning edges...</p>
+      <div id="ai_progress_bar_wrapper" class="hidden w-64 max-w-xs mx-auto mt-3 bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+        <div id="ai_progress_bar" class="bg-gradient-to-r from-emerald-500 to-indigo-600 h-full w-0 transition-all duration-200"></div>
+      </div>
     </div>
 
     <!-- Workspace Preview & Controls -->
@@ -326,22 +331,22 @@
       <!-- Engine / Mode Selection Bar -->
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
         <div class="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-full md:w-auto overflow-x-auto">
-          <button id="mode_btn_smart" onclick="setRemovalMode('smart')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap">
-            <span>⚡</span> Smart Objects &amp; Documents
-          </button>
-          <button id="mode_btn_studio" onclick="setRemovalMode('studio')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white flex items-center gap-1.5 whitespace-nowrap">
+          <button id="mode_btn_studio" onclick="setRemovalMode('studio')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 whitespace-nowrap">
             <span>🧠</span> Studio AI (RMBG-1.4)
           </button>
           <button id="mode_btn_portrait" onclick="setRemovalMode('portrait')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 whitespace-nowrap">
-            <span>👤</span> AI Portrait &amp; People
+            <span>👤</span> Fast Portrait AI
+          </button>
+          <button id="mode_btn_smart" onclick="setRemovalMode('smart')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 whitespace-nowrap">
+            <span>⚡</span> Smart Edge
           </button>
           <button id="mode_btn_wand" onclick="setRemovalMode('wand')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 whitespace-nowrap">
-            <span>🪄</span> Magic Wand / Color Tap
+            <span>🪄</span> Magic Wand
           </button>
         </div>
         <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 text-center md:text-right">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-          <span id="mode_hint_text">Auto-detects exterior table/background. Click Studio AI for Deep Learning cutout.</span>
+          <span class="inline-block w-2 h-2 rounded-full bg-purple-500 shrink-0"></span>
+          <span id="mode_hint_text">Studio AI: Deep Learning model for products, humans, and complex scenes.</span>
         </div>
       </div>
 
@@ -352,7 +357,7 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col items-center">
           <div class="w-full flex justify-between items-center mb-3">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Original Photo</span>
-            <span class="text-[11px] font-semibold text-emerald-600">💡 Click anywhere on background to erase it</span>
+            <span class="text-[11px] font-semibold text-emerald-600">💡 Click anywhere on background to erase color</span>
           </div>
           <div class="w-full h-96 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center p-2 relative">
             <canvas id="orig_canvas" onclick="handleCanvasClick(event, this)" class="max-h-full max-w-full object-contain rounded-xl cursor-crosshair" title="Click anywhere on the photo to erase that background color"></canvas>
@@ -363,37 +368,51 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col items-center">
           <div class="w-full flex justify-between items-center mb-3">
             <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1">
-              <span>✨</span> Cutout Result
+              <span>✨</span> Cutout Studio
             </span>
-            <span id="brush_status_badge" class="text-[11px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2.5 py-0.5 rounded-full">
-              Mode: View
-            </span>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700 text-[11px]">
+                <button onclick="zoomCutout(-0.2)" class="px-2 py-0.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 font-bold" title="Zoom Out">−</button>
+                <span id="zoom_level_label" class="px-1.5 font-mono text-slate-500 dark:text-slate-400">100%</span>
+                <button onclick="zoomCutout(0.2)" class="px-2 py-0.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 font-bold" title="Zoom In">+</button>
+                <button onclick="resetZoom()" class="px-1.5 text-slate-400 hover:text-slate-600 text-[10px]" title="Reset Zoom">↺</button>
+              </div>
+              <span id="brush_status_badge" class="text-[11px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2.5 py-0.5 rounded-full">
+                Mode: View
+              </span>
+            </div>
           </div>
-          <div id="result_container" class="checkerboard-bg w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative">
-            <canvas id="cutout_canvas" onclick="handleCutoutCanvasClick(event)" class="max-h-full max-w-full object-contain rounded-xl"></canvas>
+          <div id="result_container" class="checkerboard-bg w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative cursor-crosshair">
+            <canvas id="cutout_canvas" onclick="handleCutoutCanvasClick(event)" class="max-h-full max-w-full object-contain rounded-xl transition-transform duration-100"></canvas>
+            <div id="brush_cursor" class="pointer-events-none fixed rounded-full border-2 border-emerald-500 shadow-md hidden z-50 transform -translate-x-1/2 -translate-y-1/2" style="width: 25px; height: 25px;"></div>
           </div>
         </div>
 
       </div>
 
-      <!-- Simple Touch-Up & Sensitivity Bar -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-5">
+      <!-- Interactive Touch-Up Studio Toolbar -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col xl:flex-row justify-between items-center gap-5">
         
-        <!-- Controls: Sensitivity, Feathering, Invert -->
-        <div class="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+        <!-- Controls: Sensitivity, Feathering, Invert, Defringe -->
+        <div class="flex flex-wrap items-center gap-4 w-full xl:w-auto">
           <!-- Sensitivity Slider -->
           <div class="flex items-center gap-2">
             <label class="text-xs font-bold uppercase text-slate-700 dark:text-slate-300 whitespace-nowrap">Clean Sensitivity:</label>
-            <input type="range" id="tolerance_slider" min="15" max="100" value="45" oninput="adjustTolerance(this.value)" class="w-28 sm:w-36 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+            <input type="range" id="tolerance_slider" min="15" max="100" value="45" oninput="adjustTolerance(this.value)" class="w-24 sm:w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600">
             <span id="tolerance_label" class="text-xs font-mono font-bold text-emerald-600 w-7 text-right">45</span>
           </div>
 
           <!-- Feather / Soft Edge Slider -->
           <div class="flex items-center gap-2">
-            <label class="text-xs font-bold uppercase text-slate-700 dark:text-slate-300 whitespace-nowrap">Smooth Edge:</label>
-            <input type="range" id="feather_slider" min="0" max="3" value="1" oninput="adjustFeather(this.value)" class="w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+            <label class="text-xs font-bold uppercase text-slate-700 dark:text-slate-300 whitespace-nowrap">Soft Edge:</label>
+            <input type="range" id="feather_slider" min="0" max="4" value="1" oninput="adjustFeather(this.value)" class="w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600">
             <span id="feather_label" class="text-xs font-mono font-bold text-emerald-600 w-6 text-right">1px</span>
           </div>
+
+          <!-- Auto Defringe Button -->
+          <button onclick="triggerDefringe()" id="btn_defringe" class="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs" title="Remove colored halo bleed from background around edges">
+            <span>✨</span> De-Halo
+          </button>
 
           <!-- Invert Button -->
           <button onclick="toggleInvertCutout()" id="btn_invert" class="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-400 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs" title="Invert cutout (keep background, erase subject)">
@@ -401,29 +420,34 @@
           </button>
         </div>
 
-        <!-- Simple Touch-up Tools -->
-        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
-          <span class="text-xs font-bold text-slate-500 uppercase mr-1">Touch-up:</span>
+        <!-- Touch-up Tools & Shortcuts -->
+        <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-end">
+          <span class="text-xs font-bold text-slate-500 uppercase mr-1">Touch-Up Studio:</span>
           
-          <button onclick="setBrushMode('erase')" id="btn_brush_erase" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 hover:bg-rose-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs">
+          <button onclick="setBrushMode('erase')" id="btn_brush_erase" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 hover:bg-rose-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs" title="Erase background speckles (Click & drag)">
             <span>🧹</span> Erase
           </button>
           
-          <button onclick="setBrushMode('restore')" id="btn_brush_restore" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs">
+          <button onclick="setBrushMode('restore')" id="btn_brush_restore" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs" title="Restore original photo details (Click & drag)">
             <span>🖌️</span> Restore
           </button>
           
-          <button onclick="setBrushMode('none')" id="btn_brush_off" class="px-3 py-2 rounded-xl border-2 border-slate-900 bg-slate-900 text-white text-xs font-bold transition shadow-xs">
+          <button onclick="setBrushMode('none')" id="btn_brush_off" class="px-3 py-2 rounded-xl border-2 border-slate-900 bg-slate-900 text-white text-xs font-bold transition shadow-xs" title="View mode / Eyedropper">
             View
           </button>
 
-          <button onclick="undoLastAction()" id="btn_undo" disabled class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1 cursor-not-allowed">
+          <button onclick="undoLastAction()" id="btn_undo" disabled class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1 cursor-not-allowed" title="Undo (Ctrl+Z)">
             <span>↩️</span> Undo
           </button>
           
-          <div class="flex items-center gap-1.5 ml-2">
+          <div class="flex items-center gap-1.5 ml-2 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">
             <span class="text-[11px] font-bold text-slate-400">Size:</span>
-            <input type="range" id="brush_size_slider" min="5" max="60" value="25" class="w-16 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+            <input type="range" id="brush_size_slider" min="5" max="80" value="25" oninput="updateBrushSizeLabel()" class="w-16 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600" title="Adjust brush diameter (or press [ and ])">
+            <span id="brush_size_label" class="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 w-6">25</span>
+          </div>
+
+          <div class="hidden sm:flex items-center text-[10px] text-slate-400 font-mono ml-1">
+            <span>[Space: Hold to Compare]</span>
           </div>
         </div>
 
@@ -885,7 +909,12 @@
 
     async function executeStudioAICutout() {
       const statusText = document.getElementById('bg_processing_status');
-      statusText.textContent = 'Initializing Studio AI Model (briaai/RMBG-1.4)...';
+      const progressBar = document.getElementById('ai_progress_bar');
+      const progressWrapper = document.getElementById('ai_progress_bar_wrapper');
+
+      if (progressWrapper) progressWrapper.classList.remove('hidden');
+      if (progressBar) progressBar.style.width = '15%';
+      statusText.textContent = 'Initializing Studio AI Model (RMBG-1.4)...';
 
       if (!rmbgPipeline) {
         statusText.textContent = 'Downloading AI model weights (~45MB, cached in browser)...';
@@ -893,14 +922,17 @@
         env.allowLocalModels = false;
         rmbgPipeline = await pipeline('image-segmentation', 'briaai/RMBG-1.4', {
           progress_callback: (p) => {
-            if (p.status === 'progress') {
-              statusText.textContent = `Downloading AI Model: ${Math.round((p.progress || 0) * 100)}%...`;
+            if (p.status === 'progress' && p.total) {
+              const pct = Math.round(((p.loaded || 0) / p.total) * 100);
+              statusText.textContent = `Downloading Studio AI: ${pct}%...`;
+              if (progressBar) progressBar.style.width = `${Math.min(90, 15 + pct * 0.75)}%`;
             }
           }
         });
       }
 
-      statusText.textContent = 'Analyzing image semantics & removing background...';
+      if (progressBar) progressBar.style.width = '95%';
+      statusText.textContent = 'Analyzing image semantics & isolating subject...';
       const { RawImage } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3');
 
       const canvas = document.getElementById('cutout_canvas');
@@ -945,6 +977,10 @@
       }
       ctx.restore();
 
+      // Clean edge fringing for razor-sharp borders
+      applyDefringe(ctx, canvas.width, canvas.height);
+
+      if (progressWrapper) progressWrapper.classList.add('hidden');
       saveUndoState();
     }
 
@@ -1423,7 +1459,55 @@
       };
     }
 
-    // AI PORTRAIT ENGINE (Google MediaPipe)
+    // Auto-Defringe Filter: Eradicates background color bleed/halos around edges
+    function applyDefringe(ctx, width, height) {
+      try {
+        const imgData = ctx.getImageData(0, 0, width, height);
+        const data = imgData.data;
+        for (let y = 1; y < height - 1; y++) {
+          for (let x = 1; x < width - 1; x++) {
+            const idx = (y * width + x) * 4;
+            const a = data[idx + 3];
+            if (a > 15 && a < 235) {
+              let rSum = 0, gSum = 0, bSum = 0, count = 0;
+              for (let dy = -2; dy <= 2; dy++) {
+                const ny = y + dy;
+                if (ny < 0 || ny >= height) continue;
+                for (let dx = -2; dx <= 2; dx++) {
+                  const nx = x + dx;
+                  if (nx < 0 || nx >= width) continue;
+                  const nidx = (ny * width + nx) * 4;
+                  if (data[nidx + 3] >= 240) {
+                    rSum += data[nidx];
+                    gSum += data[nidx + 1];
+                    bSum += data[nidx + 2];
+                    count++;
+                  }
+                }
+              }
+              if (count > 0) {
+                data[idx] = Math.round(rSum / count);
+                data[idx + 1] = Math.round(gSum / count);
+                data[idx + 2] = Math.round(bSum / count);
+              }
+            }
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } catch (e) {
+        console.warn('Defringe error:', e);
+      }
+    }
+
+    function triggerDefringe() {
+      const canvas = document.getElementById('cutout_canvas');
+      if (!canvas || !sourceImage) return;
+      saveUndoState();
+      applyDefringe(canvas.getContext('2d'), canvas.width, canvas.height);
+      showToast('✨ De-halo applied: Edge color bleed cleared!');
+    }
+
+    // AI PORTRAIT ENGINE (Google MediaPipe) - Generalized Edge Matting
     async function executeAIPortraitCutout() {
       const canvas = document.getElementById('cutout_canvas');
       const ctx = canvas.getContext('2d');
@@ -1449,11 +1533,13 @@
             const origImgData = origCtx.getImageData(0, 0, width, height);
             const origData = origImgData.data;
 
-            // Extract raw MediaPipe segmentation mask
+            // Extract high-resolution bilinearly filtered MediaPipe segmentation mask
             const maskCanvas = document.createElement('canvas');
             maskCanvas.width = width;
             maskCanvas.height = height;
             const maskCtx = maskCanvas.getContext('2d');
+            maskCtx.imageSmoothingEnabled = true;
+            maskCtx.imageSmoothingQuality = 'high';
             maskCtx.drawImage(results.segmentationMask, 0, 0, width, height);
             const maskImgData = maskCtx.getImageData(0, 0, width, height);
             const maskData = maskImgData.data;
@@ -1462,254 +1548,38 @@
             const outImgData = ctx.createImageData(width, height);
             const outData = outImgData.data;
 
+            const feather = parseInt(document.getElementById('feather_slider')?.value || 1);
+            const lowThresh = Math.max(8, 35 - feather * 6);
+            const highThresh = Math.min(248, 195 + feather * 10);
+            const range = Math.max(1, highThresh - lowThresh);
+
             for (let i = 0; i < width * height; i++) {
               const idx = i * 4;
               outData[idx] = origData[idx];
               outData[idx + 1] = origData[idx + 1];
               outData[idx + 2] = origData[idx + 2];
-            }
 
-            // Auto-detect Graphic / Poster scenes with Dark Top Banners & Typography (like ads)
-            let topDarkBgPixels = 0;
-            let topTotalSampled = 0;
-            for (let y = 10; y < Math.min(height * 0.25, 150); y += 4) {
-              for (let x = 10; x < width - 10; x += 4) {
-                topTotalSampled++;
-                const idx = (y * width + x) * 4;
-                const lum = 0.299 * origData[idx] + 0.587 * origData[idx + 1] + 0.114 * origData[idx + 2];
-                if (lum < 42) topDarkBgPixels++;
+              const rawA = maskData[idx + 3] !== undefined ? maskData[idx + 3] : maskData[idx];
+              let alpha = 0;
+
+              if (rawA <= lowThresh) {
+                alpha = 0;
+              } else if (rawA >= highThresh) {
+                alpha = 255;
+              } else {
+                // Smooth Hermite interpolation
+                const t = (rawA - lowThresh) / range;
+                alpha = Math.round(t * t * (3 - 2 * t) * 255);
               }
-            }
-            const isDarkBannerPoster = (topTotalSampled > 0 && topDarkBgPixels / topTotalSampled > 0.35);
 
-            const finalMask = new Uint8Array(width * height);
-
-            for (let y = 0; y < height; y++) {
-              for (let x = 0; x < width; x++) {
-                const pos = y * width + x;
-                const idx = pos * 4;
-                const r = origData[idx], g = origData[idx + 1], b = origData[idx + 2];
-                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-                const a = maskData[idx + 3];
-
-                // BRANCH A: GRAPHIC POSTERS WITH HEADLINE TYPOGRAPHY
-                if (isDarkBannerPoster) {
-                  if (x < 15 && y < 200) {
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-
-                  // Headline Typography (Priority 3: Typography & Letter Loops)
-                  if (y <= 175) {
-                    if (y <= 75) {
-                      // Vibrant Lime Green Letters (e.g. HERBALIFE)
-                      if (g > 55 && g > r * 0.98 && g > b + 10) {
-                        finalMask[pos] = 1;
-                      }
-                    } else {
-                      // Crisp White Typography & Dissolve Trapped Loops (O, P, R, B, A)
-                      if (x >= 22 && x <= 445 && lum > 65 && Math.abs(r - g) < 35 && Math.abs(g - b) < 35) {
-                        finalMask[pos] = 1;
-                      }
-                    }
-                    continue;
-                  }
-
-                  // Transition area between banner and hair
-                  if (y > 175 && y < 270) {
-                    if (x >= 165 && x <= 285) {
-                      if (lum > 28 && (r > 40 || g > 35)) {
-                        finalMask[pos] = 1;
-                        continue;
-                      }
-                    }
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-
-                  // Autograph Signature
-                  if (y >= 265 && y <= 355 && x >= 310 && x <= 405) {
-                    if (lum > 112 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
-                      finalMask[pos] = 1;
-                      continue;
-                    }
-                  }
-
-                  // Bottom Branding & Partner text
-                  if (y >= 585 && x >= 270) {
-                    if (lum > 110 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
-                      finalMask[pos] = 1;
-                      continue;
-                    }
-                  }
-
-                  // Background space right of subject
-                  if (x > 375 && y >= 340 && y <= 580) {
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-
-                  // Handheld Shake Glass & Hand
-                  if (y >= 420 && y <= 535 && x >= 55 && x <= 145) {
-                    if (lum > 110 || (r > 120 && g > 75)) {
-                      finalMask[pos] = 1;
-                      continue;
-                    }
-                  }
-
-                  // Background turf
-                  if ((x < 155 && y >= 580) || (x < 75 && y > 520) || (x > 430 && y > 530)) {
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-
-                  if (a >= 140) {
-                    finalMask[pos] = 1;
-                    continue;
-                  }
-
-                  // Boundary edge snapping
-                  if (a >= 35) {
-                    const isSkin = (r > 120 && g > 75 && r > g && g > b - 15);
-                    const isHair = (y < 370 && lum >= 25 && lum <= 95 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
-                    const isJersey = (g > 120 && g > r * 1.1 && b < 165);
-                    const isJerseyText = (lum > 140 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
-                    if (isSkin || isHair || isJersey || isJerseyText) finalMask[pos] = 1;
-                  }
-                  continue;
-                }
-
-                // BRANCH B: GENERAL PORTRAIT PHOTOGRAPHY
-                // Priority 2: Interior Limb Voids (Left & Right arm gaps)
-                if (x >= width * 0.23 && x <= width * 0.32 && y >= height * 0.66 && y <= height * 0.80) {
-                  if ((r > g + 5 && b > g + 2) || (r < 90 && g < 70 && b < 80)) {
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-                }
-                if (x >= width * 0.71 && x <= width * 0.81 && y >= height * 0.69 && y <= height * 0.82) {
-                  if (lum < 65 || (r > 100 && r - g > 18 && r - b > 25) || (r > g + 5 && b > g + 2)) {
-                    finalMask[pos] = 0;
-                    continue;
-                  }
-                }
-
-                if (a < 30) {
-                  finalMask[pos] = 0;
-                  continue;
-                }
-
-                // Scene background suppression (Priority 1: Border Security)
-                const isPurpleCurtain = (r > g + 8 && b > g + 3 && (r > 50 || b > 40));
-                const isTvBlue = (x < width * 0.22 && b > 110 && b > r + 25);
-                const isRedCloth = (x < width * 0.24 && y > height * 0.66 && r > 110 && g < 90 && b < 90);
-                const isChair = (x > width * 0.69 && y > height * 0.56 && r > 105 && r - g > 20 && r - b > 30);
-                const isValance = (y < height * 0.27 && (x < width * 0.41 || x > width * 0.64) && (r > 150 && g > 120 && b > 110));
-                const isShelf = (y < height * 0.08 && (x < width * 0.45 || x > width * 0.61));
-                const isBelowHand = (x < width * 0.31 && y > height * 0.84);
-                const isRightWall = (x > width * 0.81 && y < height * 0.57);
-
-                if (isPurpleCurtain || isTvBlue || isRedCloth || isChair || isValance || isShelf || isBelowHand || isRightWall) {
-                  finalMask[pos] = 0;
-                  continue;
-                }
-
-                // Natural head dome
-                if (y < height * 0.05 && x >= width * 0.45 && x <= width * 0.61) {
-                  if (r > 70 && g > 50 && b > 35 && r >= g && g >= b - 5) {
-                    finalMask[pos] = 1;
-                    continue;
-                  }
-                }
-
-                if (a >= 170) {
-                  finalMask[pos] = 1;
-                  continue;
-                }
-
-                // Edge snapping on real subject boundary
-                if (a >= 35) {
-                  const isSkin = (r > 120 && g > 75 && r > g && g > b - 15);
-                  const isHair = (r < 110 && g < 95 && b < 85 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
-                  const isShirt = (lum > 135 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25);
-                  const isPants = (lum >= 75 && lum <= 145 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20);
-                  if (isSkin || isHair || isShirt || isPants) finalMask[pos] = 1;
-                }
-              }
-            }
-
-            // Connected Component Filtering on Portrait Mode
-            if (!isDarkBannerPoster) {
-              const visited = new Uint8Array(width * height);
-              const components = [];
-              for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                  const pos = y * width + x;
-                  if (finalMask[pos] === 1 && !visited[pos]) {
-                    const comp = [];
-                    const queue = [pos];
-                    visited[pos] = 1;
-                    let head = 0;
-                    while (head < queue.length) {
-                      const p = queue[head++];
-                      comp.push(p);
-                      const px = p % width;
-                      const py = Math.floor(p / width);
-                      const nbrs = [
-                        px > 0 ? p - 1 : -1,
-                        px < width - 1 ? p + 1 : -1,
-                        py > 0 ? p - width : -1,
-                        py < height - 1 ? p + width : -1
-                      ];
-                      for (let nb of nbrs) {
-                        if (nb !== -1 && finalMask[nb] === 1 && !visited[nb]) {
-                          visited[nb] = 1;
-                          queue.push(nb);
-                        }
-                      }
-                    }
-                    components.push(comp);
-                  }
-                }
-              }
-              for (let comp of components) {
-                if (comp.length < 3500) {
-                  for (let p of comp) finalMask[p] = 0;
-                }
-              }
-            }
-
-            // Anti-Aliasing Edge Feathering
-            for (let y = 0; y < height; y++) {
-              for (let x = 0; x < width; x++) {
-                const pos = y * width + x;
-                const idx = pos * 4;
-                const isFg = (finalMask[pos] === 1);
-                const keep = invertMask ? !isFg : isFg;
-
-                if (keep) {
-                  if (y === 0 || y === height - 1 || x === 0 || x === width - 1) {
-                    outData[idx + 3] = 200;
-                    continue;
-                  }
-                  const hasZero = (
-                    finalMask[pos - 1] === 0 ||
-                    finalMask[pos + 1] === 0 ||
-                    finalMask[pos - width] === 0 ||
-                    finalMask[pos + width] === 0
-                  );
-                  if (hasZero) {
-                    outData[idx + 3] = 215;
-                  } else {
-                    outData[idx + 3] = 255;
-                  }
-                } else {
-                  outData[idx + 3] = 0;
-                }
-              }
+              outData[idx + 3] = invertMask ? (255 - alpha) : alpha;
             }
 
             ctx.putImageData(outImgData, 0, 0);
+
+            // Auto-defringe semi-transparent edge pixels to eliminate halos
+            applyDefringe(ctx, width, height);
+
             saveUndoState();
             resolve();
           } catch (e) {
@@ -1779,68 +1649,175 @@
       }
     }
 
-    // Simple Touch-Up Brush
+    function updateBrushSizeLabel() {
+      const val = document.getElementById('brush_size_slider')?.value || 25;
+      const label = document.getElementById('brush_size_label');
+      if (label) label.textContent = val;
+    }
+
+    let currentZoom = 1.0;
+    function zoomCutout(delta) {
+      currentZoom = Math.min(3.0, Math.max(0.5, currentZoom + delta));
+      const canvas = document.getElementById('cutout_canvas');
+      if (canvas) {
+        canvas.style.transform = `scale(${currentZoom})`;
+      }
+      const label = document.getElementById('zoom_level_label');
+      if (label) label.textContent = Math.round(currentZoom * 100) + '%';
+    }
+
+    function resetZoom() {
+      currentZoom = 1.0;
+      const canvas = document.getElementById('cutout_canvas');
+      if (canvas) {
+        canvas.style.transform = 'scale(1)';
+      }
+      const label = document.getElementById('zoom_level_label');
+      if (label) label.textContent = '100%';
+    }
+
+    // Touch-Up Studio Brush System
+    let lastBrushPos = null;
+
     function setBrushMode(mode) {
       brushMode = mode;
       const btnErase = document.getElementById('btn_brush_erase');
       const btnRestore = document.getElementById('btn_brush_restore');
       const btnOff = document.getElementById('btn_brush_off');
       const badge = document.getElementById('brush_status_badge');
-      const canvas = document.getElementById('cutout_canvas');
+      const cursor = document.getElementById('brush_cursor');
 
-      btnErase.className = 'px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 hover:bg-rose-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs';
-      btnRestore.className = 'px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 shadow-2xs';
-      btnOff.className = 'px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition shadow-2xs';
+      if (btnErase) btnErase.className = 'px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 hover:bg-rose-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs';
+      if (btnRestore) btnRestore.className = 'px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs';
+      if (btnOff) btnOff.className = 'px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition shadow-2xs';
 
-      canvas.className = 'max-h-full max-w-full object-contain rounded-xl';
+      if (cursor) cursor.style.display = 'none';
 
       if (mode === 'erase') {
-        btnErase.className = 'px-3.5 py-2 rounded-xl border-2 border-rose-600 bg-rose-50 text-rose-900 text-xs font-bold transition flex items-center gap-1 shadow-xs';
-        badge.textContent = 'Brush: Erase';
-        badge.className = 'text-[11px] font-bold text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full';
-        canvas.classList.add('cursor-erase');
+        if (btnErase) btnErase.className = 'px-3.5 py-2 rounded-xl border-2 border-rose-600 bg-rose-50 text-rose-900 text-xs font-bold transition flex items-center gap-1.5 shadow-xs';
+        if (badge) {
+          badge.textContent = 'Brush: Erase';
+          badge.className = 'text-[11px] font-bold text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full';
+        }
+        showToast('🧹 Erase Brush active: Drag to erase edges or speckles');
       } else if (mode === 'restore') {
-        btnRestore.className = 'px-3.5 py-2 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-900 text-xs font-bold transition flex items-center gap-1 shadow-xs';
-        badge.textContent = 'Brush: Restore';
-        badge.className = 'text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full';
-        canvas.classList.add('cursor-restore');
+        if (btnRestore) btnRestore.className = 'px-3.5 py-2 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-900 text-xs font-bold transition flex items-center gap-1.5 shadow-xs';
+        if (badge) {
+          badge.textContent = 'Brush: Restore';
+          badge.className = 'text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full';
+        }
+        showToast('🖌️ Restore Brush active: Drag to recover original photo');
       } else {
-        btnOff.className = 'px-3 py-2 rounded-xl border-2 border-slate-900 bg-slate-900 text-white text-xs font-bold transition shadow-xs';
-        badge.textContent = 'Mode: View';
-        badge.className = 'text-[11px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2.5 py-0.5 rounded-full';
+        if (btnOff) btnOff.className = 'px-3 py-2 rounded-xl border-2 border-slate-900 bg-slate-900 text-white text-xs font-bold transition shadow-xs';
+        if (badge) {
+          badge.textContent = 'Mode: View';
+          badge.className = 'text-[11px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2.5 py-0.5 rounded-full';
+        }
       }
     }
 
     function setupBrushEvents() {
       const canvas = document.getElementById('cutout_canvas');
+      const cursor = document.getElementById('brush_cursor');
+
+      function updateCursor(e) {
+        if (!cursor || brushMode === 'none') {
+          if (cursor) cursor.style.display = 'none';
+          return;
+        }
+        cursor.style.display = 'block';
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = rect.width / canvas.width;
+        const brushSizeVal = parseInt(document.getElementById('brush_size_slider').value) || 25;
+        const displayDiameter = Math.max(10, brushSizeVal * 2 * scaleX * currentZoom);
+        cursor.style.width = displayDiameter + 'px';
+        cursor.style.height = displayDiameter + 'px';
+
+        if (brushMode === 'erase') {
+          cursor.style.borderColor = '#f43f5e';
+          cursor.style.background = 'rgba(244, 63, 94, 0.25)';
+        } else if (brushMode === 'restore') {
+          cursor.style.borderColor = '#10b981';
+          cursor.style.background = 'rgba(16, 185, 129, 0.25)';
+        }
+      }
+
+      canvas.onmouseenter = (e) => updateCursor(e);
+      canvas.onmouseleave = () => {
+        if (cursor) cursor.style.display = 'none';
+        isBrushing = false;
+        lastBrushPos = null;
+      };
+
+      canvas.onmousemove = (e) => {
+        updateCursor(e);
+        if (!isBrushing || brushMode === 'none') return;
+        applyInterpolatedStroke(e);
+      };
 
       canvas.onmousedown = (e) => {
         if (brushMode === 'none') return;
         saveUndoState();
         isBrushing = true;
-        applyBrushStroke(e);
-      };
-
-      canvas.onmousemove = (e) => {
-        if (!isBrushing || brushMode === 'none') return;
-        applyBrushStroke(e);
+        const pt = getCanvasCoords(e, canvas);
+        lastBrushPos = pt;
+        applyBrushStamp(pt.x, pt.y);
       };
 
       window.onmouseup = () => {
-        isBrushing = false;
+        if (isBrushing) {
+          isBrushing = false;
+          lastBrushPos = null;
+        }
       };
     }
 
-    function applyBrushStroke(e) {
-      const canvas = document.getElementById('cutout_canvas');
-      const ctx = canvas.getContext('2d');
+    function getCanvasCoords(e, canvas) {
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+      };
+    }
 
-      const x = (e.clientX - rect.left) * scaleX;
-      const y = (e.clientY - rect.top) * scaleY;
-      const radius = (parseInt(document.getElementById('brush_size_slider').value) || 25) * (scaleX / 1.5);
+    function applyInterpolatedStroke(e) {
+      const canvas = document.getElementById('cutout_canvas');
+      const currentPt = getCanvasCoords(e, canvas);
+      if (!lastBrushPos) {
+        lastBrushPos = currentPt;
+        applyBrushStamp(currentPt.x, currentPt.y);
+        return;
+      }
+
+      const dx = currentPt.x - lastBrushPos.x;
+      const dy = currentPt.y - lastBrushPos.y;
+      const dist = Math.hypot(dx, dy);
+      const brushSize = parseInt(document.getElementById('brush_size_slider').value) || 25;
+      const step = Math.max(2, brushSize * 0.25);
+
+      if (dist < step) {
+        applyBrushStamp(currentPt.x, currentPt.y);
+      } else {
+        const steps = Math.ceil(dist / step);
+        for (let i = 1; i <= steps; i++) {
+          const t = i / steps;
+          const ix = lastBrushPos.x + dx * t;
+          const iy = lastBrushPos.y + dy * t;
+          applyBrushStamp(ix, iy);
+        }
+      }
+      lastBrushPos = currentPt;
+    }
+
+    function applyBrushStamp(x, y) {
+      const canvas = document.getElementById('cutout_canvas');
+      const ctx = canvas.getContext('2d');
+      const radius = parseInt(document.getElementById('brush_size_slider').value) || 25;
 
       ctx.save();
       ctx.beginPath();
@@ -1902,15 +1879,15 @@
       btnDark.className = 'px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-400 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1';
 
       if (type === 'transparent') {
-        container.className = 'checkerboard-bg w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative';
+        container.className = 'checkerboard-bg w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative cursor-crosshair';
         container.style.backgroundColor = '';
         btnTrans.className = 'px-3 py-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-xs font-bold transition flex items-center gap-1';
       } else if (type === 'white') {
-        container.className = 'w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative';
+        container.className = 'w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative cursor-crosshair';
         container.style.backgroundColor = '#ffffff';
         btnWhite.className = 'px-3 py-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-xs font-bold transition flex items-center gap-1';
       } else {
-        container.className = 'w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative';
+        container.className = 'w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center p-2 transition-colors relative cursor-crosshair';
         container.style.backgroundColor = type;
         btnDark.className = 'px-3 py-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-xs font-bold transition flex items-center gap-1';
       }
@@ -1984,6 +1961,7 @@
       sourceImage = null;
       sampledBgColor = null;
       lastClickCoord = null;
+      resetZoom();
       setBrushMode('none');
     }
 
@@ -1995,10 +1973,60 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
+    let isSpacePressed = false;
     window.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
         e.preventDefault();
         undoLastAction();
+      } else if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        if (!isSpacePressed && sourceImage) {
+          isSpacePressed = true;
+          e.preventDefault();
+          const canvas = document.getElementById('cutout_canvas');
+          const ctx = canvas.getContext('2d');
+          ctx.save();
+          ctx.drawImage(sourceImage, 0, 0);
+          ctx.restore();
+          showToast('👁️ Original View (Release Space to return)');
+        }
+      } else if (e.key === '[') {
+        const slider = document.getElementById('brush_size_slider');
+        if (slider) {
+          slider.value = Math.max(5, parseInt(slider.value) - 5);
+          updateBrushSizeLabel();
+        }
+      } else if (e.key === ']') {
+        const slider = document.getElementById('brush_size_slider');
+        if (slider) {
+          slider.value = Math.min(80, parseInt(slider.value) + 5);
+          updateBrushSizeLabel();
+        }
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.code === 'Space' && isSpacePressed) {
+        isSpacePressed = false;
+        if (undoStack.length > 0) {
+          const canvas = document.getElementById('cutout_canvas');
+          const ctx = canvas.getContext('2d');
+          ctx.putImageData(undoStack[undoStack.length - 1], 0, 0);
+        }
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && file.type && file.type.startsWith('image/')) {
+            console.log('ZenithHandoff loaded pending image:', file.name);
+            handleImageFile(file);
+            showToast(`🚀 Auto-loaded ${file.name} from homepage!`);
+          }
+        }
+      } catch (err) {
+        console.warn('ZenithHandoff check:', err);
       }
     });
   </script>

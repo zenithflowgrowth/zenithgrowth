@@ -34,6 +34,8 @@
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   </script>
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
 
   <style>
     .signature-font {
@@ -620,6 +622,20 @@
         btn.textContent = 'Sign & Download Document →';
       }
     }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+            console.log('ZenithHandoff auto-loading PDF in Sign PDF:', file.name);
+            handleSignFile(file);
+          }
+        }
+      } catch (e) {
+        console.warn('ZenithHandoff sign error:', e);
+      }
+    });
   </script>
 </body>
 </html>
