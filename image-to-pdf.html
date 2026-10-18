@@ -96,6 +96,8 @@
   ]
 }
   </script>
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
@@ -149,15 +151,23 @@
     <!-- Image Previews & Action Panel -->
     <div id="image_preview_section" class="w-full hidden">
       <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
-        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
           <div>
             <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span>Selected Images</span>
-              <span id="img_count_badge" class="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600">0</span>
+              <span id="img_count_badge" class="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600 font-bold">0</span>
             </h4>
-            <p class="text-[11px] text-slate-400 mt-0.5">Click "↻ 90°" on any image to rotate orientation.</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Click ↻ 90° to rotate individual cards, or use batch actions below.</p>
           </div>
-          <button onclick="clearImages()" class="text-xs font-semibold text-rose-500 hover:text-rose-600 underline">Clear All</button>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="rotateAllImages(90)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition flex items-center gap-1 border border-slate-200">
+              <span>↻ Rotate All 90°</span>
+            </button>
+            <button type="button" onclick="reverseImageOrder()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition flex items-center gap-1 border border-slate-200">
+              <span>⇄ Reverse Order</span>
+            </button>
+            <button type="button" onclick="clearImages()" class="text-xs font-semibold text-rose-500 hover:text-rose-600 underline ml-1">Clear All</button>
+          </div>
         </div>
         <div id="image_thumbs_grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1">
           <!-- Populated by JS -->
@@ -372,6 +382,18 @@
       });
     }
 
+    function rotateAllImages(deg = 90) {
+      imageItems.forEach(item => {
+        item.rotation = (item.rotation + deg) % 360;
+      });
+      renderImageGrid();
+    }
+
+    function reverseImageOrder() {
+      imageItems.reverse();
+      renderImageGrid();
+    }
+
     function rotateImageItem(index) {
       imageItems[index].rotation = (imageItems[index].rotation + 90) % 360;
       const img = document.getElementById(`img_thumb_${index}`);
@@ -468,6 +490,20 @@
         reader.readAsDataURL(file);
       });
     }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && file.type && file.type.startsWith('image/')) {
+            console.log('ZenithHandoff auto-loading image into Image to PDF:', file.name);
+            handleFiles([file]);
+          }
+        }
+      } catch (e) {
+        console.warn('ZenithHandoff image-to-pdf error:', e);
+      }
+    });
   </script>
 </body>
 </html>

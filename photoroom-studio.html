@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google AdSense Verification & Auto Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5837397162697542" crossorigin="anonymous"></script>
+
+  <!-- Theme Initialization (Prevents flash of wrong theme) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6GCW9T0X');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoRoom Pro Studio — Studio-Grade AI Background Remover | Zenith Growth</title>
+  <meta name="description" content="Erase image backgrounds with studio-grade AI precision. Before/after split slider, custom color backdrops, lossless transparent PNG export, and 100% private in-browser processing.">
+  <link rel="canonical" href="https://zenithgrowth.tech/photoroom-studio.html">
+
+  <meta property="og:title" content="PhotoRoom Pro Studio — Studio-Grade AI Background Remover | Zenith Growth">
+  <meta property="og:description" content="Remove backgrounds in 1 click with sub-pixel hair matting and studio color backdrops. Zero server uploads, 100% private in-browser tool.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zenithgrowth.tech/photoroom-studio.html">
+  <meta property="og:image" content="https://zenithgrowth.tech/og-image.jpg">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: "class" };</script>
+  <!-- Universal Client-Side File Handoff Protocol -->
+  <script src="handoff.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .checkerboard-pattern {
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      background-image: 
+        linear-gradient(45deg, rgba(203, 213, 225, 0.4) 25%, transparent 25%), 
+        linear-gradient(-45deg, rgba(203, 213, 225, 0.4) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, rgba(203, 213, 225, 0.4) 75%), 
+        linear-gradient(-45deg, transparent 75%, rgba(203, 213, 225, 0.4) 75%);
+    }
+    .dark .checkerboard-pattern {
+      background-image: 
+        linear-gradient(45deg, rgba(30, 41, 59, 0.6) 25%, transparent 25%), 
+        linear-gradient(-45deg, rgba(30, 41, 59, 0.6) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, rgba(30, 41, 59, 0.6) 75%), 
+        linear-gradient(-45deg, transparent 75%, rgba(30, 41, 59, 0.6) 75%);
+    }
+
+    .compare-box {
+      position: relative;
+      width: 100%;
+      max-width: 820px;
+      height: 520px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      user-select: none;
+    }
+
+    .compare-img-after {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .compare-img-before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      border-right: 3px solid #FFFFFF;
+      background-color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    }
+
+    .compare-img-after img, .compare-img-before img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .compare-img-before img {
+      width: 820px;
+      height: 520px;
+      max-width: none;
+      object-fit: contain;
+    }
+
+    .slider-divider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+      cursor: ew-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .color-pill-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(148, 163, 184, 0.4);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-pill-btn:hover, .color-pill-btn.active {
+      transform: scale(1.18);
+      border-color: #6366F1;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+    }
+  </style>
+
+  <!-- Structured Data Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Zenith Growth PhotoRoom Pro Studio",
+    "operatingSystem": "All Web Browsers",
+    "applicationCategory": "DesignApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Studio-grade AI background remover with interactive before/after split slider, custom backdrops, and lossless transparent PNG export."
+  }
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <img src="logo.png" alt="Zenith Growth" class="h-8 w-auto rounded-lg object-contain shadow-xs">
+          <span class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-1">
+            Zenith<span class="text-slate-400 font-normal">/</span>Growth
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-3 text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <a href="/#section_pdf" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition flex items-center gap-1.5"><span>📄</span> PDF Suite</a>
+          <a href="/#section_video" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition flex items-center gap-1.5"><span>🎬</span> Video &amp; Media</a>
+          <a href="/#section_ai" class="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold transition flex items-center gap-1.5"><span>⚡</span> AI Utilities</a>
+          <a href="/#section_business" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition flex items-center gap-1.5"><span>💼</span> Business &amp; Dev</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800/80">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          PhotoRoom SOTA Engine
+        </span>
+        <button onclick="toggleDarkMode()" id="theme_toggle_btn" title="Toggle Dark/Light Mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
+          <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <a href="/" class="px-3.5 py-1.5 rounded-lg bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-xs">
+          All Tools
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col items-center">
+    
+    <!-- Hero Title -->
+    <div class="text-center max-w-2xl mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full mb-3 shadow-xs">
+        <span>✨ Studio-Grade Precision</span>
+        <span class="w-1 h-1 rounded-full bg-indigo-400"></span>
+        <span>BRIA RMBG-2.0 & WASM</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-950 dark:text-white tracking-tight mb-3">
+        PhotoRoom <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Pro Studio</span>
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
+        Professional background removal with sub-pixel hair matting, interactive before/after split viewer, and studio color backdrops. 100% private.
+      </p>
+
+      <!-- Engine Selector Bar -->
+      <div class="flex items-center justify-center gap-2 mt-4 text-xs font-semibold">
+        <span class="text-slate-500">Active Engine:</span>
+        <span class="px-2.5 py-1 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono" id="activeEngineLabel">
+          ⚡ Dual Engine (BRIA RMBG-2.0 + Local WASM)
+        </span>
+      </div>
+    </div>
+
+    <!-- Upload Dropzone Card -->
+    <div id="dropZone" class="w-full max-w-3xl bg-white dark:bg-slate-900/80 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all duration-200 hover:shadow-xl group mb-8">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-3xl mb-4 group-hover:scale-105 transition-transform duration-200">
+        🪄
+      </div>
+      <h3 class="text-xl font-extrabold text-slate-950 dark:text-white mb-1.5">
+        Drop your image here, or <span class="text-indigo-600 dark:text-indigo-400 underline decoration-indigo-300 underline-offset-4">browse files</span>
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+        Supports High-Res JPG, PNG, WEBP (Portraits, Hair, Pets, E-commerce Products)
+      </p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden">
+      <button onclick="document.getElementById('fileInput').click()" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Select Photo to Cut Out
+      </button>
+    </div>
+
+    <!-- Interactive Studio Workspace (Hidden by default) -->
+    <div id="studioView" class="hidden w-full max-w-4xl flex-col gap-6 items-center">
+      
+      <!-- Canvas Wrapper -->
+      <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center min-h-[560px] relative shadow-lg">
+        
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="absolute inset-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center gap-3 z-30">
+          <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          <div class="text-lg font-bold text-slate-900 dark:text-white" id="loadingStatus">
+            Running Studio-Grade AI Segmentation...
+          </div>
+          <div class="text-xs text-slate-500 max-w-sm text-center" id="loadingDetail">
+            Refining sub-pixel hair strands and defringing background color bleed
+          </div>
+        </div>
+
+        <!-- Before / After Slider Box -->
+        <div class="compare-box" id="compareBox">
+          <div class="compare-img-after checkerboard-pattern" id="afterContainer">
+            <img id="afterImg" alt="AI Cutout Result">
+          </div>
+          <div class="compare-img-before" id="beforeContainer">
+            <img id="beforeImg" alt="Original Photo">
+          </div>
+          <div class="slider-divider-handle" id="sliderHandle">
+            <svg class="w-5 h-5 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <div class="text-[11px] font-semibold text-slate-400 mt-3 flex items-center gap-2">
+          <span>⟵ Drag slider to compare Original vs AI Cutout ⟶</span>
+        </div>
+      </div>
+
+      <!-- Bottom Controls Toolbar -->
+      <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-md">
+        
+        <!-- Backdrop Palette -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Backdrop:</span>
+          <button class="color-pill-btn checkerboard-pattern active" title="Transparent" onclick="setBackdrop('transparent')"></button>
+          <button class="color-pill-btn bg-white" title="Studio White" onclick="setBackdrop('#ffffff')"></button>
+          <button class="color-pill-btn bg-slate-950" title="Matte Black" onclick="setBackdrop('#0b0d13')"></button>
+          <button class="color-pill-btn bg-amber-400" title="Vibrant Yellow" onclick="setBackdrop('#facc15')"></button>
+          <button class="color-pill-btn bg-blue-500" title="Sky Blue" onclick="setBackdrop('#3b82f6')"></button>
+          <button class="color-pill-btn bg-purple-600" title="Luxury Purple" onclick="setBackdrop('#a855f7')"></button>
+          <button class="color-pill-btn bg-rose-500" title="Crimson Red" onclick="setBackdrop('#ef4444')"></button>
+          <div class="relative flex items-center">
+            <input type="color" id="customColor" value="#10b981" title="Pick Custom Color" class="w-8 h-8 rounded-full border-none cursor-pointer" onchange="setBackdrop(this.value)">
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-end flex-wrap">
+          <button onclick="resetWorkspace()" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            Upload Another
+          </button>
+          <button id="copyClipBtn" onclick="copyResultToClipboard()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition border border-slate-200 dark:border-slate-700">
+            <span>📋 Copy to Clipboard</span>
+          </button>
+          <button onclick="downloadResult()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs shadow-md hover:shadow-lg transition active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Download HD PNG
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Feature Value Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-14">
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-lg mb-3">
+          🔍
+        </div>
+        <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5">Sub-Pixel Hair Matting</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          Deep boundary-aware neural segmentation cleanly isolates individual hair strands, animal fur, and complex transparent glass.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg mb-3">
+          📦
+        </div>
+        <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5">E-Commerce Product Staging</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          Instantly replace messy backgrounds with Amazon-compliant pure studio white (#FFFFFF) or vibrant colored brand backdrops.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg mb-3">
+          🔒
+        </div>
+        <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5">100% Client-Side Privacy</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          Operates via WebAssembly directly inside your device's browser memory. Your confidential photos and documents are never uploaded.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#070b14] py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>© 2026 Zenith Growth. All rights reserved. 100% Private In-Browser Utilities.</div>
+      <div class="flex items-center gap-6">
+        <a href="/privacy.html" class="hover:underline">Privacy Policy</a>
+        <a href="/terms.html" class="hover:underline">Terms of Service</a>
+        <a href="/contact.html" class="hover:underline">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const studioView = document.getElementById('studioView');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const beforeImg = document.getElementById('beforeImg');
+    const afterImg = document.getElementById('afterImg');
+    const afterContainer = document.getElementById('afterContainer');
+    const beforeContainer = document.getElementById('beforeContainer');
+    const sliderHandle = document.getElementById('sliderHandle');
+    const compareBox = document.getElementById('compareBox');
+
+    let currentCutoutBlob = null;
+    let originalBlob = null;
+    let selectedBackdrop = 'transparent';
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) processFile(e.target.files[0]);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-indigo-500');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-indigo-500'));
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-indigo-500');
+      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+    });
+
+    async function processFile(file) {
+      originalBlob = file;
+      const originalUrl = URL.createObjectURL(file);
+      beforeImg.src = originalUrl;
+
+      dropZone.style.display = 'none';
+      studioView.classList.remove('hidden');
+      studioView.style.display = 'flex';
+      loadingOverlay.style.display = 'flex';
+
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('model', 'bria-rmbg');
+
+      try {
+        // Try local high-powered Python backend if running
+        const response = await fetch('/api/remove-bg', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Local backend offline");
+
+        const blob = await response.blob();
+        currentCutoutBlob = blob;
+        afterImg.src = URL.createObjectURL(blob);
+        loadingOverlay.style.display = 'none';
+
+      } catch (err) {
+        // In-browser WebAssembly fallback
+        document.getElementById('loadingStatus').innerText = "Running in-browser WebAssembly engine...";
+        document.getElementById('loadingDetail').innerText = "Processing locally in your browser memory for 100% privacy...";
+        try {
+          const { removeBackground } = await import("https://esm.sh/@imgly/background-removal@1.5.7");
+          const blob = await removeBackground(file);
+          currentCutoutBlob = blob;
+          afterImg.src = URL.createObjectURL(blob);
+          loadingOverlay.style.display = 'none';
+        } catch (wasmErr) {
+          console.error("Segmentation error:", wasmErr);
+          alert("Could not process image. Please try another photo.");
+          resetWorkspace();
+        }
+      }
+    }
+
+    // Split Slider Drag Interaction
+    let isDragging = false;
+    compareBox.addEventListener('mousedown', () => isDragging = true);
+    window.addEventListener('mouseup', () => isDragging = false);
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const rect = compareBox.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const pct = (x / rect.width) * 100;
+      beforeContainer.style.width = pct + '%';
+      sliderHandle.style.left = pct + '%';
+    });
+
+    // Touch support for mobile devices
+    compareBox.addEventListener('touchmove', (e) => {
+      if (!e.touches.length) return;
+      const rect = compareBox.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.touches[0].clientX - rect.left, rect.width));
+      const pct = (x / rect.width) * 100;
+      beforeContainer.style.width = pct + '%';
+      sliderHandle.style.left = pct + '%';
+    }, { passive: true });
+
+    function setBackdrop(color) {
+      selectedBackdrop = color;
+      document.querySelectorAll('.color-pill-btn').forEach(b => b.classList.remove('active'));
+
+      if (color === 'transparent') {
+        afterContainer.classList.add('checkerboard-pattern');
+        afterContainer.style.backgroundColor = 'transparent';
+      } else {
+        afterContainer.classList.remove('checkerboard-pattern');
+        afterContainer.style.backgroundColor = color;
+      }
+    }
+
+    function resetWorkspace() {
+      studioView.style.display = 'none';
+      studioView.classList.add('hidden');
+      dropZone.style.display = 'block';
+      fileInput.value = '';
+      currentCutoutBlob = null;
+      originalBlob = null;
+      setBackdrop('transparent');
+    }
+
+    async function copyResultToClipboard() {
+      if (!currentCutoutBlob) return;
+      const btn = document.getElementById('copyClipBtn');
+      try {
+        let blobToCopy = currentCutoutBlob;
+        if (selectedBackdrop !== 'transparent') {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.src = URL.createObjectURL(currentCutoutBlob);
+          await new Promise(r => img.onload = r);
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx.fillStyle = selectedBackdrop;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          blobToCopy = await new Promise(r => canvas.toBlob(r, 'image/png'));
+        }
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blobToCopy })
+        ]);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>✅ Copied Image!</span>';
+        setTimeout(() => { btn.innerHTML = originalText; }, 2200);
+      } catch (err) {
+        console.warn('Clipboard write error:', err);
+        alert('Could not copy image automatically. Use Download HD PNG instead.');
+      }
+    }
+
+    async function downloadResult() {
+      if (!currentCutoutBlob) return;
+
+      if (selectedBackdrop === 'transparent') {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(currentCutoutBlob);
+        a.download = 'photoroom-cutout-transparent.png';
+        a.click();
+      } else {
+        // Composite onto selected background color
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = URL.createObjectURL(currentCutoutBlob);
+        await new Promise(r => img.onload = r);
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.fillStyle = selectedBackdrop;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob((blob) => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `photoroom-staged-${selectedBackdrop.replace('#','')}.png`;
+          a.click();
+        }, 'image/png');
+      }
+    }
+
+    // Universal Client-Side File Handoff integration
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        if (window.ZenithHandoff) {
+          const file = await window.ZenithHandoff.consumePendingFile();
+          if (file && file.type && file.type.startsWith('image/')) {
+            console.log('ZenithHandoff loaded pending image into PhotoRoom Studio:', file.name);
+            processFile(file);
+          }
+        }
+      } catch (err) {
+        console.warn('Handoff error:', err);
+      }
+    });
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

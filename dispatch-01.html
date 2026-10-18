@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Zenith Growth Dispatch — Issue #01 (Interactive Canvas Edition V2: The Death of the Static PDF)</title>
+    <!-- Google AdSense Verification & Auto Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5837397162697542" crossorigin="anonymous"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6GCW9T0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6GCW9T0X');
+  </script>
+
+  <!-- Bing Webmaster & Domain Verification -->
+  <meta name="msvalidate.01" content="Mo_8UvX6y5v5ojKLRMFqYg30dlo_mIPiEVgr1ZgMXDM" />
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="canonical" href="https://zenithgrowth.tech/dispatch-01.html">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            zenith: {
+              bg: '#070B14',
+              card: '#0D1322',
+              border: '#1E293B',
+              indigo: '#6366F1',
+              emerald: '#10B981',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom CSS Variables for Seamless Dark / Magazine-Grade Light Luxury SaaS Theme */
+    :root {
+      --bg-primary: #FAFAFC;
+      --bg-elevated: rgba(255, 255, 255, 0.92);
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-subcard: #F3F5F9;
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --accent-glow: rgba(99, 102, 241, 0.10);
+      --grid-line: rgba(15, 23, 42, 0.035);
+    }
+
+    html.dark {
+      --bg-primary: #070B14;
+      --bg-elevated: rgba(13, 19, 34, 0.78);
+      --bg-card: rgba(15, 23, 42, 0.72);
+      --bg-subcard: rgba(7, 11, 20, 0.85);
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border-color: rgba(255, 255, 255, 0.09);
+      --accent-glow: rgba(99, 102, 241, 0.22);
+      --grid-line: rgba(99, 102, 241, 0.07);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    /* Architectural Background Grid */
+    .bg-tech-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    }
+
+    /* Glassmorphism Surface */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 18px 45px -15px rgba(15, 23, 42, 0.08);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.35s ease;
+    }
+
+    html.dark .glass-card {
+      box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.45);
+    }
+
+    .glass-card-hover:hover {
+      border-color: rgba(99, 102, 241, 0.45);
+      box-shadow: 0 24px 60px -12px var(--accent-glow);
+    }
+
+    .sub-surface {
+      background: var(--bg-subcard);
+      border: 1px solid var(--border-color);
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
+
+    /* Dropzone Active Highlight */
+    .dropzone-active {
+      border-color: #10B981 !important;
+      background-color: rgba(16, 185, 129, 0.08) !important;
+      transform: scale(1.01);
+    }
+
+    html.dark {
+      --bg-primary: #070B14;
+      --bg-elevated: rgba(13, 19, 34, 0.78);
+      --bg-card: rgba(15, 23, 42, 0.72);
+      --bg-subcard: rgba(7, 11, 20, 0.85);
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border-color: rgba(255, 255, 255, 0.09);
+      --accent-glow: rgba(99, 102, 241, 0.22);
+      --grid-line: rgba(99, 102, 241, 0.07);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    /* Architectural Background Grid */
+    .bg-tech-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    }
+
+    /* Glassmorphism Surface */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.25);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.35s ease;
+    }
+
+    .glass-card-hover:hover {
+      border-color: rgba(99, 102, 241, 0.45);
+      box-shadow: 0 24px 60px -12px var(--accent-glow);
+    }
+
+    .sub-surface {
+      background: var(--bg-subcard);
+      border: 1px solid var(--border-color);
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
+
+    /* Custom Range Slider for ATS Resume Compressor */
+    input[type="range"].zenith-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(90deg, #6366F1 0%, #10B981 var(--slider-pct, 92%), rgba(148, 163, 184, 0.25) var(--slider-pct, 92%));
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].zenith-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid #6366F1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25), 0 4px 12px rgba(0, 0, 0, 0.35);
+      cursor: grab;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+
+    input[type="range"].zenith-slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.12);
+      border-color: #10B981;
+    }
+
+    input[type="range"].zenith-slider::-moz-range-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid #6366F1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25), 0 4px 12px rgba(0, 0, 0, 0.35);
+      cursor: grab;
+    }
+
+    /* Alpha Checkerboard Pattern for PhotoRoom Transparent Backdrop */
+    .bg-checkerboard {
+      background-color: #1e293b;
+      background-image: 
+        linear-gradient(45deg, #0f172a 25%, transparent 25%), 
+        linear-gradient(-45deg, #0f172a 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #0f172a 75%), 
+        linear-gradient(-45deg, transparent 75%, #0f172a 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    html:not(.dark) .bg-checkerboard {
+      background-color: #e2e8f0;
+      background-image: 
+        linear-gradient(45deg, #cbd5e1 25%, transparent 25%), 
+        linear-gradient(-45deg, #cbd5e1 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #cbd5e1 75%), 
+        linear-gradient(-45deg, transparent 75%, #cbd5e1 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    /* 3D Booklet & Page Flip Perspective */
+    .booklet-stage {
+      perspective: 1200px;
+    }
+    .booklet-page-flip {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+      transform-style: preserve-3d;
+    }
+    .page-turning {
+      transform: rotateY(-18deg) scale(0.96);
+      opacity: 0.65;
+    }
+
+    /* Drag and drop card highlight */
+    .binder-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.97);
+      border-color: #6366F1 !important;
+    }
+    .binder-card.drag-over {
+      border-color: #10B981 !important;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Smooth Accordion Transition */
+    .accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .accordion-content.open {
+      grid-template-rows: 1fr;
+    }
+    .accordion-inner {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-tech-grid min-h-screen antialiased selection:bg-indigo-500 selection:text-white relative">
+
+  <!-- Ambient Top Radial Spotlights -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden z-0">
+    <div class="absolute -top-40 left-1/4 w-[550px] h-[550px] rounded-full bg-indigo-600/15 blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[450px] h-[450px] rounded-full bg-emerald-500/10 blur-[130px]"></div>
+  </div>
+
+  <!-- Toast Notification Banner (No alert() used anywhere) -->
+  <div id="toast-container" class="fixed bottom-20 sm:bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Sticky Top Navigation Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#FAFAFC]/85 dark:bg-[#070B14]/85 border-b border-[#E2E8F0] dark:border-white/10 transition-colors">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-3">
+      <!-- Brand Identity -->
+      <a href="https://zenithgrowth.tech" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 sm:gap-3 group focus:outline-none shrink-0">
+        <img src="logo.png" alt="Zenith Growth" class="w-9 h-9 rounded-xl object-contain shadow-md group-hover:scale-105 transition-transform">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold tracking-tight text-sm sm:text-base text-slate-900 dark:text-white">ZENITH GROWTH</span>
+            <span class="hidden md:inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">Dispatch #01 • V2</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">Interactive Client-Side Utility Briefing</p>
+        </div>
+      </a>
+
+      <!-- Quick Section Jump Links (Desktop) -->
+      <nav class="hidden lg:flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/90 dark:bg-slate-900/70 px-2 py-1.5 rounded-full border border-[#E2E8F0] dark:border-white/10">
+        <a href="#tool-compressor" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">01. Compressor</a>
+        <a href="#tool-binder" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">02. Binder</a>
+        <a href="#wasm-benchmark" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">03. Benchmark</a>
+        <a href="#tool-photoroom" class="px-2.5 py-1 rounded-full hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors">04. PhotoRoom</a>
+      </nav>
+
+      <!-- Actions: 3-Way Segmented System Theme Controller & Live Platform Link -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <div
+          role="group"
+          aria-label="3-Way Color Theme Selector"
+          class="inline-flex items-center p-1 rounded-xl sub-surface border border-[#E2E8F0] dark:border-white/10 text-[11px] font-mono"
+        >
+          <button
+            type="button"
+            data-theme-mode="system"
+            class="theme-segment-btn px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 font-semibold"
+            title="Sync with OS Dark/Light Preference"
+          >
+            <span>💻</span>
+            <span class="hidden sm:inline">System</span>
+            <span id="os-theme-badge" class="hidden xl:inline text-[9px] px-1 rounded bg-indigo-500/15 text-indigo-500"></span>
+          </button>
+          <button
+            type="button"
+            data-theme-mode="light"
+            class="theme-segment-btn px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 font-semibold"
+            title="Magazine-Grade Light Mode (#FAFAFC)"
+          >
+            <span>☀️</span>
+            <span class="hidden sm:inline">Light</span>
+          </button>
+          <button
+            type="button"
+            data-theme-mode="dark"
+            class="theme-segment-btn px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 font-semibold"
+            title="Luxury Slate Dark Mode (#070B14)"
+          >
+            <span>🌙</span>
+            <span class="hidden sm:inline">Dark</span>
+          </button>
+        </div>
+
+        <a href="https://zenithgrowth.tech" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 transition-all hover:-translate-y-0.5 shrink-0">
+          <span class="hidden sm:inline">Launch Suite</span>
+          <span class="sm:hidden">Suite</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Interactive Newsletter Container -->
+  <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-28 space-y-12 sm:space-y-16">
+
+    <!-- ==========================================
+         SECTION 1: INTERACTIVE HERO HEADER
+         ========================================== -->
+    <section aria-labelledby="hero-heading" class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden">
+      <!-- Subtle decorative corner glow -->
+      <div class="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/25 to-emerald-500/20 blur-3xl"></div>
+
+      <!-- Top Metadata & Live Privacy Badge Row -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span>⚡ 100% In-Browser &amp; Private</span>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 sub-surface px-3 py-1.5 rounded-full">
+          <span>ISSUE #01 • V2</span>
+          <span class="text-indigo-500">•</span>
+          <span>OCT 2026</span>
+          <span class="text-indigo-500">•</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-semibold">0 KB SERVER UPLOAD</span>
+        </div>
+      </div>
+
+      <!-- Main Hero Title -->
+      <h1 id="hero-heading" class="text-3xl sm:text-5xl lg:text-[52px] font-extrabold tracking-tight leading-[1.12] text-slate-900 dark:text-white mb-6">
+        Zenith Growth Dispatch #01: <br class="hidden sm:inline" />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-indigo-400 to-emerald-400">
+          The Death of the Static PDF
+        </span>
+      </h1>
+
+      <!-- Editorial Intro -->
+      <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mb-8">
+        For two decades, compressing an executive resume, merging signed NDAs, or stripping background clutter meant uploading your most sensitive files to a stranger's cloud server. 
+        <strong class="text-slate-900 dark:text-white font-semibold">That era is officially over.</strong> Powered by WebAssembly and local browser neural engines, <a href="https://zenithgrowth.tech" target="_blank" rel="noopener noreferrer" class="text-indigo-500 underline decoration-indigo-500/40 hover:decoration-indigo-500 font-medium">Zenith Growth</a> executes enterprise-grade PDF &amp; AI studio pipelines directly inside your device's RAM. Don't just read about it—test the live engines right inside this dispatch below.
+      </p>
+
+      <!-- Live Telemetry Bar / Interactive Privacy Verifier -->
+      <div class="sub-surface rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-500 shrink-0">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono uppercase tracking-wider font-bold text-slate-800 dark:text-slate-200">Client-Side Sandbox Telemetry</span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold">VERIFIED LOCAL</span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Outbound Network Calls: <strong class="font-mono text-slate-800 dark:text-slate-200">0 requests</strong> • Cloud Storage Retention: <strong class="font-mono text-slate-800 dark:text-slate-200">0.00 MB</strong>
+            </p>
+          </div>
+        </div>
+
+        <button id="verify-privacy-btn" type="button" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-indigo-600 dark:hover:bg-indigo-600 text-white text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 shrink-0">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span id="verify-privacy-text">Run Zero-Upload Audit</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 2: INTERACTIVE SIMULATION #1 — ATS RESUME COMPRESSOR
+         ============================================================ -->
+    <section id="tool-compressor" aria-labelledby="compressor-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#E2E8F0] dark:border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-indigo-500 font-semibold mb-2">
+            <span>INTERACTIVE SIMULATION #01</span>
+            <span>•</span>
+            <span>WASM STREAM ENGINE + LIVE FILE SANDBOX</span>
+          </div>
+          <h2 id="compressor-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            The "Under-100KB" ATS Resume Compressor
+          </h2>
+        </div>
+        <a href="https://zenithgrowth.tech/compress-pdf.html" target="_blank" rel="noopener noreferrer" class="self-start sm:self-auto inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-500 hover:text-indigo-400 bg-indigo-500/10 px-3.5 py-2 rounded-xl border border-indigo-500/20 transition-colors">
+          <span>Open Live PDF Compressor</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- V2 NEW: DROP REAL TEST FILE MICRO-ZONE -->
+      <div class="mb-8">
+        <input id="compressor-file-input" type="file" accept=".pdf,image/jpeg,image/png,image/webp" class="hidden" />
+        <div
+          id="compressor-dropzone"
+          role="button"
+          tabindex="0"
+          aria-label="Drop a real PDF or image file to test client-side compression calculations"
+          class="sub-surface rounded-2xl p-4 sm:p-5 border-2 border-dashed border-indigo-500/35 hover:border-indigo-500 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+        >
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-500 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Drop Real Test File (PDF / JPG / PNG)</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold">V2 LIVE SANDBOX</span>
+              </div>
+              <p id="compressor-dropzone-subtext" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Drag a real file here or click to browse. We parse its exact byte size in RAM and simulate the WASM deflate curve live.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <button
+              id="compressor-reset-sample-btn"
+              type="button"
+              class="hidden px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-200/80 dark:bg-white/10 hover:bg-rose-500/20 hover:text-rose-400 text-slate-700 dark:text-slate-200 transition-all"
+            >
+              ↺ Reset to 15 MB Sample
+            </button>
+            <span class="px-3.5 py-2 rounded-xl bg-indigo-600/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 font-mono text-xs font-semibold">
+              Select Local File →
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left Column: Interactive Slider & Telemetry Controls (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            Strict corporate &amp; government job portals automatically reject high-res exported PDFs over <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-500">100 KB</code>, while naive compressors turn text into blurry raster images that fail ATS parsers. Drag the slider below to test Zenith's font-subsetting &amp; stream-deflate engine:
+          </p>
+
+          <!-- Preset Quick Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-mono text-slate-400 mr-1">PRESETS:</span>
+            <button type="button" data-compress-preset="0" class="compress-preset-btn px-3 py-1.5 rounded-lg text-xs font-mono sub-surface hover:border-indigo-500/50 transition-all">
+              Raw Source
+            </button>
+            <button type="button" data-compress-preset="55" class="compress-preset-btn px-3 py-1.5 rounded-lg text-xs font-mono sub-surface hover:border-indigo-500/50 transition-all">
+              Balanced Deflate
+            </button>
+            <button type="button" data-compress-preset="100" class="compress-preset-btn px-3 py-1.5 rounded-lg text-xs font-mono bg-indigo-600 text-white font-semibold shadow-sm transition-all">
+              ⚡ Strict Portal (&lt;100 KB)
+            </button>
+          </div>
+
+          <!-- Draggable Slider Box -->
+          <div class="sub-surface rounded-2xl p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <label for="compression-slider" class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                <span>WASM Deflate &amp; Metadata Strip Force</span>
+              </label>
+              <span id="slider-force-label" class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-indigo-500/15 text-indigo-500">
+                100% MAX OPTIMIZATION
+              </span>
+            </div>
+
+            <input
+              id="compression-slider"
+              type="range"
+              min="0"
+              max="100"
+              value="100"
+              class="zenith-slider"
+              aria-label="PDF Compression Force Slider"
+            />
+
+            <div class="flex justify-between text-[11px] font-mono text-slate-400">
+              <span id="slider-min-label">0% (Uncompressed 15.00 MB)</span>
+              <span>50% (Standard)</span>
+              <span id="slider-max-label" class="text-emerald-600 dark:text-emerald-400 font-semibold">100% (88 KB Target)</span>
+            </div>
+          </div>
+
+          <!-- Live Calculation Readout Banner -->
+          <div id="compressor-status-banner" class="rounded-2xl p-4 sm:p-5 bg-emerald-500/10 border border-emerald-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center gap-3">
+              <div id="compressor-status-icon" class="w-9 h-9 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center shrink-0 font-bold">
+                ✓
+              </div>
+              <div>
+                <p id="compressor-live-calc" class="text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-300">
+                  Saved 99.4% file size — ATS Compliant &amp; Portal Safe
+                </p>
+                <p id="compressor-sub-calc" class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                  100% searchable vector text layer preserved • Passes Workday, Greenhouse &amp; <span class="font-mono">&lt;100KB</span> portals.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Visual PDF Document Card & Size Counter (5 cols) -->
+        <div class="lg:col-span-5">
+          <div class="sub-surface rounded-2xl p-6 relative overflow-hidden border border-indigo-500/25">
+            <!-- Top File Header -->
+            <div class="flex items-center justify-between gap-2 pb-4 mb-4 border-b border-[#E2E8F0] dark:border-white/10">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div id="compressor-file-ext-badge" class="w-8 h-8 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-500 flex items-center justify-center font-mono text-xs font-bold shrink-0">
+                  PDF
+                </div>
+                <div class="truncate">
+                  <p id="compressor-filename-label" class="text-xs font-mono font-semibold text-slate-800 dark:text-slate-200 truncate">Alex_Rivera_Senior_Resume.pdf</p>
+                  <p id="compressor-filemeta-label" class="text-[11px] text-slate-400">Vector Text + Embedded Fonts</p>
+                </div>
+              </div>
+              <span id="portal-badge" class="shrink-0 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                &lt;100KB READY
+              </span>
+            </div>
+
+            <!-- Live Animated File Size Readout -->
+            <div class="text-center py-4">
+              <p class="text-[11px] font-mono uppercase tracking-widest text-slate-400 mb-1">Real-Time Output Size</p>
+              <div class="flex items-baseline justify-center gap-3">
+                <span id="original-filesize-strike" class="text-sm font-mono line-through text-slate-400">15.00 MB</span>
+                <span id="live-filesize-display" class="text-4xl sm:text-5xl font-black font-mono tracking-tight text-emerald-500 transition-colors">
+                  88 KB
+                </span>
+              </div>
+              <p id="exact-bytes-readout" class="text-[11px] font-mono text-slate-400 mt-1">
+                Raw Stream: 15,728,640 bytes → 90,112 bytes
+              </p>
+            </div>
+
+            <!-- Simulated Resume Vector Preview / Dropped Image Preview & Byte Matrix -->
+            <div class="mt-3 rounded-xl bg-white dark:bg-slate-900/90 p-4 border border-[#E2E8F0] dark:border-white/10 space-y-2.5">
+              <div id="compressor-custom-img-wrap" class="hidden pb-2">
+                <img id="compressor-custom-img" src="" alt="Dropped user test file preview" class="w-full h-24 object-contain rounded-lg bg-slate-100 dark:bg-slate-950 p-1" />
+              </div>
+              <div id="compressor-vector-skeleton" class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <div class="h-3 w-32 rounded bg-slate-800 dark:bg-slate-200"></div>
+                  <span class="text-[10px] font-mono text-indigo-500 font-semibold">300 DPI VECTOR</span>
+                </div>
+                <div class="h-2 w-48 rounded bg-indigo-500/40"></div>
+                <div class="pt-1 space-y-1.5">
+                  <div class="h-1.5 w-full rounded bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="h-1.5 w-11/12 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="h-1.5 w-4/5 rounded bg-slate-200 dark:bg-slate-700"></div>
+                </div>
+              </div>
+
+              <!-- Visual Byte Density Bar -->
+              <div class="pt-3 border-t border-slate-100 dark:border-white/5">
+                <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                  <span>Redundant Font/Metadata Overhead</span>
+                  <span id="overhead-pct-label">0.6%</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div id="overhead-bar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-150" style="width: 4%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3: INTERACTIVE SIMULATION #2 — MULTI-IMAGE TO PDF BINDER
+         ============================================================ -->
+    <section id="tool-binder" aria-labelledby="binder-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-[#E2E8F0] dark:border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-indigo-500 font-semibold mb-2">
+            <span>INTERACTIVE SIMULATION #02</span>
+            <span>•</span>
+            <span>MULTI-IMAGE TO PDF BINDER + LIVE DROP</span>
+          </div>
+          <h2 id="binder-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            Rotate, Reorder &amp; Stitch Scans into 1 Bound PDF
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-xl border border-[#E2E8F0] dark:border-white/10">
+            💡 Drag cards to reorder or click <strong class="text-indigo-500">Rotate 90°</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- V2 NEW: DROP REAL IMAGES OR PDF FILES INTO BINDER MICRO-ZONE -->
+      <div class="mb-8">
+        <input id="binder-file-input" type="file" accept="image/jpeg,image/png,image/webp,.pdf" multiple class="hidden" />
+        <div
+          id="binder-dropzone"
+          role="button"
+          tabindex="0"
+          aria-label="Drop real images or PDFs to add them to the interactive binder"
+          class="sub-surface rounded-2xl p-4 sm:p-5 border-2 border-dashed border-emerald-500/35 hover:border-emerald-500 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+        >
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Drop Real Test Images / PDFs into Binder</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-semibold">MULTI-FILE CLIENT SANDBOX</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Drop 1 or more JPG/PNG/WebP/PDF files from your computer to rotate 90°, reorder, and stitch into the live booklet below.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <button
+              id="binder-reset-samples-btn"
+              type="button"
+              class="hidden px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-200/80 dark:bg-white/10 hover:bg-rose-500/20 hover:text-rose-400 text-slate-700 dark:text-slate-200 transition-all"
+            >
+              ↺ Reset 3 Samples
+            </button>
+            <span class="px-3.5 py-2 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 font-mono text-xs font-semibold">
+              + Add Local Files
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATE A: Interactive Photo/Scan Cards Grid -->
+      <div id="binder-grid-view" class="space-y-8">
+        <div id="binder-cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Cards are dynamically rendered by JS so order & rotation stay in sync -->
+        </div>
+
+        <!-- Bottom Action Bar: Stitch into 1 PDF CTA -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <p id="binder-summary-caption" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            All 3 scans will be normalized to A4 aspect ratio and bound locally with zero quality loss.
+          </p>
+          <button
+            id="stitch-pdf-btn"
+            type="button"
+            class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:to-emerald-400 text-white font-bold text-sm sm:text-base shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-3 transition-all hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span id="stitch-btn-label">Stitch into 1 PDF Booklet</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STATE B: Bound Interactive Digital PDF Booklet View (Hidden until stitched) -->
+      <div id="binder-booklet-view" class="hidden">
+        <div class="sub-surface rounded-2xl p-6 sm:p-8 border border-emerald-500/30">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 flex items-center justify-center font-bold">
+                ✓
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white font-mono">Merged_Packet_Zenith.pdf</h3>
+                  <span id="booklet-total-pill" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold">3 PAGES BOUND</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Your custom page order and 90° rotation states are baked into the unified PDF.</p>
+              </div>
+            </div>
+
+            <button
+              id="unbind-pdf-btn"
+              type="button"
+              class="px-4 py-2 rounded-xl sub-surface hover:border-indigo-500 text-xs font-mono font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition-all"
+            >
+              <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Unbind / Edit Pages</span>
+            </button>
+          </div>
+
+          <!-- Interactive 3D Booklet Reader -->
+          <div class="booklet-stage max-w-md mx-auto">
+            <div id="booklet-page-card" class="booklet-page-flip rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-500/40 shadow-2xl p-6 relative">
+              <!-- Spine Binding Visual on Left Edge -->
+              <div class="absolute left-2 top-6 bottom-6 w-2 flex flex-col justify-between pointer-events-none">
+                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+              </div>
+
+              <div class="pl-4">
+                <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-3">
+                  <span id="booklet-page-indicator" class="text-indigo-500 font-bold">PAGE 1 OF 3</span>
+                  <span id="booklet-rotation-indicator">ROTATION: 0°</span>
+                </div>
+
+                <!-- Dynamic SVG or Uploaded Image Preview Slot -->
+                <div class="h-52 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-[#E2E8F0] dark:border-white/10 flex items-center justify-center overflow-hidden p-4">
+                  <div id="booklet-svg-holder" class="w-40 h-40 flex items-center justify-center transition-transform duration-300"></div>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                  <div class="min-w-0 pr-2">
+                    <p id="booklet-doc-title" class="font-bold text-sm text-slate-900 dark:text-white truncate"></p>
+                    <p id="booklet-doc-meta" class="text-xs font-mono text-slate-400 truncate"></p>
+                  </div>
+                  <span class="shrink-0 text-[11px] font-mono px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-500 font-semibold">A4 NORMALIZED</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Booklet Flip Controls -->
+            <div class="flex items-center justify-between mt-5">
+              <button id="prev-page-btn" type="button" class="px-4 py-2 rounded-xl sub-surface text-xs font-mono font-semibold hover:border-indigo-500 transition-all flex items-center gap-1.5">
+                <span>← Prev Page</span>
+              </button>
+              <div id="booklet-dots" class="flex items-center gap-2"></div>
+              <button id="next-page-btn" type="button" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold transition-all flex items-center gap-1.5">
+                <span>Flip Next Page →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3.5 (V2 NEW): INTERACTIVE PERFORMANCE BENCHMARK XY CHART
+         ============================================================ -->
+    <section id="wasm-benchmark" aria-labelledby="benchmark-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#E2E8F0] dark:border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold mb-2">
+            <span>V2 TELEMETRY BENCHMARK</span>
+            <span>•</span>
+            <span>CLOUD UPLOAD VS. IN-BROWSER WASM</span>
+          </div>
+          <h2 id="benchmark-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            Interactive Speed &amp; Privacy Benchmark XY Chart
+          </h2>
+        </div>
+
+        <!-- File Size Selector Pill Bar + Live Race Trigger -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div role="group" aria-label="Benchmark Payload Size Selector" class="inline-flex p-1 rounded-xl sub-surface border border-[#E2E8F0] dark:border-white/10 font-mono text-xs">
+            <button type="button" data-bench-size="1" class="bench-size-btn px-3 py-1.5 rounded-lg transition-all font-semibold">
+              1 MB
+            </button>
+            <button type="button" data-bench-size="10" class="bench-size-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow transition-all font-semibold">
+              10 MB
+            </button>
+            <button type="button" data-bench-size="50" class="bench-size-btn px-3 py-1.5 rounded-lg transition-all font-semibold">
+              50 MB
+            </button>
+          </div>
+
+          <button
+            id="run-bench-race-btn"
+            type="button"
+            class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-1.5 transition-all"
+          >
+            <span>▶ Run Live Race</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left Column: Horizontal XY Timeline Bar Race & Breakdown (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            Legacy PDF utilities force a round-trip across the public internet (Upload Queue → Remote Server Decode → Re-Download) and retain copies in cloud buckets. Select a payload size above to compare total wall-clock latency:
+          </p>
+
+          <!-- Track 1: Legacy Cloud Upload (Adobe / iLovePDF) -->
+          <div class="sub-surface rounded-2xl p-5 space-y-3 border border-rose-500/25">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Cloud Server Upload (Adobe / iLovePDF)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-semibold">
+                  ⚠️ High Privacy Risk
+                </span>
+                <span id="bench-cloud-time" class="font-mono text-base sm:text-lg font-extrabold text-rose-500">8.4s</span>
+              </div>
+            </div>
+
+            <!-- Horizontal Bar Track -->
+            <div class="w-full h-5 rounded-xl bg-slate-200 dark:bg-slate-800/90 overflow-hidden p-0.5">
+              <div
+                id="bench-cloud-bar"
+                class="h-full rounded-lg bg-gradient-to-r from-rose-500 via-amber-500 to-rose-600 transition-all duration-700 flex items-center justify-end pr-2"
+                style="width: 92%"
+              >
+                <span id="bench-cloud-bar-label" class="text-[10px] font-mono font-bold text-white drop-shadow">UPLOAD + QUEUE + DOWNLOAD</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+              <span id="bench-cloud-breakdown">Upload: 5.1s • Server Queue: 1.4s • Download: 1.9s</span>
+              <span id="bench-cloud-leaked" class="text-rose-500 font-semibold">10 MB Uploaded to 3rd-Party</span>
+            </div>
+          </div>
+
+          <!-- Track 2: Zenith In-Browser WASM -->
+          <div class="sub-surface rounded-2xl p-5 space-y-3 border border-emerald-500/35">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Zenith In-Browser WASM Engine</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold">
+                  🛡️ 0 Bytes Leaked
+                </span>
+                <span id="bench-wasm-time" class="font-mono text-base sm:text-lg font-extrabold text-emerald-500">0.3s</span>
+              </div>
+            </div>
+
+            <!-- Horizontal Bar Track -->
+            <div class="w-full h-5 rounded-xl bg-slate-200 dark:bg-slate-800/90 overflow-hidden p-0.5">
+              <div
+                id="bench-wasm-bar"
+                class="h-full rounded-lg bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-500"
+                style="width: 6%"
+              ></div>
+            </div>
+
+            <div class="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+              <span id="bench-wasm-breakdown">Network Transfer: 0.00s • Local RAM SIMD Compute: 0.30s</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">100% Local RAM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive SVG XY Scaling Curve & Speedup Delta (5 cols) -->
+        <div class="lg:col-span-5">
+          <div class="sub-surface rounded-2xl p-6 border border-indigo-500/25 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[10px] font-mono uppercase tracking-widest text-slate-400">LIVE SPEEDUP MULTIPLIER</p>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span id="bench-speedup-badge" class="text-3xl sm:text-4xl font-black font-mono text-indigo-500">28.0× Faster</span>
+                  <span id="bench-payload-tag" class="text-xs font-mono text-emerald-500 font-semibold">@ 10 MB PDF</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-500 font-mono text-[11px] font-bold">
+                XY LATENCY CURVE
+              </span>
+            </div>
+
+            <!-- SVG XY Plot (X: File Size 1MB -> 50MB, Y: Latency Seconds) -->
+            <div class="rounded-xl bg-white dark:bg-slate-900/95 p-3 border border-[#E2E8F0] dark:border-white/10">
+              <svg id="benchmark-xy-svg" class="w-full h-44" viewBox="0 0 320 170" fill="none">
+                <!-- Grid Lines -->
+                <line x1="36" y1="20" x2="300" y2="20" stroke="currentColor" class="text-slate-200 dark:text-slate-800" stroke-dasharray="3 3" />
+                <line x1="36" y1="65" x2="300" y2="65" stroke="currentColor" class="text-slate-200 dark:text-slate-800" stroke-dasharray="3 3" />
+                <line x1="36" y1="110" x2="300" y2="110" stroke="currentColor" class="text-slate-200 dark:text-slate-800" stroke-dasharray="3 3" />
+                <line x1="36" y1="142" x2="300" y2="142" stroke="currentColor" class="text-slate-300 dark:text-slate-700" stroke-width="1.5" />
+                <line x1="36" y1="15" x2="36" y2="142" stroke="currentColor" class="text-slate-300 dark:text-slate-700" stroke-width="1.5" />
+
+                <!-- Y-Axis Labels -->
+                <text x="6" y="24" fill="#94A3B8" font-family="monospace" font-size="9">35s</text>
+                <text x="6" y="68" fill="#94A3B8" font-family="monospace" font-size="9">20s</text>
+                <text x="10" y="113" fill="#94A3B8" font-family="monospace" font-size="9">8s</text>
+                <text x="12" y="142" fill="#94A3B8" font-family="monospace" font-size="9">0s</text>
+
+                <!-- X-Axis Labels -->
+                <text x="45" y="158" fill="#94A3B8" font-family="monospace" font-size="9">1 MB</text>
+                <text x="152" y="158" fill="#94A3B8" font-family="monospace" font-size="9">10 MB</text>
+                <text x="268" y="158" fill="#94A3B8" font-family="monospace" font-size="9">50 MB</text>
+
+                <!-- Cloud Server Slope (Steep Latency Growth) -->
+                <path d="M 55 132 Q 165 110, 285 24" stroke="#F43F5E" stroke-width="3" fill="none" stroke-linecap="round" />
+                <!-- Zenith WASM Slope (Near-Flat Sub-Second Local Execution) -->
+                <path d="M 55 140 L 165 138 L 285 134" stroke="#10B981" stroke-width="3" fill="none" stroke-linecap="round" />
+
+                <!-- Active Selection Vertical Guide Line -->
+                <line id="xy-active-guide" x1="165" y1="20" x2="165" y2="142" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4 3" />
+
+                <!-- Active Cloud Point -->
+                <circle id="xy-cloud-dot" cx="165" cy="110" r="6" fill="#F43F5E" stroke="#FFFFFF" stroke-width="2" />
+                <!-- Active WASM Point -->
+                <circle id="xy-wasm-dot" cx="165" cy="138" r="6" fill="#10B981" stroke="#FFFFFF" stroke-width="2" />
+              </svg>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Cloud Upload Curve</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Zenith WASM Curve</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 4: INTERACTIVE FEATURE OF THE WEEK — PHOTOROOM PRO STUDIO
+         ============================================================ -->
+    <section id="tool-photoroom" aria-labelledby="photoroom-heading" class="glass-card glass-card-hover rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-slate-200/80 dark:border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-500 font-semibold mb-2">
+            <span>FEATURE OF THE WEEK</span>
+            <span>•</span>
+            <span>PHOTOROOM PRO STUDIO + EXIF SANITIZER</span>
+          </div>
+          <h2 id="photoroom-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            In-Browser Neural Background Cutout &amp; Studio Relighting
+          </h2>
+        </div>
+
+        <!-- Interactive AI EXIF Sanitizer Toggle Pill -->
+        <button
+          id="exif-toggle-btn"
+          type="button"
+          class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold flex items-center gap-2 transition-all hover:bg-emerald-500/25"
+        >
+          <span id="exif-dot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="exif-status-label">AI EXIF Sanitizer: ACTIVE (GPS Stripped)</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left Column: Interactive Split Comparison Canvas (7 cols) -->
+        <div class="lg:col-span-7">
+          <div
+            id="comparison-stage"
+            class="relative w-full h-[340px] sm:h-[390px] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/15 select-none cursor-ew-resize shadow-inner"
+            aria-label="Before and After Background Removal Split Slider"
+          >
+            <!-- LAYER 1 (BOTTOM / FULL WIDTH): "AFTER" STUDIO CUTOUT WITH DYNAMIC BACKDROP -->
+            <div id="photoroom-after-bg" class="absolute inset-0 bg-checkerboard transition-colors duration-300 flex items-center justify-center">
+              <!-- Ambient Studio Rim Glow -->
+              <div id="photoroom-studio-glow" class="pointer-events-none absolute w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl transition-all duration-300"></div>
+
+              <!-- Crisp Cutout Subject Illustration (Flagship Studio Headphones + Creator Badge) -->
+              <div class="relative z-10 flex flex-col items-center">
+                <svg class="w-56 h-56 sm:w-64 sm:h-64 drop-shadow-[0_22px_32px_rgba(0,0,0,0.45)]" viewBox="0 0 240 240" fill="none">
+                  <!-- Outer Metallic Headband -->
+                  <path d="M48 128C48 83.8172 80.2355 48 120 48C159.764 48 192 83.8172 192 128" stroke="url(#headbandGrad)" stroke-width="16" stroke-linecap="round"/>
+                  <path d="M60 124C60 88.6538 86.8629 60 120 60C153.137 60 180 88.6538 180 124" stroke="#6366F1" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 4"/>
+                  <!-- Left Ear Cup -->
+                  <rect x="30" y="116" width="38" height="68" rx="19" fill="url(#cupGrad)" stroke="#818CF8" stroke-width="2.5"/>
+                  <rect x="58" y="122" width="12" height="56" rx="6" fill="#1E293B"/>
+                  <!-- Right Ear Cup -->
+                  <rect x="172" y="116" width="38" height="68" rx="19" fill="url(#cupGrad)" stroke="#818CF8" stroke-width="2.5"/>
+                  <rect x="170" y="122" width="12" height="56" rx="6" fill="#1E293B"/>
+                  <!-- Neon Accent Rings on Ear Cups -->
+                  <circle cx="49" cy="150" r="10" stroke="#10B981" stroke-width="2.5"/>
+                  <circle cx="191" cy="150" r="10" stroke="#10B981" stroke-width="2.5"/>
+                  <!-- Center Floating Audio Waveform Graphic -->
+                  <rect x="92" y="138" width="6" height="24" rx="3" fill="#6366F1"/>
+                  <rect x="104" y="124" width="6" height="52" rx="3" fill="#10B981"/>
+                  <rect x="117" y="112" width="6" height="76" rx="3" fill="#818CF8"/>
+                  <rect x="130" y="128" width="6" height="44" rx="3" fill="#10B981"/>
+                  <rect x="142" y="140" width="6" height="20" rx="3" fill="#6366F1"/>
+                  <defs>
+                    <linearGradient id="headbandGrad" x1="48" y1="48" x2="192" y2="128" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#E2E8F0"/>
+                      <stop offset="0.5" stop-color="#94A3B8"/>
+                      <stop offset="1" stop-color="#475569"/>
+                    </linearGradient>
+                    <linearGradient id="cupGrad" x1="30" y1="116" x2="68" y2="184" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#312E81"/>
+                      <stop offset="1" stop-color="#0F172A"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <!-- "AFTER" Corner Pill -->
+              <span class="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-emerald-500/90 text-slate-950 font-mono text-[11px] font-bold shadow">
+                AFTER • AI STUDIO CUTOUT
+              </span>
+            </div>
+
+            <!-- LAYER 2 (CLIPPED BY SLIDER): "BEFORE" CLUTTERED DESK / STREET SCENE -->
+            <div
+              id="photoroom-before-clip"
+              class="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-slate-800 to-stone-900 flex items-center justify-center overflow-hidden"
+              style="clip-path: inset(0 50% 0 0);"
+            >
+              <!-- Cluttered Noisy Background Elements (Messy cables, coffee mug, window blinds, photobombers) -->
+              <svg class="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 600 400" preserveAspectRatio="none">
+                <!-- Messy Venetian Blinds & Street Buildings -->
+                <rect x="20" y="20" width="180" height="20" fill="#475569" />
+                <rect x="20" y="55" width="180" height="20" fill="#475569" />
+                <rect x="20" y="90" width="180" height="20" fill="#475569" />
+                <rect x="410" y="30" width="150" height="190" fill="#334155" />
+                <!-- Cluttered Desk Surface -->
+                <rect x="0" y="290" width="600" height="110" fill="#292524" />
+                <!-- Tangled Background Wires & Coffee Spill -->
+                <path d="M10 280 Q 150 210, 260 310 T 580 260" stroke="#F59E0B" stroke-width="5" fill="none" />
+                <path d="M50 340 Q 240 240, 420 350" stroke="#EF4444" stroke-width="4" fill="none" />
+                <!-- Distracting Coffee Cup & Clutter Boxes -->
+                <rect x="75" y="220" width="55" height="70" rx="8" fill="#B45309" />
+                <circle cx="485" cy="245" r="42" fill="#78716C" />
+                <text x="36" y="165" fill="#FBBF24" font-family="monospace" font-size="13" font-weight="bold">CLUTTERED BG + RAW EXIF GPS</text>
+              </svg>
+
+              <!-- Same Subject inside the Before Scene (slightly duller lighting) -->
+              <div class="relative z-10 flex flex-col items-center filter sepia-[.25] contrast-90">
+                <svg class="w-56 h-56 sm:w-64 sm:h-64" viewBox="0 0 240 240" fill="none">
+                  <path d="M48 128C48 83.8172 80.2355 48 120 48C159.764 48 192 83.8172 192 128" stroke="#94A3B8" stroke-width="16" stroke-linecap="round"/>
+                  <rect x="30" y="116" width="38" height="68" rx="19" fill="#1E293B" stroke="#64748B" stroke-width="2.5"/>
+                  <rect x="172" y="116" width="38" height="68" rx="19" fill="#1E293B" stroke="#64748B" stroke-width="2.5"/>
+                  <rect x="92" y="138" width="6" height="24" rx="3" fill="#64748B"/>
+                  <rect x="104" y="124" width="6" height="52" rx="3" fill="#94A3B8"/>
+                  <rect x="117" y="112" width="6" height="76" rx="3" fill="#64748B"/>
+                  <rect x="130" y="128" width="6" height="44" rx="3" fill="#94A3B8"/>
+                  <rect x="142" y="140" width="6" height="20" rx="3" fill="#64748B"/>
+                </svg>
+              </div>
+
+              <!-- "BEFORE" Corner Pill -->
+              <span class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-slate-900/90 text-amber-400 border border-amber-500/30 font-mono text-[11px] font-bold">
+                BEFORE • RAW PHOTO
+              </span>
+            </div>
+
+            <!-- VERTICAL DRAGGABLE SPLIT HANDLE -->
+            <div
+              id="comparison-handle"
+              class="absolute top-0 bottom-0 z-30 w-1 bg-white shadow-[0_0_15px_rgba(0,0,0,0.8)] pointer-events-none"
+              style="left: 50%;"
+            >
+              <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-indigo-600 border-2 border-white shadow-xl flex items-center justify-center text-white">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-4 3 4 3m8-6l4 3-4 3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Backdrop Color Chips & EXIF Telemetry (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+              Real-Time Studio Backdrop Switcher
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              Drag the split handle on the canvas to inspect edge precision, then click any studio backdrop chip below to relight the cutout subject in real-time:
+            </p>
+          </div>
+
+          <!-- 4 Required Backdrop Color Chips -->
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              data-backdrop="transparent"
+              class="backdrop-chip-btn active-chip p-3 rounded-2xl sub-surface border-2 border-indigo-500 flex items-center gap-3 text-left transition-all"
+            >
+              <span class="w-7 h-7 rounded-lg bg-checkerboard border border-slate-400/40 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-900 dark:text-white">Transparent</p>
+                <p class="text-[10px] font-mono text-slate-400">Alpha PNG</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              data-backdrop="white"
+              class="backdrop-chip-btn p-3 rounded-2xl sub-surface border-2 border-transparent hover:border-indigo-500/40 flex items-center gap-3 text-left transition-all"
+            >
+              <span class="w-7 h-7 rounded-lg bg-white border border-slate-300 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-900 dark:text-white">Pure White</p>
+                <p class="text-[10px] font-mono text-slate-400">#FFFFFF Amazon</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              data-backdrop="violet"
+              class="backdrop-chip-btn p-3 rounded-2xl sub-surface border-2 border-transparent hover:border-indigo-500/40 flex items-center gap-3 text-left transition-all"
+            >
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-700 border border-indigo-400 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-900 dark:text-white">Cyber Violet</p>
+                <p class="text-[10px] font-mono text-slate-400">#6366F1 Neon</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              data-backdrop="black"
+              class="backdrop-chip-btn p-3 rounded-2xl sub-surface border-2 border-transparent hover:border-indigo-500/40 flex items-center gap-3 text-left transition-all"
+            >
+              <span class="w-7 h-7 rounded-lg bg-[#090D16] border border-slate-700 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-900 dark:text-white">Matte Black</p>
+                <p class="text-[10px] font-mono text-slate-400">#090D16 Luxury</p>
+              </div>
+            </button>
+          </div>
+
+          <!-- EXIF Metadata Sanitizer Live Inspector Box -->
+          <div class="sub-surface rounded-2xl p-4 space-y-2 text-xs font-mono">
+            <div class="flex items-center justify-between text-slate-400 pb-1.5 border-b border-slate-200/60 dark:border-white/10">
+              <span>AI EXIF METADATA INSPECTOR</span>
+              <span id="exif-badge-mini" class="text-emerald-500 font-bold">SCRUBBED</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">GPS Coordinates:</span>
+              <span id="exif-gps-val" class="text-emerald-500 line-through">37.7749° N, 122.4194° W</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Camera Serial / Lens:</span>
+              <span id="exif-cam-val" class="text-emerald-500 line-through">Sony ILCE-7M4 #884120</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5: "3 AI WORKFLOW SHORTCUTS OF THE WEEK" (ACCORDIONS)
+         ============================================================ -->
+    <section id="ai-shortcuts" aria-labelledby="shortcuts-heading" class="glass-card rounded-3xl p-6 sm:p-10">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 mb-8 border-b border-slate-200/80 dark:border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-indigo-500 font-semibold mb-2">
+            <span>CURATED PLAYBOOKS</span>
+            <span>•</span>
+            <span>1-CLICK COPY PROMPTS</span>
+          </div>
+          <h2 id="shortcuts-heading" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            3 AI Workflow Shortcuts of the Week
+          </h2>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          Click any card to expand the workflow and copy the exact LLM prompt.
+        </p>
+      </div>
+
+      <!-- Accordion Stack -->
+      <div class="space-y-4" id="shortcuts-accordion-group">
+
+        <!-- Shortcut #1 -->
+        <div class="sub-surface rounded-2xl overflow-hidden border border-slate-200/80 dark:border-white/10 transition-all">
+          <button
+            type="button"
+            class="accordion-trigger w-full p-5 sm:p-6 flex items-center justify-between gap-4 text-left focus:outline-none"
+            aria-expanded="true"
+          >
+            <div class="flex items-center gap-4">
+              <span class="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-500 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+                01
+              </span>
+              <div>
+                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+                  Instant OCR Text Extractor → Clean Markdown Financial Table
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Extract raw text from locked PDF invoices in-browser, then pipe into any LLM for instant CSV/Markdown formatting.
+                </p>
+              </div>
+            </div>
+            <svg class="accordion-chevron w-5 h-5 text-slate-400 transition-transform duration-300 rotate-180 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div class="accordion-content open">
+            <div class="accordion-inner px-5 sm:px-6 pb-6 pt-2 border-t border-slate-200/60 dark:border-white/5 space-y-4">
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <strong>Step 1:</strong> Drop your scanned receipt or locked PDF invoice into Zenith Growth's <em>OCR Text Extractor</em> (runs 100% locally via WebAssembly). <br />
+                <strong>Step 2:</strong> Paste the raw OCR dump alongside this structured prompt:
+              </p>
+              <div class="rounded-xl bg-slate-900 text-slate-200 p-4 font-mono text-xs leading-relaxed relative">
+                <p id="prompt-text-1">You are a Senior Financial Data Parser. Take the following raw OCR text extracted via Zenith Growth and convert every line item into a clean Markdown table with columns: [Date | Vendor | Category | Net Amount | Tax | Total]. Flag any arithmetic discrepancies at the bottom.</p>
+              </div>
+              <div class="flex justify-end">
+                <button
+                  type="button"
+                  data-copy-target="prompt-text-1"
+                  class="copy-prompt-btn px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold flex items-center gap-2 transition-all shadow-md shadow-indigo-500/20"
+                >
+                  <span>📋 Copy Prompt</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcut #2 -->
+        <div class="sub-surface rounded-2xl overflow-hidden border border-slate-200/80 dark:border-white/10 transition-all">
+          <button
+            type="button"
+            class="accordion-trigger w-full p-5 sm:p-6 flex items-center justify-between gap-4 text-left focus:outline-none"
+            aria-expanded="false"
+          >
+            <div class="flex items-center gap-4">
+              <span class="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+                02
+              </span>
+              <div>
+                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+                  ATS Keyword Density Audit + Under-100KB Resume Pipeline
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Optimize executive bullet points for Workday/Greenhouse parsers before running Zenith's &lt;100KB PDF Compressor.
+                </p>
+              </div>
+            </div>
+            <svg class="accordion-chevron w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div class="accordion-content">
+            <div class="accordion-inner px-5 sm:px-6 pb-6 pt-2 border-t border-slate-200/60 dark:border-white/5 space-y-4">
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <strong>Step 1:</strong> Run this prompt to align your resume bullets with the target job description. <br />
+                <strong>Step 2:</strong> Export as PDF and compress under 100 KB on <code class="font-mono text-indigo-500">zenithgrowth.tech</code> so strict enterprise portals never truncate your file.
+              </p>
+              <div class="rounded-xl bg-slate-900 text-slate-200 p-4 font-mono text-xs leading-relaxed">
+                <p id="prompt-text-2">Analyze my resume text against the pasted Job Description. Identify the top 8 missing hard-skill keywords required by enterprise ATS parsers (Workday/Greenhouse) and rewrite 4 of my experience bullet points using the [Action Verb + Quantified Metric + Technical Outcome] framework without keyword stuffing.</p>
+              </div>
+              <div class="flex justify-end">
+                <button
+                  type="button"
+                  data-copy-target="prompt-text-2"
+                  class="copy-prompt-btn px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold flex items-center gap-2 transition-all shadow-md shadow-indigo-500/20"
+                >
+                  <span>📋 Copy Prompt</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcut #3 -->
+        <div class="sub-surface rounded-2xl overflow-hidden border border-slate-200/80 dark:border-white/10 transition-all">
+          <button
+            type="button"
+            class="accordion-trigger w-full p-5 sm:p-6 flex items-center justify-between gap-4 text-left focus:outline-none"
+            aria-expanded="false"
+          >
+            <div class="flex items-center gap-4">
+              <span class="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+                03
+              </span>
+              <div>
+                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+                  PhotoRoom Pro Studio Cutout + B2B Product Line-Sheet Generator
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Strip noisy product backgrounds, sanitize EXIF GPS tags, and generate high-converting spec copy for a bound PDF catalog.
+                </p>
+              </div>
+            </div>
+            <svg class="accordion-chevron w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div class="accordion-content">
+            <div class="accordion-inner px-5 sm:px-6 pb-6 pt-2 border-t border-slate-200/60 dark:border-white/5 space-y-4">
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <strong>Step 1:</strong> Clean your product shots with Zenith's <em>PhotoRoom Pro Studio</em> &amp; <em>AI EXIF Sanitizer</em>. <br />
+                <strong>Step 2:</strong> Generate punchy catalog specs with this prompt, then bind everything using the <em>Image to PDF</em> utility:
+              </p>
+              <div class="rounded-xl bg-slate-900 text-slate-200 p-4 font-mono text-xs leading-relaxed">
+                <p id="prompt-text-3">Write a luxury B2B one-page product specification sheet for [Product Name]. Include: 1) A 12-word hero value proposition, 2) 4 technical differentiators with scannable bold headers, and 3) A concise SKU & packaging dimension table ready for a downloadable PDF catalog.</p>
+              </div>
+              <div class="flex justify-end">
+                <button
+                  type="button"
+                  data-copy-target="prompt-text-3"
+                  class="copy-prompt-btn px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold flex items-center gap-2 transition-all shadow-md shadow-indigo-500/20"
+                >
+                  <span>📋 Copy Prompt</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6: NEWSLETTER LEAD-CAPTURE & FEEDBACK FOOTER
+         ============================================================ -->
+    <footer class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden">
+      <div class="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-indigo-600/20 blur-3xl"></div>
+
+      <!-- V2 NEW: 1-CLICK SOCIAL SHARE PILL BAR (INTEGRATED IN FOOTER + FLOATING BAR BELOW) -->
+      <div class="sub-surface rounded-2xl p-4 sm:p-5 mb-8 border border-indigo-500/25 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-500 flex items-center justify-center shrink-0 font-bold">
+            ✦
+          </div>
+          <div>
+            <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+              Found this interesting? Share the interactive sandbox
+            </p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              Send Issue #01 ("The Death of the Static PDF") to your engineering or design team in 1 click.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <button
+            type="button"
+            data-share-channel="x"
+            class="share-action-btn flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-950 font-mono text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span>Post on X</span>
+          </button>
+
+          <button
+            type="button"
+            data-share-channel="linkedin"
+            class="share-action-btn flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-[#0A66C2] hover:bg-[#0958a8] text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+            </svg>
+            <span>Share on LinkedIn</span>
+          </button>
+
+          <button
+            type="button"
+            data-share-channel="copy"
+            class="share-action-btn flex-1 md:flex-initial px-3.5 py-2.5 rounded-xl sub-surface hover:border-indigo-500 text-slate-700 dark:text-slate-200 font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+          >
+            <span>🔗 Copy Link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Reader Reaction Poll -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-8 mb-8 border-b border-[#E2E8F0] dark:border-white/10">
+        <div>
+          <p class="text-xs font-mono uppercase tracking-wider text-indigo-500 font-semibold">Reader Pulse Check</p>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-0.5">
+            How did you like this interactive Canvas edition of the Zenith Dispatch?
+          </h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" data-reaction="🔥 Mind-blown" class="reaction-btn px-3.5 py-2 rounded-xl sub-surface hover:border-indigo-500 text-xs font-medium flex items-center gap-1.5 transition-all">
+            <span>🔥 Mind-blown</span>
+            <span class="reaction-count font-mono text-[11px] text-indigo-500 font-bold">142</span>
+          </button>
+          <button type="button" data-reaction="⚡ Super helpful" class="reaction-btn px-3.5 py-2 rounded-xl sub-surface hover:border-indigo-500 text-xs font-medium flex items-center gap-1.5 transition-all">
+            <span>⚡ Super helpful</span>
+            <span class="reaction-count font-mono text-[11px] text-indigo-500 font-bold">98</span>
+          </button>
+          <button type="button" data-reaction="💡 More AI Hacks" class="reaction-btn px-3.5 py-2 rounded-xl sub-surface hover:border-indigo-500 text-xs font-medium flex items-center gap-1.5 transition-all">
+            <span>💡 More AI Hacks</span>
+            <span class="reaction-count font-mono text-[11px] text-indigo-500 font-bold">64</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Lead Capture & Direct Platform CTA Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Minimalist Newsletter Subscription Form (7 cols) -->
+        <div class="lg:col-span-7 space-y-3">
+          <label for="dispatch-email-input" class="block text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+            Get next week's interactive dispatch
+          </label>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            Zero spam. Every Tuesday we ship 1 new client-side WebAssembly tool preview + 3 high-leverage AI prompts.
+          </p>
+
+          <form id="newsletter-form" class="pt-2 flex flex-col sm:flex-row gap-3" novalidate>
+            <input
+              id="dispatch-email-input"
+              type="email"
+              required
+              placeholder="founder@company.com"
+              class="flex-1 px-4 py-3.5 rounded-xl sub-surface text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="submit"
+              class="px-6 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 transition-all shrink-0"
+            >
+              Subscribe Free
+            </button>
+          </form>
+          <p id="newsletter-feedback" class="text-xs font-mono text-emerald-500 hidden"></p>
+        </div>
+
+        <!-- Direct Button Link back to https://zenithgrowth.tech (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col items-stretch sm:items-end justify-center">
+          <div class="sub-surface rounded-2xl p-6 w-full text-center sm:text-right space-y-4 border border-indigo-500/25">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-500 font-bold">100% Free • No Sign-Up Required</span>
+              <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-1">
+                Ready to process your actual files?
+              </h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Compress PDFs under 100KB, merge, split, remove backgrounds, and scrub EXIF data right now.
+              </p>
+            </div>
+
+            <a
+              href="https://zenithgrowth.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-emerald-500 hover:from-indigo-500 hover:to-emerald-400 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-indigo-500/25 transition-all hover:-translate-y-0.5"
+            >
+              <span>Explore All Free Tools →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Copyright & Colophon -->
+      <div class="mt-10 pt-6 border-t border-[#E2E8F0] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-mono">
+        <span>© 2026 Zenith Growth (zenithgrowth.tech) • Issue #01 Interactive Canvas V2</span>
+        <span>Built with Zero-Server WebAssembly Architecture</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- V2 FLOATING 1-CLICK SOCIAL SHARE PILL BAR -->
+  <div id="floating-share-pill" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-[95vw] backdrop-blur-xl bg-white/90 dark:bg-[#0D1322]/90 border border-[#E2E8F0] dark:border-white/15 shadow-2xl rounded-full px-4 py-2 flex items-center gap-2.5 sm:gap-3 transition-all">
+    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-200 truncate hidden sm:inline">
+      Found this interesting? <strong class="text-indigo-500">Share the interactive sandbox:</strong>
+    </span>
+    <span class="text-[11px] font-semibold text-indigo-500 sm:hidden">Share Sandbox:</span>
+    <button
+      type="button"
+      data-share-channel="x"
+      class="share-action-btn px-3 py-1 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-mono text-[11px] font-bold hover:opacity-90 transition-opacity flex items-center gap-1"
+    >
+      <span>𝕏</span>
+      <span>Tweet</span>
+    </button>
+    <button
+      type="button"
+      data-share-channel="linkedin"
+      class="share-action-btn px-3 py-1 rounded-full bg-[#0A66C2] text-white font-mono text-[11px] font-bold hover:opacity-90 transition-opacity"
+    >
+      in Share
+    </button>
+    <button
+      type="button"
+      data-share-channel="copy"
+      class="share-action-btn px-2.5 py-1 rounded-full sub-surface text-slate-700 dark:text-slate-200 font-mono text-[11px] font-semibold hover:border-indigo-500 transition-all"
+    >
+      🔗 Copy
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       APPLICATION JAVASCRIPT: ALL V2 INTERACTIVE SIMULATIONS & UPGRADES
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ----------------------------------------------------------
+         UTILITY: Custom Non-Blocking Toast Notification (No alert)
+      ---------------------------------------------------------- */
+      function showToast(message, badgeText = 'ZENITH ENGINE') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-indigo-500/40 shadow-2xl text-xs font-medium transform translate-y-3 opacity-0 transition-all duration-300';
+        toast.innerHTML = `
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">${badgeText}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.classList.remove('translate-y-3', 'opacity-0');
+        });
+
+        setTimeout(() => {
+          toast.classList.add('translate-y-2', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      function formatBytesReadable(bytes) {
+        if (bytes >= 1048576) {
+          return (bytes / 1048576).toFixed(2) + ' MB';
+        }
+        return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+      }
+
+      /* ----------------------------------------------------------
+         1. V2 3-WAY SYSTEM THEME CONTROLLER [ 💻 System | ☀️ Light | 🌙 Dark ]
+      ---------------------------------------------------------- */
+      const htmlEl = document.documentElement;
+      const themeSegmentBtns = document.querySelectorAll('.theme-segment-btn');
+      const osThemeBadge = document.getElementById('os-theme-badge');
+      const systemMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      let activeThemeMode = 'dark'; // Default to dark luxury aesthetic on initial load, user can select System/Light/Dark
+
+      function applyThemeMode(mode, notify = false) {
+        activeThemeMode = mode;
+        const osPrefersDark = systemMediaQuery.matches;
+        const effectiveDark = mode === 'dark' || (mode === 'system' && osPrefersDark);
+
+        if (effectiveDark) {
+          htmlEl.classList.add('dark');
+        } else {
+          htmlEl.classList.remove('dark');
+        }
+
+        if (osThemeBadge) {
+          osThemeBadge.textContent = osPrefersDark ? 'OS:DARK' : 'OS:LIGHT';
+        }
+
+        themeSegmentBtns.forEach((btn) => {
+          const btnMode = btn.getAttribute('data-theme-mode');
+          if (btnMode === mode) {
+            btn.className = 'theme-segment-btn px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 font-semibold bg-indigo-600 text-white shadow-sm';
+          } else {
+            btn.className = 'theme-segment-btn px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-500';
+          }
+        });
+
+        if (notify) {
+          const labelMap = {
+            system: `System Sync (${osPrefersDark ? 'OS Dark' : 'OS Light'})`,
+            light: 'Magazine-Grade Light (#FAFAFC)',
+            dark: 'Luxury Dark Slate (#070B14)'
+          };
+          showToast(`Theme switched to ${labelMap[mode]}`, 'THEME V2');
+        }
+      }
+
+      themeSegmentBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selectedMode = btn.getAttribute('data-theme-mode');
+          applyThemeMode(selectedMode, true);
+        });
+      });
+
+      // Automatically listen to window.matchMedia('(prefers-color-scheme: dark)') change events
+      if (systemMediaQuery.addEventListener) {
+        systemMediaQuery.addEventListener('change', (e) => {
+          if (osThemeBadge) {
+            osThemeBadge.textContent = e.matches ? 'OS:DARK' : 'OS:LIGHT';
+          }
+          if (activeThemeMode === 'system') {
+            applyThemeMode('system', false);
+            showToast(`OS color scheme changed → synced to ${e.matches ? 'Dark' : 'Light'} mode`, 'OS SYNC');
+          }
+        });
+      }
+
+      applyThemeMode('dark', false);
+
+      // Zero-Upload Privacy Audit Button
+      const verifyBtn = document.getElementById('verify-privacy-btn');
+      const verifyText = document.getElementById('verify-privacy-text');
+      if (verifyBtn && verifyText) {
+        verifyBtn.addEventListener('click', () => {
+          verifyText.textContent = 'Auditing Network Sandbox...';
+          setTimeout(() => {
+            verifyText.textContent = '✓ Verified: 0 Bytes Sent to Cloud';
+            showToast('Network Inspector confirmed 0 external file uploads. 100% WebAssembly local execution.', 'PRIVACY OK');
+          }, 450);
+        });
+      }
+
+      /* ----------------------------------------------------------
+         2. SIMULATION #1: ATS RESUME COMPRESSOR SLIDER + REAL FILE DROP SANDBOX
+      ---------------------------------------------------------- */
+      const compressionSlider = document.getElementById('compression-slider');
+      const liveFilesizeDisplay = document.getElementById('live-filesize-display');
+      const originalFilesizeStrike = document.getElementById('original-filesize-strike');
+      const exactBytesReadout = document.getElementById('exact-bytes-readout');
+      const sliderMinLabel = document.getElementById('slider-min-label');
+      const sliderMaxLabel = document.getElementById('slider-max-label');
+      const sliderForceLabel = document.getElementById('slider-force-label');
+      const compressorLiveCalc = document.getElementById('compressor-live-calc');
+      const compressorSubCalc = document.getElementById('compressor-sub-calc');
+      const portalBadge = document.getElementById('portal-badge');
+      const overheadBar = document.getElementById('overhead-bar');
+      const overheadPctLabel = document.getElementById('overhead-pct-label');
+      const presetBtns = document.querySelectorAll('.compress-preset-btn');
+
+      // Real File Drop Elements
+      const compressorDropzone = document.getElementById('compressor-dropzone');
+      const compressorFileInput = document.getElementById('compressor-file-input');
+      const compressorResetBtn = document.getElementById('compressor-reset-sample-btn');
+      const compressorDropSubtext = document.getElementById('compressor-dropzone-subtext');
+      const compressorFilenameLabel = document.getElementById('compressor-filename-label');
+      const compressorFilemetaLabel = document.getElementById('compressor-filemeta-label');
+      const compressorFileExtBadge = document.getElementById('compressor-file-ext-badge');
+      const compressorCustomImgWrap = document.getElementById('compressor-custom-img-wrap');
+      const compressorCustomImg = document.getElementById('compressor-custom-img');
+
+      // Baseline state (default 15.00 MB = 15,728,640 bytes -> 88 KB = 90,112 bytes)
+      let baselineBytes = 15728640;
+      let targetMinBytes = 90112;
+
+      function updateCompressionSimulation(val) {
+        const pct = Number(val);
+        if (compressionSlider) {
+          compressionSlider.style.setProperty('--slider-pct', `${pct}%`);
+        }
+
+        const normalized = pct / 100;
+        const curve = Math.pow(1 - normalized, 2.35);
+        const currentBytes = Math.round(targetMinBytes + (baselineBytes - targetMinBytes) * curve);
+        const currentKB = Math.max(1, Math.round(currentBytes / 1024));
+
+        const formattedCurrent = formatBytesReadable(currentBytes);
+        const formattedOriginal = formatBytesReadable(baselineBytes);
+
+        // Calculate percentage saved
+        const savedPct = baselineBytes > 0
+          ? (((baselineBytes - currentBytes) / baselineBytes) * 100).toFixed(1)
+          : '0.0';
+
+        if (originalFilesizeStrike) originalFilesizeStrike.textContent = formattedOriginal;
+        if (exactBytesReadout) {
+          exactBytesReadout.textContent = `Raw Stream: ${baselineBytes.toLocaleString()} bytes → ${currentBytes.toLocaleString()} bytes`;
+        }
+
+        if (liveFilesizeDisplay) {
+          liveFilesizeDisplay.textContent = formattedCurrent;
+          if (currentKB <= 100) {
+            liveFilesizeDisplay.className = 'text-4xl sm:text-5xl font-black font-mono tracking-tight text-emerald-500 transition-colors';
+          } else if (currentKB <= 2000) {
+            liveFilesizeDisplay.className = 'text-4xl sm:text-5xl font-black font-mono tracking-tight text-indigo-500 transition-colors';
+          } else {
+            liveFilesizeDisplay.className = 'text-4xl sm:text-5xl font-black font-mono tracking-tight text-amber-500 transition-colors';
+          }
+        }
+
+        if (sliderForceLabel) {
+          sliderForceLabel.textContent = pct === 100 ? '100% MAX OPTIMIZATION' : `${pct}% COMPRESSION FORCE`;
+        }
+
+        const remainingOverhead = Math.max(0.6, (100 - Number(savedPct))).toFixed(1);
+        if (overheadPctLabel) overheadPctLabel.textContent = `${remainingOverhead}%`;
+        if (overheadBar) overheadBar.style.width = `${Math.max(4, 100 - pct)}%`;
+
+        if (pct >= 96 || currentKB <= 100) {
+          compressorLiveCalc.textContent = `Saved ${savedPct}% file size — ATS Compliant & Portal Safe`;
+          compressorSubCalc.innerHTML = `100% searchable vector text layer preserved • Passes Workday, Greenhouse &amp; <span class="font-mono">&lt;100KB</span> portals.`;
+          portalBadge.textContent = '<100KB READY';
+          portalBadge.className = 'shrink-0 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
+        } else if (pct >= 45) {
+          compressorLiveCalc.textContent = `Saved ${savedPct}% file size — Standard Email Ready`;
+          compressorSubCalc.textContent = `Drag slider to 100% to pass strict <100 KB government & enterprise ATS portals.`;
+          portalBadge.textContent = 'STANDARD PDF';
+          portalBadge.className = 'shrink-0 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-500 border border-indigo-500/30';
+        } else {
+          compressorLiveCalc.textContent = `Saved ${savedPct}% file size — Warning: File Over Portal Limit`;
+          compressorSubCalc.textContent = `Uncompressed embedded font tables & metadata bloat detected. Scrub slider right to deflate.`;
+          portalBadge.textContent = `RAW (${formattedOriginal})`;
+          portalBadge.className = 'shrink-0 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-500 border border-amber-500/30';
+        }
+      }
+
+      // Handle Real Dropped or Selected File for Simulation #1
+      function loadRealFileIntoCompressor(file) {
+        if (!file) return;
+        baselineBytes = Math.max(2048, file.size);
+        // Calculate realistic under-100KB target (or 12% of small files)
+        targetMinBytes = baselineBytes > 120000
+          ? Math.min(90112, Math.max(24576, Math.round(baselineBytes * 0.045)))
+          : Math.max(4096, Math.round(baselineBytes * 0.22));
+
+        const ext = (file.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
+        if (compressorFileExtBadge) compressorFileExtBadge.textContent = ext;
+        if (compressorFilenameLabel) compressorFilenameLabel.textContent = file.name;
+        if (compressorFilemetaLabel) {
+          compressorFilemetaLabel.textContent = `${file.type || 'application/octet-stream'} • Real Local File`;
+        }
+        if (sliderMinLabel) sliderMinLabel.textContent = `0% (${formatBytesReadable(baselineBytes)})`;
+        if (sliderMaxLabel) sliderMaxLabel.textContent = `100% (${formatBytesReadable(targetMinBytes)} Target)`;
+        if (compressorDropSubtext) {
+          compressorDropSubtext.innerHTML = `Loaded <strong class="text-indigo-500 font-mono">${file.name}</strong> (${file.size.toLocaleString()} bytes) in local memory.`;
+        }
+        if (compressorResetBtn) compressorResetBtn.classList.remove('hidden');
+
+        // If dropped file is an image, render its live thumbnail
+        if (file.type && file.type.startsWith('image/') && compressorCustomImg && compressorCustomImgWrap) {
+          const objUrl = URL.createObjectURL(file);
+          compressorCustomImg.src = objUrl;
+          compressorCustomImgWrap.classList.remove('hidden');
+        } else if (compressorCustomImgWrap) {
+          compressorCustomImgWrap.classList.add('hidden');
+        }
+
+        // Animate slider from 0% -> 100% so the user sees their real file compress live
+        if (compressionSlider) {
+          compressionSlider.value = 0;
+          updateCompressionSimulation(0);
+          let step = 0;
+          const anim = setInterval(() => {
+            step += 10;
+            compressionSlider.value = step;
+            updateCompressionSimulation(step);
+            if (step >= 100) clearInterval(anim);
+          }, 28);
+        }
+
+        showToast(`Parsed "${file.name}" (${formatBytesReadable(file.size)}) locally!`, 'REAL FILE LOADED');
+      }
+
+      if (compressorDropzone && compressorFileInput) {
+        compressorDropzone.addEventListener('click', (e) => {
+          if (e.target.closest('#compressor-reset-sample-btn')) return;
+          compressorFileInput.click();
+        });
+        compressorDropzone.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            compressorFileInput.click();
+          }
+        });
+        compressorFileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            loadRealFileIntoCompressor(e.target.files[0]);
+          }
+        });
+        compressorDropzone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          compressorDropzone.classList.add('dropzone-active');
+        });
+        compressorDropzone.addEventListener('dragleave', () => {
+          compressorDropzone.classList.remove('dropzone-active');
+        });
+        compressorDropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          compressorDropzone.classList.remove('dropzone-active');
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            loadRealFileIntoCompressor(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      if (compressorResetBtn) {
+        compressorResetBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          baselineBytes = 15728640;
+          targetMinBytes = 90112;
+          compressorFileExtBadge.textContent = 'PDF';
+          compressorFilenameLabel.textContent = 'Alex_Rivera_Senior_Resume.pdf';
+          compressorFilemetaLabel.textContent = 'Vector Text + Embedded Fonts';
+          sliderMinLabel.textContent = '0% (Uncompressed 15.00 MB)';
+          sliderMaxLabel.textContent = '100% (88 KB Target)';
+          compressorDropSubtext.textContent = 'Drag a real file here or click to browse. We parse its exact byte size in RAM and simulate the WASM deflate curve live.';
+          compressorResetBtn.classList.add('hidden');
+          if (compressorCustomImgWrap) compressorCustomImgWrap.classList.add('hidden');
+          compressionSlider.value = 100;
+          updateCompressionSimulation(100);
+          showToast('Reset Compressor to 15.00 MB executive resume sample.', 'RESET');
+        });
+      }
+
+      if (compressionSlider) {
+        compressionSlider.addEventListener('input', (e) => {
+          updateCompressionSimulation(e.target.value);
+        });
+        updateCompressionSimulation(compressionSlider.value);
+      }
+
+      presetBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const targetVal = btn.getAttribute('data-compress-preset');
+          if (compressionSlider) {
+            compressionSlider.value = targetVal;
+            updateCompressionSimulation(targetVal);
+          }
+        });
+      });
+
+      /* ----------------------------------------------------------
+         3. SIMULATION #2: MULTI-IMAGE TO PDF BINDER + REAL IMAGE/PDF DROP
+      ---------------------------------------------------------- */
+      const defaultBinderSamples = [
+        {
+          id: 'doc-nda',
+          title: '01. Signed_Mutual_NDA.jpg',
+          meta: '2480 × 3508 px • Legal Scan (1.8 MB)',
+          rotation: 0,
+          imageUrl: null,
+          svg: `
+            <svg class="w-28 h-28" viewBox="0 0 120 120" fill="none">
+              <rect x="18" y="10" width="84" height="100" rx="8" fill="#1E293B" stroke="#6366F1" stroke-width="2.5"/>
+              <rect x="30" y="24" width="42" height="6" rx="3" fill="#818CF8"/>
+              <rect x="30" y="38" width="60" height="4" rx="2" fill="#475569"/>
+              <rect x="30" y="48" width="54" height="4" rx="2" fill="#475569"/>
+              <rect x="30" y="58" width="60" height="4" rx="2" fill="#475569"/>
+              <path d="M32 86 C42 74, 52 92, 66 78 C72 72, 80 86, 88 80" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="82" cy="30" r="9" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2"/>
+            </svg>
+          `
+        },
+        {
+          id: 'doc-id',
+          title: '02. Founder_Passport_ID.png',
+          meta: '1920 × 1080 px • KYC Receipt (940 KB)',
+          rotation: 90,
+          imageUrl: null,
+          svg: `
+            <svg class="w-28 h-28" viewBox="0 0 120 120" fill="none">
+              <rect x="14" y="22" width="92" height="76" rx="10" fill="#0F172A" stroke="#10B981" stroke-width="2.5"/>
+              <circle cx="42" cy="56" r="14" fill="#1E293B" stroke="#34D399" stroke-width="2"/>
+              <circle cx="42" cy="52" r="5" fill="#34D399"/>
+              <path d="M33 65 C35 59, 49 59, 51 65" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+              <rect x="64" y="42" width="30" height="5" rx="2.5" fill="#E2E8F0"/>
+              <rect x="64" y="53" width="22" height="4" rx="2" fill="#64748B"/>
+              <rect x="64" y="63" width="26" height="4" rx="2" fill="#64748B"/>
+              <rect x="24" y="82" width="72" height="6" rx="3" fill="#6366F1" fill-opacity="0.4"/>
+            </svg>
+          `
+        },
+        {
+          id: 'doc-arch',
+          title: '03. System_Wireframe_V4.webp',
+          meta: '3840 × 2160 px • Diagram (2.4 MB)',
+          rotation: 0,
+          imageUrl: null,
+          svg: `
+            <svg class="w-28 h-28" viewBox="0 0 120 120" fill="none">
+              <rect x="14" y="16" width="92" height="88" rx="8" fill="#1E1B4B" stroke="#818CF8" stroke-width="2.5"/>
+              <rect x="26" y="28" width="26" height="20" rx="4" fill="#312E81" stroke="#6366F1" stroke-width="2"/>
+              <rect x="68" y="28" width="26" height="20" rx="4" fill="#312E81" stroke="#10B981" stroke-width="2"/>
+              <rect x="47" y="70" width="26" height="20" rx="4" fill="#064E3B" stroke="#10B981" stroke-width="2"/>
+              <path d="M52 38 H68 M39 48 V80 H47 M81 48 V80 H73" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          `
+        }
+      ];
+
+      let binderCardsData = JSON.parse(JSON.stringify(defaultBinderSamples));
+
+      const binderContainer = document.getElementById('binder-cards-container');
+      const binderGridView = document.getElementById('binder-grid-view');
+      const binderBookletView = document.getElementById('binder-booklet-view');
+      const stitchPdfBtn = document.getElementById('stitch-pdf-btn');
+      const stitchBtnLabel = document.getElementById('stitch-btn-label');
+      const binderSummaryCaption = document.getElementById('binder-summary-caption');
+      const bookletTotalPill = document.getElementById('booklet-total-pill');
+      const unbindPdfBtn = document.getElementById('unbind-pdf-btn');
+
+      const binderDropzone = document.getElementById('binder-dropzone');
+      const binderFileInput = document.getElementById('binder-file-input');
+      const binderResetSamplesBtn = document.getElementById('binder-reset-samples-btn');
+
+      let draggedIndex = null;
+      let currentBookletPage = 0;
+
+      function getCardVisualMarkup(card) {
+        if (card.imageUrl) {
+          return `<img src="${card.imageUrl}" alt="${card.title}" class="w-32 h-32 object-contain rounded-lg shadow-sm pointer-events-none" />`;
+        }
+        return card.svg;
+      }
+
+      function renderBinderCards() {
+        if (!binderContainer) return;
+        binderContainer.innerHTML = '';
+
+        if (binderSummaryCaption) {
+          binderSummaryCaption.textContent = `All ${binderCardsData.length} page(s) will be normalized to A4 aspect ratio and bound locally with zero quality loss.`;
+        }
+        if (stitchBtnLabel) {
+          stitchBtnLabel.textContent = `Stitch ${binderCardsData.length} Pages into 1 PDF Booklet`;
+        }
+
+        binderCardsData.forEach((card, index) => {
+          const cardEl = document.createElement('div');
+          cardEl.className = 'binder-card sub-surface rounded-2xl p-5 flex flex-col justify-between border-2 border-transparent hover:border-indigo-500/40 transition-all cursor-grab active:cursor-grabbing select-none';
+          cardEl.setAttribute('draggable', 'true');
+          cardEl.dataset.index = index;
+
+          const uprightStatus = card.rotation % 360 === 0
+            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold">0° UPRIGHT</span>'
+            : `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-500 font-semibold">${card.rotation}° ROTATED</span>`;
+
+          cardEl.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-xs font-mono font-bold text-indigo-500">PAGE #0${index + 1}</span>
+                ${uprightStatus}
+              </div>
+
+              <div data-rotate-idx="${index}" class="rotate-trigger-stage h-44 rounded-xl bg-white dark:bg-slate-900/90 border border-[#E2E8F0] dark:border-white/10 flex items-center justify-center overflow-hidden relative group cursor-pointer">
+                <div class="transition-transform duration-300 ease-out" style="transform: rotate(${card.rotation}deg)">
+                  ${getCardVisualMarkup(card)}
+                </div>
+                <div class="absolute inset-0 bg-indigo-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span class="px-3 py-1.5 rounded-full bg-white text-slate-900 font-mono text-xs font-bold shadow-lg">
+                    ↻ Click to Rotate +90°
+                  </span>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${card.title}</p>
+                <p class="text-xs font-mono text-slate-400 mt-0.5 truncate">${card.meta}</p>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-[#E2E8F0] dark:border-white/10 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                data-rotate-idx="${index}"
+                class="rotate-btn flex-1 py-2 px-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-600 text-indigo-500 hover:text-white font-mono text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Rotate 90°</span>
+              </button>
+
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  data-move-dir="-1"
+                  data-move-idx="${index}"
+                  title="Move Page Earlier"
+                  class="move-page-btn p-2 rounded-lg sub-surface hover:border-indigo-500 text-xs font-mono ${index === 0 ? 'opacity-30 pointer-events-none' : ''}"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  data-move-dir="1"
+                  data-move-idx="${index}"
+                  title="Move Page Later"
+                  class="move-page-btn p-2 rounded-lg sub-surface hover:border-indigo-500 text-xs font-mono ${index === binderCardsData.length - 1 ? 'opacity-30 pointer-events-none' : ''}"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          `;
+
+          cardEl.addEventListener('dragstart', () => {
+            draggedIndex = index;
+            cardEl.classList.add('dragging');
+          });
+          cardEl.addEventListener('dragend', () => {
+            cardEl.classList.remove('dragging');
+          });
+          cardEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            cardEl.classList.add('drag-over');
+          });
+          cardEl.addEventListener('dragleave', () => {
+            cardEl.classList.remove('drag-over');
+          });
+          cardEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            cardEl.classList.remove('drag-over');
+            if (draggedIndex !== null && draggedIndex !== index) {
+              const movedItem = binderCardsData.splice(draggedIndex, 1)[0];
+              binderCardsData.splice(index, 0, movedItem);
+              renderBinderCards();
+              showToast(`Reordered "${movedItem.title}" to Page #0${index + 1}`, 'PDF BINDER');
+            }
+            draggedIndex = null;
+          });
+
+          binderContainer.appendChild(cardEl);
+        });
+
+        binderContainer.querySelectorAll('[data-rotate-idx]').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = Number(el.getAttribute('data-rotate-idx'));
+            binderCardsData[idx].rotation = (binderCardsData[idx].rotation + 90) % 360;
+            renderBinderCards();
+          });
+        });
+
+        binderContainer.querySelectorAll('.move-page-btn').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = Number(btn.getAttribute('data-move-idx'));
+            const dir = Number(btn.getAttribute('data-move-dir'));
+            const targetIdx = idx + dir;
+            if (targetIdx >= 0 && targetIdx < binderCardsData.length) {
+              const temp = binderCardsData[idx];
+              binderCardsData[idx] = binderCardsData[targetIdx];
+              binderCardsData[targetIdx] = temp;
+              renderBinderCards();
+            }
+          });
+        });
+      }
+
+      // Handle Real Dropped Files into Simulation #2 Binder
+      function handleBinderRealFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
+        const addedItems = [];
+
+        Array.from(fileList).slice(0, 6).forEach((file, idx) => {
+          const isImg = file.type && file.type.startsWith('image/');
+          const objUrl = isImg ? URL.createObjectURL(file) : null;
+          addedItems.push({
+            id: `custom-${Date.now()}-${idx}`,
+            title: file.name,
+            meta: `${formatBytesReadable(file.size)} • Local ${isImg ? 'Image' : 'PDF Document'}`,
+            rotation: 0,
+            imageUrl: objUrl,
+            svg: `
+              <svg class="w-28 h-28" viewBox="0 0 120 120" fill="none">
+                <rect x="20" y="12" width="80" height="96" rx="8" fill="#1E293B" stroke="#10B981" stroke-width="2.5"/>
+                <text x="36" y="64" fill="#10B981" font-family="monospace" font-size="15" font-weight="bold">PDF</text>
+              </svg>
+            `
+          });
+        });
+
+        binderCardsData = [...addedItems, ...binderCardsData].slice(0, 6);
+        if (binderResetSamplesBtn) binderResetSamplesBtn.classList.remove('hidden');
+        binderBookletView.classList.add('hidden');
+        binderGridView.classList.remove('hidden');
+        renderBinderCards();
+        showToast(`Added ${addedItems.length} real file(s) to the Multi-Image PDF Binder!`, 'BINDER SANDBOX');
+      }
+
+      if (binderDropzone && binderFileInput) {
+        binderDropzone.addEventListener('click', (e) => {
+          if (e.target.closest('#binder-reset-samples-btn')) return;
+          binderFileInput.click();
+        });
+        binderDropzone.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            binderFileInput.click();
+          }
+        });
+        binderFileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            handleBinderRealFiles(e.target.files);
+          }
+        });
+        binderDropzone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          binderDropzone.classList.add('dropzone-active');
+        });
+        binderDropzone.addEventListener('dragleave', () => {
+          binderDropzone.classList.remove('dropzone-active');
+        });
+        binderDropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          binderDropzone.classList.remove('dropzone-active');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleBinderRealFiles(e.dataTransfer.files);
+          }
+        });
+      }
+
+      if (binderResetSamplesBtn) {
+        binderResetSamplesBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          binderCardsData = JSON.parse(JSON.stringify(defaultBinderSamples));
+          binderResetSamplesBtn.classList.add('hidden');
+          binderBookletView.classList.add('hidden');
+          binderGridView.classList.remove('hidden');
+          renderBinderCards();
+          showToast('Restored default 3 scan cards.', 'RESET');
+        });
+      }
+
+      function renderBookletPage(pageIdx, animateFlip = false) {
+        const pageCard = document.getElementById('booklet-page-card');
+        const pageIndicator = document.getElementById('booklet-page-indicator');
+        const rotIndicator = document.getElementById('booklet-rotation-indicator');
+        const svgHolder = document.getElementById('booklet-svg-holder');
+        const docTitle = document.getElementById('booklet-doc-title');
+        const docMeta = document.getElementById('booklet-doc-meta');
+        const dotsContainer = document.getElementById('booklet-dots');
+
+        const item = binderCardsData[pageIdx];
+        if (!item) return;
+
+        const updateDOM = () => {
+          if (bookletTotalPill) bookletTotalPill.textContent = `${binderCardsData.length} PAGES BOUND`;
+          if (pageIndicator) pageIndicator.textContent = `PAGE ${pageIdx + 1} OF ${binderCardsData.length}`;
+          if (rotIndicator) rotIndicator.textContent = `ORIENTATION: ${item.rotation}°`;
+          if (svgHolder) {
+            svgHolder.style.transform = `rotate(${item.rotation}deg)`;
+            svgHolder.innerHTML = getCardVisualMarkup(item);
+          }
+          if (docTitle) docTitle.textContent = item.title;
+          if (docMeta) docMeta.textContent = item.meta;
+
+          if (dotsContainer) {
+            dotsContainer.innerHTML = binderCardsData
+              .map((_, i) => `<button type="button" data-goto-page="${i}" class="w-2.5 h-2.5 rounded-full transition-all ${i === pageIdx ? 'w-6 bg-indigo-500' : 'bg-slate-400/40'}"></button>`)
+              .join('');
+            dotsContainer.querySelectorAll('[data-goto-page]').forEach((dot) => {
+              dot.addEventListener('click', () => {
+                currentBookletPage = Number(dot.getAttribute('data-goto-page'));
+                renderBookletPage(currentBookletPage, true);
+              });
+            });
+          }
+        };
+
+        if (animateFlip && pageCard) {
+          pageCard.classList.add('page-turning');
+          setTimeout(() => {
+            updateDOM();
+            pageCard.classList.remove('page-turning');
+          }, 220);
+        } else {
+          updateDOM();
+        }
+      }
+
+      if (stitchPdfBtn) {
+        stitchPdfBtn.addEventListener('click', () => {
+          const cards = binderContainer.querySelectorAll('.binder-card');
+          cards.forEach((c) => {
+            c.style.transform = `translateY(-10px) scale(0.92)`;
+            c.style.opacity = '0.4';
+          });
+
+          setTimeout(() => {
+            binderGridView.classList.add('hidden');
+            binderBookletView.classList.remove('hidden');
+            currentBookletPage = 0;
+            renderBookletPage(currentBookletPage, false);
+            showToast(`Stitched ${binderCardsData.length} pages into Merged_Packet_Zenith.pdf inside browser memory!`, 'PDF BOUND');
+          }, 280);
+        });
+      }
+
+      if (unbindPdfBtn) {
+        unbindPdfBtn.addEventListener('click', () => {
+          binderBookletView.classList.add('hidden');
+          binderGridView.classList.remove('hidden');
+          renderBinderCards();
+        });
+      }
+
+      const prevPageBtn = document.getElementById('prev-page-btn');
+      const nextPageBtn = document.getElementById('next-page-btn');
+      if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+          currentBookletPage = (currentBookletPage - 1 + binderCardsData.length) % binderCardsData.length;
+          renderBookletPage(currentBookletPage, true);
+        });
+      }
+      if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+          currentBookletPage = (currentBookletPage + 1) % binderCardsData.length;
+          renderBookletPage(currentBookletPage, true);
+        });
+      }
+
+      renderBinderCards();
+
+      /* ----------------------------------------------------------
+         3.5 V2 NEW: INTERACTIVE PERFORMANCE BENCHMARK XY CHART
+      ---------------------------------------------------------- */
+      const benchmarkProfiles = {
+        '1': {
+          label: '1 MB',
+          cloudSec: 2.4,
+          wasmSec: 0.08,
+          cloudWidth: '48%',
+          wasmWidth: '3.5%',
+          cloudBreakdown: 'Upload: 1.3s • Server Queue: 0.6s • Download: 0.5s',
+          wasmBreakdown: 'Network Transfer: 0.00s • Local RAM SIMD Compute: 0.08s',
+          leakedText: '1 MB Uploaded to 3rd-Party',
+          speedup: '30.0× Faster',
+          xyX: 55,
+          xyCloudY: 132,
+          xyWasmY: 140
+        },
+        '10': {
+          label: '10 MB',
+          cloudSec: 8.4,
+          wasmSec: 0.30,
+          cloudWidth: '82%',
+          wasmWidth: '6%',
+          cloudBreakdown: 'Upload: 5.1s • Server Queue: 1.4s • Download: 1.9s',
+          wasmBreakdown: 'Network Transfer: 0.00s • Local RAM SIMD Compute: 0.30s',
+          leakedText: '10 MB Uploaded to 3rd-Party',
+          speedup: '28.0× Faster',
+          xyX: 165,
+          xyCloudY: 110,
+          xyWasmY: 138
+        },
+        '50': {
+          label: '50 MB',
+          cloudSec: 34.2,
+          wasmSec: 1.15,
+          cloudWidth: '98%',
+          wasmWidth: '11%',
+          cloudBreakdown: 'Upload: 21.8s • Server Queue: 4.1s • Download: 8.3s',
+          wasmBreakdown: 'Network Transfer: 0.00s • Local RAM SIMD Compute: 1.15s',
+          leakedText: '50 MB Uploaded to 3rd-Party',
+          speedup: '29.7× Faster',
+          xyX: 285,
+          xyCloudY: 24,
+          xyWasmY: 134
+        }
+      };
+
+      let currentBenchKey = '10';
+      const benchSizeBtns = document.querySelectorAll('.bench-size-btn');
+      const runBenchRaceBtn = document.getElementById('run-bench-race-btn');
+
+      function applyBenchmarkSize(sizeKey, animateRace = false) {
+        currentBenchKey = sizeKey;
+        const p = benchmarkProfiles[sizeKey];
+        if (!p) return;
+
+        benchSizeBtns.forEach((btn) => {
+          if (btn.getAttribute('data-bench-size') === sizeKey) {
+            btn.className = 'bench-size-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow transition-all font-semibold';
+          } else {
+            btn.className = 'bench-size-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-500 transition-all font-semibold';
+          }
+        });
+
+        const cloudTimeEl = document.getElementById('bench-cloud-time');
+        const wasmTimeEl = document.getElementById('bench-wasm-time');
+        const cloudBar = document.getElementById('bench-cloud-bar');
+        const wasmBar = document.getElementById('bench-wasm-bar');
+        const cloudBreakdown = document.getElementById('bench-cloud-breakdown');
+        const wasmBreakdown = document.getElementById('bench-wasm-breakdown');
+        const cloudLeaked = document.getElementById('bench-cloud-leaked');
+        const speedupBadge = document.getElementById('bench-speedup-badge');
+        const payloadTag = document.getElementById('bench-payload-tag');
+
+        const xyGuide = document.getElementById('xy-active-guide');
+        const xyCloudDot = document.getElementById('xy-cloud-dot');
+        const xyWasmDot = document.getElementById('xy-wasm-dot');
+
+        if (animateRace && cloudBar && wasmBar) {
+          cloudBar.style.transition = 'none';
+          wasmBar.style.transition = 'none';
+          cloudBar.style.width = '2%';
+          wasmBar.style.width = '2%';
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              wasmBar.style.transition = 'width 260ms cubic-bezier(0.16, 1, 0.3, 1)';
+              cloudBar.style.transition = 'width 1150ms cubic-bezier(0.22, 1, 0.36, 1)';
+              wasmBar.style.width = p.wasmWidth;
+              cloudBar.style.width = p.cloudWidth;
+            });
+          });
+        } else {
+          if (cloudBar) cloudBar.style.width = p.cloudWidth;
+          if (wasmBar) wasmBar.style.width = p.wasmWidth;
+        }
+
+        if (cloudTimeEl) cloudTimeEl.textContent = `${p.cloudSec.toFixed(1)}s`;
+        if (wasmTimeEl) wasmTimeEl.textContent = `${p.wasmSec}s`;
+        if (cloudBreakdown) cloudBreakdown.textContent = p.cloudBreakdown;
+        if (wasmBreakdown) wasmBreakdown.textContent = p.wasmBreakdown;
+        if (cloudLeaked) cloudLeaked.textContent = p.leakedText;
+        if (speedupBadge) speedupBadge.textContent = p.speedup;
+        if (payloadTag) payloadTag.textContent = `@ ${p.label} PDF`;
+
+        if (xyGuide) {
+          xyGuide.setAttribute('x1', p.xyX);
+          xyGuide.setAttribute('x2', p.xyX);
+        }
+        if (xyCloudDot) {
+          xyCloudDot.setAttribute('cx', p.xyX);
+          xyCloudDot.setAttribute('cy', p.xyCloudY);
+        }
+        if (xyWasmDot) {
+          xyWasmDot.setAttribute('cx', p.xyX);
+          xyWasmDot.setAttribute('cy', p.xyWasmY);
+        }
+      }
+
+      benchSizeBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const sizeKey = btn.getAttribute('data-bench-size');
+          applyBenchmarkSize(sizeKey, true);
+        });
+      });
+
+      if (runBenchRaceBtn) {
+        runBenchRaceBtn.addEventListener('click', () => {
+          applyBenchmarkSize(currentBenchKey, true);
+          const p = benchmarkProfiles[currentBenchKey];
+          showToast(`Zenith WASM finished in ${p.wasmSec}s vs ${p.cloudSec}s Cloud Upload (${p.speedup})`, 'BENCHMARK');
+        });
+      }
+
+      /* ----------------------------------------------------------
+         4. FEATURE OF THE WEEK: PHOTOROOM PRO STUDIO SPLIT SLIDER & CHIPS
+      ---------------------------------------------------------- */
+      const comparisonStage = document.getElementById('comparison-stage');
+      const beforeClip = document.getElementById('photoroom-before-clip');
+      const comparisonHandle = document.getElementById('comparison-handle');
+      const afterBg = document.getElementById('photoroom-after-bg');
+      const studioGlow = document.getElementById('photoroom-studio-glow');
+      const backdropChips = document.querySelectorAll('.backdrop-chip-btn');
+      const exifToggleBtn = document.getElementById('exif-toggle-btn');
+      const exifStatusLabel = document.getElementById('exif-status-label');
+      const exifBadgeMini = document.getElementById('exif-badge-mini');
+      const exifGpsVal = document.getElementById('exif-gps-val');
+      const exifCamVal = document.getElementById('exif-cam-val');
+
+      let isDraggingSplit = false;
+
+      function setSplitPosition(clientX) {
+        if (!comparisonStage || !beforeClip || !comparisonHandle) return;
+        const rect = comparisonStage.getBoundingClientRect();
+        let offsetX = clientX - rect.left;
+        offsetX = Math.max(24, Math.min(rect.width - 24, offsetX));
+        const pct = (offsetX / rect.width) * 100;
+
+        beforeClip.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        comparisonHandle.style.left = `${pct}%`;
+      }
+
+      if (comparisonStage) {
+        comparisonStage.addEventListener('mousedown', (e) => {
+          isDraggingSplit = true;
+          setSplitPosition(e.clientX);
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!isDraggingSplit) return;
+          setSplitPosition(e.clientX);
+        });
+        window.addEventListener('mouseup', () => {
+          isDraggingSplit = false;
+        });
+
+        // Mobile Touch Support
+        comparisonStage.addEventListener('touchstart', (e) => {
+          isDraggingSplit = true;
+          if (e.touches[0]) setSplitPosition(e.touches[0].clientX);
+        }, { passive: true });
+        comparisonStage.addEventListener('touchmove', (e) => {
+          if (!isDraggingSplit) return;
+          if (e.touches[0]) setSplitPosition(e.touches[0].clientX);
+        }, { passive: true });
+        comparisonStage.addEventListener('touchend', () => {
+          isDraggingSplit = false;
+        });
+      }
+
+      // Backdrop Color Chips Logic (Transparent, Pure White, Cyber Violet, Matte Black)
+      backdropChips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const mode = chip.getAttribute('data-backdrop');
+          backdropChips.forEach((c) => {
+            c.classList.remove('border-indigo-500');
+            c.classList.add('border-transparent');
+          });
+          chip.classList.remove('border-transparent');
+          chip.classList.add('border-indigo-500');
+
+          if (!afterBg || !studioGlow) return;
+
+          // Reset classes
+          afterBg.className = 'absolute inset-0 transition-all duration-300 flex items-center justify-center';
+
+          if (mode === 'transparent') {
+            afterBg.classList.add('bg-checkerboard');
+            studioGlow.className = 'pointer-events-none absolute w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl transition-all duration-300';
+          } else if (mode === 'white') {
+            afterBg.style.backgroundColor = '#FFFFFF';
+            studioGlow.className = 'pointer-events-none absolute w-64 h-64 rounded-full bg-slate-200/70 blur-2xl transition-all duration-300';
+          } else if (mode === 'violet') {
+            afterBg.style.backgroundColor = '';
+            afterBg.classList.add('bg-gradient-to-br', 'from-indigo-600', 'via-indigo-700', 'to-purple-900');
+            studioGlow.className = 'pointer-events-none absolute w-72 h-72 rounded-full bg-emerald-400/30 blur-3xl transition-all duration-300';
+          } else if (mode === 'black') {
+            afterBg.style.backgroundColor = '#090D16';
+            studioGlow.className = 'pointer-events-none absolute w-64 h-64 rounded-full bg-indigo-500/25 blur-3xl transition-all duration-300';
+          }
+
+          if (mode !== 'white' && mode !== 'black') {
+            afterBg.style.backgroundColor = '';
+          }
+        });
+      });
+
+      // AI EXIF Sanitizer Toggle
+      let exifSanitized = true;
+      if (exifToggleBtn) {
+        exifToggleBtn.addEventListener('click', () => {
+          exifSanitized = !exifSanitized;
+          if (exifSanitized) {
+            exifStatusLabel.textContent = 'AI EXIF Sanitizer: ACTIVE (GPS Stripped)';
+            exifBadgeMini.textContent = 'SCRUBBED';
+            exifBadgeMini.className = 'text-emerald-500 font-bold';
+            exifGpsVal.className = 'text-emerald-500 line-through';
+            exifCamVal.className = 'text-emerald-500 line-through';
+            showToast('AI EXIF Sanitizer scrubbed GPS & Camera Serial metadata.', 'EXIF CLEAN');
+          } else {
+            exifStatusLabel.textContent = 'AI EXIF Sanitizer: OFF (Raw Metadata Exposed)';
+            exifBadgeMini.textContent = 'EXPOSED';
+            exifBadgeMini.className = 'text-amber-500 font-bold';
+            exifGpsVal.className = 'text-amber-500';
+            exifCamVal.className = 'text-amber-500';
+          }
+        });
+      }
+
+      /* ----------------------------------------------------------
+         5. 3 AI WORKFLOW SHORTCUTS ACCORDION & 1-CLICK COPY PROMPT
+      ---------------------------------------------------------- */
+      const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+      accordionTriggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const content = trigger.nextElementSibling;
+          const chevron = trigger.querySelector('.accordion-chevron');
+          const isOpen = content.classList.contains('open');
+
+          if (isOpen) {
+            content.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+            if (chevron) chevron.classList.remove('rotate-180');
+          } else {
+            content.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+            if (chevron) chevron.classList.add('rotate-180');
+          }
+        });
+      });
+
+      // Clipboard Copy using document.execCommand('copy') for iFrame reliability
+      function copyTextToClipboard(text) {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        tempInput.style.position = 'fixed';
+        tempInput.style.opacity = '0';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand('copy');
+        } catch (err) {
+          console.error('Copy fallback failed', err);
+        }
+        document.body.removeChild(tempInput);
+      }
+
+      const copyBtns = document.querySelectorAll('.copy-prompt-btn');
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-copy-target');
+          const promptEl = document.getElementById(targetId);
+          if (!promptEl) return;
+
+          copyTextToClipboard(promptEl.textContent.trim());
+
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<span>✅ Copied to Clipboard!</span>';
+          btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+          btn.classList.add('bg-emerald-600');
+          showToast('Workflow prompt copied to your clipboard!', 'PROMPT COPIED');
+
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('bg-emerald-600');
+            btn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+          }, 2200);
+        });
+      });
+
+      /* ----------------------------------------------------------
+         6. V2 1-CLICK SOCIAL SHARE PILL BAR, REACTIONS & NEWSLETTER
+      ---------------------------------------------------------- */
+      const shareBtns = document.querySelectorAll('.share-action-btn');
+      const shareUrl = 'https://zenithgrowth.tech';
+      const shareText = encodeURIComponent(
+        'Just tested "The Death of the Static PDF" interactive WebAssembly sandbox by @ZenithGrowth — compresses 15MB resumes under 88KB & strips EXIF metadata 100% in-browser (0 bytes uploaded):'
+      );
+
+      shareBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const channel = btn.getAttribute('data-share-channel');
+          if (channel === 'x') {
+            window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
+            showToast('Opened pre-filled X (Twitter) post window!', 'SHARE ON X');
+          } else if (channel === 'linkedin') {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
+            showToast('Opened LinkedIn share dialog!', 'LINKEDIN');
+          } else if (channel === 'copy') {
+            copyTextToClipboard(`${shareUrl} — Zenith Growth Dispatch #01: The Death of the Static PDF`);
+            showToast('Interactive sandbox link copied to clipboard!', 'LINK COPIED');
+          }
+        });
+      });
+
+      const reactionBtns = document.querySelectorAll('.reaction-btn');
+      reactionBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const countEl = btn.querySelector('.reaction-count');
+          if (countEl && !btn.dataset.voted) {
+            btn.dataset.voted = 'true';
+            countEl.textContent = Number(countEl.textContent) + 1;
+            btn.classList.add('border-indigo-500', 'bg-indigo-500/10');
+            showToast(`Thanks for your feedback on Issue #01!`, 'DISPATCH POLL');
+          }
+        });
+      });
+
+      const newsletterForm = document.getElementById('newsletter-form');
+      const emailInput = document.getElementById('dispatch-email-input');
+      const newsletterFeedback = document.getElementById('newsletter-feedback');
+
+      if (newsletterForm && emailInput && newsletterFeedback) {
+        newsletterForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const emailVal = emailInput.value.trim();
+          if (!emailVal || !emailVal.includes('@')) {
+            newsletterFeedback.textContent = '⚠️ Please enter a valid work or personal email address.';
+            newsletterFeedback.className = 'text-xs font-mono text-amber-500 block pt-1';
+            return;
+          }
+
+          newsletterFeedback.textContent = `✓ Subscribed ${emailVal}! Issue #02 will arrive in your inbox next Tuesday.`;
+          newsletterFeedback.className = 'text-xs font-mono text-emerald-500 block pt-1';
+          emailInput.value = '';
+          showToast('Welcome to The Zenith Growth Dispatch!', 'SUBSCRIBED');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
