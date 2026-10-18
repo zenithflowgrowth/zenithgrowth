@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith Wire — Independent AI Benchmarks & Tech Dispatches</title>
+  <meta name="description" content="Independent tech journalism, unfiltered AI model benchmarks, zero-cloud software audits, and sovereign developer strategies from Zenith Wire.">
+  <link rel="canonical" href="https://zenithgrowth.tech/wire.html">
+
+  <!-- Open Graph / Social Cards -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zenith Wire">
+  <meta property="og:url" content="https://zenithgrowth.tech/wire.html">
+  <meta property="og:title" content="Zenith Wire — Unfiltered AI Benchmarks & Sovereign Tech Intelligence">
+  <meta property="og:description" content="Real-world SWE-bench audits, zero-cloud document privacy analysis, and independent AI teardowns.">
+  <meta property="og:image" content="https://zenithgrowth.tech/wire-assets/07-gemini-argon-vs-claude-benchmark.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zenith Wire — Unfiltered Tech Dispatches">
+  <meta name="twitter:description" content="Independent AI model audits, privacy teardowns, and sovereign developer intelligence.">
+  <meta name="twitter:image" content="https://zenithgrowth.tech/wire-assets/07-gemini-argon-vs-claude-benchmark.jpg">
+
+  <!-- Google AdSense Official Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5837397162697542" crossorigin="anonymous"></script>
+
+  <!-- Prevent Flash of Unstyled Theme -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'system';
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (savedTheme === 'system' && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <!-- Tailwind CDN + Typography -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#070A0F',
+              900: '#0D111A',
+              850: '#111723',
+              800: '#171F2E',
+              700: '#232D42'
+            },
+            emerald: {
+              400: '#34D399',
+              500: '#10B981',
+              600: '#059669'
+            },
+            argon: {
+              gold: '#F59E0B',
+              violet: '#8B5CF6'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* CSS Variables for Clean Zero-CLS Theming */
+    :root {
+      --bg-base: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --border-line: #E2E8F0;
+      --text-primary: #0F172A;
+      --text-muted: #64748B;
+    }
+    html.dark {
+      --bg-base: #070A0F;
+      --bg-surface: #0D111A;
+      --border-line: rgba(255, 255, 255, 0.08);
+      --text-primary: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+
+    /* Ambient Architectural Grid */
+    .bg-wire-grid {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    html:not(.dark) .bg-wire-grid {
+      background-image: linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    }
+
+    /* Ticker Marquee Animation */
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: 200%;
+      animation: marquee 28s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Card Hover Glow */
+    .wire-card {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .wire-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6), 0 0 20px -4px rgba(16, 185, 129, 0.15);
+    }
+  </style>
+
+  <!-- Schema.org NewsMediaOrganization Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    "name": "Zenith Wire",
+    "url": "https://zenithgrowth.tech/wire.html",
+    "logo": "https://zenithgrowth.tech/logo.png",
+    "publishingPrinciples": "https://zenithgrowth.tech/about.html",
+    "masthead": "https://zenithgrowth.tech/wire.html",
+    "ethicsPolicy": "https://zenithgrowth.tech/privacy.html"
+  }
+  </script>
+</head>
+
+<body class="bg-[#F8FAFC] dark:bg-obsidian-950 text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-black">
+
+  <!-- Architectural Background Grid -->
+  <div class="fixed inset-0 bg-wire-grid pointer-events-none -z-20 [mask-image:radial-gradient(ellipse_at_top,black_40%,transparent_85%)]"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. LIVE BREAKING WIRE TICKER                                              -->
+  <!-- ========================================================================= -->
+  <div class="w-full bg-obsidian-900 border-b border-white/[0.08] text-xs font-mono overflow-hidden py-2 px-4 flex items-center">
+    <div class="flex items-center gap-2 pr-4 shrink-0 font-bold tracking-wider text-emerald-400 uppercase border-r border-white/10 z-10 bg-obsidian-900">
+      <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+      <span>LIVE WIRE</span>
+    </div>
+    <div class="overflow-hidden whitespace-nowrap w-full pl-3">
+      <div class="animate-marquee flex gap-8 text-slate-300">
+        <span class="flex items-center gap-2">
+          <strong class="text-white">BENCHMARK AUDIT:</strong> Gemini 4 Argon scores 68.4% on SWE-bench Verified vs Claude 3.5 Sonnet's 65.2% (+3.2% lead).
+        </span>
+        <span class="text-emerald-500">•</span>
+        <span class="flex items-center gap-2">
+          <strong class="text-white">PRIVACY ALERT:</strong> Online PDF converters caught storing user tax files in unencrypted cloud buckets for 48+ hours.
+        </span>
+        <span class="text-emerald-500">•</span>
+        <span class="flex items-center gap-2">
+          <strong class="text-white">IN-BROWSER WASM:</strong> Client-side RAM processing reaches 100 GB/s bandwidth on Apple Silicon / modern laptops.
+        </span>
+        <span class="text-emerald-500">•</span>
+        <span class="flex items-center gap-2">
+          <strong class="text-white">SAAS AUDIT:</strong> Average enterprise spends $670/seat annually on basic file utilities that modern browsers do for $0.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN HEADER & MASTHEAD                                                 -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 px-4 sm:px-6 lg:px-8 pt-3 pb-3 bg-white/80 dark:bg-obsidian-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/[0.06]">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Logo & Masthead -->
+      <a href="wire.html" class="flex items-center gap-3 group">
+        <img src="logo.webp" alt="Zenith Logo" width="36" height="36" class="h-9 w-9 rounded-xl object-contain shadow-sm group-hover:scale-105 transition-transform">
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-black tracking-tight text-slate-950 dark:text-white uppercase font-mono">
+              ZENITH<span class="text-emerald-500">WIRE</span>
+            </span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              DISPATCHES
+            </span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500 dark:text-slate-400 -mt-0.5">
+            Independent AI Audits &amp; Sovereign Tech
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-white hover:bg-white/[0.06] transition">
+          🛠️ Free In-Browser Tools
+        </a>
+        <a href="dispatch-01.html" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-white hover:bg-white/[0.06] transition">
+          ⚡ Argon vs Claude
+        </a>
+        <a href="dispatch-02.html" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-white hover:bg-white/[0.06] transition">
+          💼 AI Careers
+        </a>
+        <a href="dispatch-03.html" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-white hover:bg-white/[0.06] transition">
+          🏢 SaaS Burn Audit
+        </a>
+      </nav>
+
+      <!-- Right Action & Theme Toggle -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 text-obsidian-950 font-bold text-xs hover:bg-emerald-400 transition shadow-sm">
+          <span>Launch Tools</span>
+          <span>→</span>
+        </a>
+        <button type="button" onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-obsidian-850 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-white transition" title="Toggle Theme">
+          <span class="dark:hidden">🌙</span>
+          <span class="hidden dark:inline">☀️</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 3. HERO LEAD STORY: THE BENCHMARK DUEL                                    -->
+  <!-- ========================================================================= -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Top Editorial Alert Pill -->
+    <div class="mb-6 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <span class="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          Independent Tech Audit // Volume 26.10
+        </span>
+      </div>
+      <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
+        Published: October 18, 2026 • 0 Sponsored Bias
+      </div>
+    </div>
+
+    <!-- Lead Story Grid (Dual Split: Editorial Brief + 4:5 Visual Infographic) -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 items-center p-6 sm:p-8 rounded-3xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] shadow-2xl relative overflow-hidden">
+      
+      <!-- Ambient Glow Behind Story -->
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
+
+      <!-- Left Column: Story Headline, Proof, and Breakdown (7 Cols) -->
+      <div class="lg:col-span-7 flex flex-col justify-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 dark:text-amber-400 font-mono text-xs font-bold w-fit mb-4">
+          <span>🏆 FRONTIER MODEL DUEL</span>
+          <span>•</span>
+          <span>SWE-BENCH VERIFIED</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 dark:text-white leading-[1.15] mb-5">
+          Gemini 4 Argon vs. Claude 3.5 Sonnet: The Unfiltered Coding Benchmark.
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+          Google DeepMind’s 1,000,000-token flagship engine goes head-to-head with Anthropic’s reigning champion across 14,000 real-world pull requests. Here is what happens when you strip the marketing claims and benchmark actual repo-scale execution.
+        </p>
+
+        <!-- Stat Pill Bar -->
+        <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-obsidian-950 border border-slate-200 dark:border-white/[0.06] mb-8">
+          <div>
+            <div class="text-xs font-mono text-slate-500 dark:text-slate-400">Argon (SWE-Bench)</div>
+            <div class="text-xl sm:text-2xl font-black text-amber-500 font-mono mt-0.5">68.4%</div>
+            <div class="text-[10px] text-emerald-500 font-bold">+3.2% Lead</div>
+          </div>
+          <div>
+            <div class="text-xs font-mono text-slate-500 dark:text-slate-400">Claude Sonnet</div>
+            <div class="text-xl sm:text-2xl font-black text-purple-400 font-mono mt-0.5">65.2%</div>
+            <div class="text-[10px] text-slate-400">Runner-Up</div>
+          </div>
+          <div>
+            <div class="text-xs font-mono text-slate-500 dark:text-slate-400">Context Window</div>
+            <div class="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-0.5">1,000,000</div>
+            <div class="text-[10px] text-slate-400">Tokens 0% Loss</div>
+          </div>
+        </div>
+
+        <!-- Punchline Quote Card -->
+        <div class="p-4 rounded-xl bg-emerald-500/5 border-l-4 border-emerald-500 text-sm text-slate-700 dark:text-slate-300 italic mb-8 font-serif">
+          “Argon maps and builds the entire city. Claude designs the penthouse interior.”
+        </div>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex items-center gap-4 flex-wrap">
+          <a href="dispatch-01.html" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-obsidian-950 font-extrabold text-sm transition flex items-center gap-2 shadow-lg shadow-emerald-500/20">
+            <span>Read Full Technical Audit</span>
+            <span>→</span>
+          </a>
+          <a href="index.html" class="px-5 py-3 rounded-xl bg-slate-100 dark:bg-obsidian-800 hover:bg-slate-200 dark:hover:bg-obsidian-700 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-bold text-sm transition">
+            Explore Free Tools
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Visual Poster Asset (5 Cols) -->
+      <div class="lg:col-span-5 flex justify-center">
+        <div class="relative group max-w-sm rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+          <img src="wire-assets/07-gemini-argon-vs-claude-benchmark.jpg" alt="Gemini 4 Argon vs Claude 3.5 Sonnet Benchmark Poster" class="w-full h-auto object-cover group-hover:scale-102 transition-transform duration-300" loading="eager">
+          <div class="absolute bottom-3 left-3 right-3 px-3 py-2 rounded-xl bg-obsidian-950/80 backdrop-blur-md border border-white/10 text-[11px] font-mono text-slate-300 flex items-center justify-between">
+            <span>Official Research Poster</span>
+            <span class="text-emerald-400 font-bold">4:5 High-Res</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 4. ZERO-CLS ADSENSE BANNER ZONE #1                                        -->
+    <!-- ========================================================================= -->
+    <div class="w-full my-10 p-4 rounded-2xl bg-slate-100 dark:bg-obsidian-900/60 border border-dashed border-slate-300 dark:border-white/10 flex flex-col items-center justify-center min-h-[140px] text-center" style="min-height: 140px;">
+      <span class="text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-2">Advertisement • Independent Sponsor</span>
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-5837397162697542"
+           data-ad-slot="zenith_wire_mid_feed"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 5. BREAKING WIRE FEED (6 INVESTIGATIVE DISPATCHES)                         -->
+    <!-- ========================================================================= -->
+    <section class="mb-16">
+      <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-white/[0.08]">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight">
+            Latest Wire Investigations
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 font-mono mt-1">
+            Software audits, privacy teardowns, and sovereign tech playbooks.
+          </p>
+        </div>
+        <span class="text-xs font-mono text-emerald-500 font-bold hidden sm:block">
+          UPDATED DAILY // ZERO PAYWALL
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Wire Card 1: SaaS Burn Audit -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/09-saas-burn-audit-burning-receipts.jpg" alt="Burning SaaS Receipts Audit" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/90 text-white">
+                FINANCIAL AUDIT
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              DISPATCH #04 • 6 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="dispatch-03.html">The $670/Seat SaaS Burn: Why Companies Are Ditching File Subscriptions</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              Why are agencies paying $20/month per seat to DocuSign and Adobe just to sign and compress single contracts? How in-browser WebAssembly made cloud servers obsolete.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">$0 Cloud Alternative</span>
+            <a href="dispatch-03.html" class="text-slate-400 hover:text-white font-bold">Read →</a>
+          </div>
+        </article>
+
+        <!-- Wire Card 2: S3 Bucket Privacy Trap -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/04-s3-bucket-trap-cloud-privacy.jpg" alt="S3 Bucket Cloud Privacy Trap" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/90 text-black">
+                CYBERSECURITY
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              DISPATCH #05 • 5 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="compress-pdf.html">The S3 Bucket Trap: Why 'Free Online Converters' Threaten Client NDAs</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              Every time employees upload confidential contracts or tax returns to free web utilities, documents sit on unmonitored third-party servers for hours. Here is how local RAM shields work.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">100% RAM Privacy</span>
+            <a href="compress-pdf.html" class="text-slate-400 hover:text-white font-bold">Read →</a>
+          </div>
+        </article>
+
+        <!-- Wire Card 3: 6 High-Paying AI Careers in 2026 -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/03-6-high-paying-ai-careers-2026.jpg" alt="6 High-Paying AI Careers Emerging in 2026" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/90 text-white">
+                CAREERS &amp; LABOR
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              DISPATCH #02 • 7 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="dispatch-02.html">6 High-Paying AI Careers Emerging in 2026 That Require Zero Coding</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              From Context Architects ($180k) to AI Red-Teamers and Local-Ops specialists: how non-technical operators are securing lucrative salaries in the agentic era.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">$120k–$180k Range</span>
+            <a href="dispatch-02.html" class="text-slate-400 hover:text-white font-bold">Read →</a>
+          </div>
+        </article>
+
+        <!-- Wire Card 4: Cutout Studio vs Canva -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/06-canva-15mo-cutout-studio-4k.jpg" alt="Canva $15/mo Cutout Teardown" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500 text-obsidian-950">
+                PRODUCTIVITY TOOL
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              TOOL BREAKDOWN • 4 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="cutout-studio.html">Stop Paying $15/Month to Canva Just for Product Background Removal</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              Neural edge detection running directly inside your browser GPU. Download 4K transparent PNGs with full hair and glass transparency with zero cloud upload limits.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">100% Free Tool</span>
+            <a href="cutout-studio.html" class="text-slate-400 hover:text-white font-bold">Open Tool →</a>
+          </div>
+        </article>
+
+        <!-- Wire Card 5: Camera EXIF Metadata -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/08-camera-exif-gps-metadata-remover.jpg" alt="EXIF GPS Coordinates Privacy" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500 text-white">
+                PRIVACY LEAK
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              SECURITY ADVISORY • 4 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="metadata-remover.html">Did You Know Your Images Secretly Store Your GPS Coordinates &amp; Prompts?</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              Smartphone photos and AI generators embed exact home coordinates and prompt parameters inside EXIF chunks. Here is how to strip them locally before posting.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">Sanitize in RAM</span>
+            <a href="metadata-remover.html" class="text-slate-400 hover:text-white font-bold">Sanitize →</a>
+          </div>
+        </article>
+
+        <!-- Wire Card 6: The Sovereign Remote Stack (16:9 Banner Story) -->
+        <article class="wire-card rounded-2xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between overflow-hidden shadow-sm">
+          <div>
+            <div class="relative rounded-xl overflow-hidden mb-4 aspect-[4/3] bg-obsidian-950">
+              <img src="wire-assets/10-sovereign-remote-stack-16x9-banner.jpg" alt="Sovereign Remote Stack" class="w-full h-full object-cover" loading="lazy">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500 text-obsidian-950">
+                REMOTE STACK
+              </span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+              FIELD GUIDE • 5 MIN READ
+            </div>
+            <h3 class="text-lg font-bold text-slate-950 dark:text-white leading-snug mb-2 hover:text-emerald-500 transition">
+              <a href="index.html">How Elite $150k+ Remote Contractors Work Locally &amp; Ship Globally</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 mb-4 leading-relaxed">
+              Working on flights with zero Wi-Fi, preventing client NDA leaks, and saving $1,200/year by replacing single-purpose utility subscriptions with local browser tools.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span class="text-emerald-500 font-semibold">Sovereign Tools</span>
+            <a href="index.html" class="text-slate-400 hover:text-white font-bold">Explore →</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 6. NEWSLETTER / WIRE INTEL SIGNUP                                         -->
+    <!-- ========================================================================= -->
+    <section class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-obsidian-900 via-obsidian-850 to-obsidian-900 border border-emerald-500/20 text-center relative overflow-hidden mb-16 shadow-2xl">
+      <div class="max-w-2xl mx-auto relative z-10">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-4">
+          WEEKLY DISPATCH • ZERO SPAM
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
+          Get The Weekly Zenith Wire Intel.
+        </h2>
+        <p class="text-sm sm:text-base text-slate-300 mb-8 leading-relaxed">
+          Unfiltered AI benchmark audits, zero-cloud software tools, and sovereign developer strategies delivered to your inbox every Tuesday.
+        </p>
+
+        <form onsubmit="event.preventDefault(); alert('Subscribed to Zenith Wire Dispatches!');" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <input type="email" placeholder="Enter your business email" required class="flex-grow px-4 py-3 rounded-xl bg-obsidian-950 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 font-mono">
+          <button type="submit" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-obsidian-950 font-bold text-sm transition shrink-0">
+            Join Wire Intel
+          </button>
+        </form>
+        <span class="block text-[11px] font-mono text-slate-500 mt-3">
+          100% private. Unsubscribe anytime with 1 click.
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 7. EDITORIAL FOOTER                                                       -->
+  <!-- ========================================================================= -->
+  <footer class="w-full bg-white dark:bg-obsidian-950 border-t border-slate-200 dark:border-white/[0.08] py-10 px-4 sm:px-6 lg:px-8 text-xs font-mono text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <img src="logo.webp" alt="Zenith" width="28" height="28" class="h-7 w-7 rounded-lg">
+        <span class="font-extrabold text-slate-900 dark:text-white uppercase">
+          ZENITH<span class="text-emerald-500">WIRE</span>
+        </span>
+        <span class="text-slate-400 dark:text-slate-600">|</span>
+        <span>Independent Media &amp; Benchmarks</span>
+      </div>
+
+      <div class="flex items-center gap-6 flex-wrap">
+        <a href="wire.html" class="hover:text-emerald-500 transition">Dispatches</a>
+        <a href="index.html" class="hover:text-emerald-500 transition">Free Tools</a>
+        <a href="privacy.html" class="hover:text-emerald-500 transition">Privacy</a>
+        <a href="terms.html" class="hover:text-emerald-500 transition">Terms</a>
+        <a href="contact.html" class="hover:text-emerald-500 transition">Contact</a>
+      </div>
+
+      <div>
+        <span>© 2026 Zenith Growth Media. team@zenithgrowth.tech</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+  </script>
+</body>
+</html>
